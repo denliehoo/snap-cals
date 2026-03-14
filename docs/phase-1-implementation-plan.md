@@ -99,7 +99,7 @@ graph TD
 - **Test:** Signup creates user in DB. Login returns valid JWT. Invalid credentials return 401. Protected route rejects without token.
 - **Demo:** Use Postman/curl to signup, login, and access a protected test endpoint.
 
-### Task 4: Auth frontend (signup + login screens)
+### Task 4: Auth frontend (signup + login screens) ✅
 
 - **Objective:** Build signup and login screens in the React Native app, store JWT, and handle auth flow.
 - **Guidance:**
