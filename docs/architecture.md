@@ -1,0 +1,92 @@
+# Snap Cals — Architecture
+
+## Overview
+
+Snap Cals is a mobile calorie and macro tracking app. Users log food entries, set daily nutrition goals, and view daily/weekly intake summaries. Future phases add AI-powered food recognition via the Gemini API.
+
+## Tech Stack
+
+| Layer | Tech | Rationale |
+|-------|------|-----------|
+| Monorepo | pnpm workspaces | Shared types between frontend and backend, single install |
+| Frontend | React Native + Expo + TypeScript | Cross-platform mobile, fast iteration with Expo |
+| Navigation | React Navigation | Standard for React Native/Expo |
+| State Management | Zustand | Lightweight, minimal boilerplate, easy to learn |
+| Backend | Node.js + Express + TypeScript | Full control over API, resume-worthy, JS/TS everywhere |
+| Auth | Passport.js + JWT | Abstracts auth strategy, JWT for stateless mobile auth |
+| Database | Postgres + Prisma ORM | Relational data (users, entries, goals), strong aggregation support, Prisma for type-safe queries |
+| DB Hosting | Neon | Free tier Postgres, no expiry, serverless |
+| Backend Hosting | Render | Free tier, simple git-push deploys |
+| AI (Phase 2+) | Gemini API | Free tier, multimodal (text + image) |
+
+## Monorepo Structure
+
+```
+snap-cals/
+├── apps/
+│   ├── mobile/          # React Native + Expo app
+│   │   └── src/
+│   │       ├── screens/       # Screen components
+│   │       ├── components/    # Reusable UI components
+│   │       ├── services/      # API service layer
+│   │       ├── stores/        # Zustand stores
+│   │       └── theme.ts       # Design system (colors, spacing, fonts)
+│   └── server/          # Express API
+│       └── src/
+│           ├── routes/        # Express route definitions
+│           ├── controllers/   # Request handlers
+│           └── middleware/     # Auth, validation, error handling
+├── packages/
+│   └── shared/          # Shared TypeScript types and enums
+│       └── src/
+│           └── index.ts       # MealType enum, interfaces, API types
+├── docs/                # Architecture, plans, roadmap
+├── pnpm-workspace.yaml
+└── package.json
+```
+
+## Key Decisions
+
+### Shared types via tsconfig path aliases
+- `@snap-cals/shared` maps to `../../packages/shared/src` in both apps' `tsconfig.json`
+- Server uses `tsconfig-paths/register` for runtime resolution with ts-node
+- Expo/Metro handles tsconfig paths natively
+- No build step needed — changes to shared types are picked up immediately
+- Nodemon watches `packages/shared/src` so the server restarts on shared type changes
+
+### Theme / Design System
+- Centralized in `apps/mobile/src/theme.ts`
+- Exports `colors`, `spacing`, `fontSize`, `borderRadius` objects
+- Includes macro-specific colors (calories, protein, carbs, fat)
+- All UI components should import from theme — no hardcoded values
+- Designed for easy theme swapping (change colors in one file)
+
+### API Design
+- Base path: `/api`
+- Auth routes: `/api/auth/signup`, `/api/auth/login`
+- Resource routes: `/api/entries`, `/api/goals`
+- All non-auth routes protected via Passport.js JWT middleware
+- Request/response types defined in `@snap-cals/shared`
+- Standard response wrapper: `{ data: T, message?: string }`
+- Standard error shape: `{ message: string, errors?: Record<string, string[]> }`
+
+### Auth Flow
+- Email/password signup and login
+- Passwords hashed with bcrypt
+- JWT returned on signup/login, stored in `expo-secure-store` on mobile
+- Passport.js JWT strategy validates tokens on protected routes
+- Zustand auth store manages token/user state on frontend
+- React Navigation switches between auth stack and main app stack based on auth state
+
+### Database
+- Postgres on Neon (free tier)
+- Prisma ORM for schema definition, migrations, and type-safe queries
+- Models: User, FoodEntry, Goal
+- MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
+
+## Phase Roadmap
+
+- **Phase 1:** CRUD calorie tracking (current)
+- **Phase 2:** AI autofill via Gemini API
+- **Phase 3:** AI chat with clarifying questions (toggleable)
+- **Phase 4:** Image-based food recognition

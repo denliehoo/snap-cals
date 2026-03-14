@@ -1,0 +1,1 @@
+Always reference docs/architecture.md for project conventions and decisions before writing code. When a task introduces new patterns, conventions, or architectural decisions, update docs/architecture.md accordingly.

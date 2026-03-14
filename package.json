@@ -1,0 +1,8 @@
+{
+  "name": "snap-cals",
+  "private": true,
+  "scripts": {
+    "dev:server": "pnpm --filter @snap-cals/server dev",
+    "dev:mobile": "pnpm --filter @snap-cals/mobile start"
+  }
+}
