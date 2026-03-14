@@ -85,7 +85,7 @@ graph TD
 - **Test:** Migration runs successfully. Seed script populates data. Prisma Studio shows tables with data.
 - **Demo:** Open Prisma Studio, show tables and seeded data.
 
-### Task 3: Auth backend (signup + login)
+### Task 3: Auth backend (signup + login) ✅
 
 - **Objective:** Implement email/password signup and login endpoints with JWT.
 - **Guidance:**
