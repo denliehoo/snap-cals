@@ -25,6 +25,8 @@ A foundational mobile app with email/password auth, full CRUD for food entries (
 
 Instead of manually entering food details, the user can type a food name and the AI (Gemini API) returns estimated calories and macros. The user can then edit or confirm the values before saving. Manual entry from Phase 1 remains available as a fallback.
 
+Also includes: Google OAuth login (via `passport-google-oauth20`, building on the existing Passport.js setup from Phase 1).
+
 **Status:** Not started
 
 ### Phase 3: AI Chat

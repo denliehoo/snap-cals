@@ -186,3 +186,18 @@ graph TD
   - Logout functionality
 - **Test:** Full user flow works end-to-end: signup → set goals → add entries → view daily → view weekly → edit → delete → logout → login.
 - **Demo:** Complete walkthrough of the app from signup to a full day of tracking.
+
+### Task 11: Unit and integration tests
+
+- **Objective:** Add test coverage for backend API endpoints and frontend components.
+- **Guidance:**
+  - Backend: Jest + Supertest for API endpoint tests
+    - Auth: signup (201, 409 duplicate, 400 validation), login (200, 401 bad credentials)
+    - Entries: CRUD operations, authorization checks, date filtering
+    - Goals: create/update, per-user scoping
+  - Frontend: React Native Testing Library for component tests
+    - Form validation behavior
+    - Screen rendering with mock data
+    - Navigation flows
+- **Test:** All tests pass. Coverage report generated.
+- **Demo:** Run `pnpm test` from root, show passing test suite.
