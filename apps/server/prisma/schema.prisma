@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  entries      FoodEntry[]
+  goal         Goal?
+}
+
+model FoodEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  servingSize String
+  mealType    MealType
+  date        DateTime @db.Date
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, date])
+}
+
+model Goal {
+  id           String @id @default(cuid())
+  userId       String @unique
+  dailyCalories Float
+  dailyProtein  Float
+  dailyCarbs    Float
+  dailyFat      Float
+  user         User   @relation(fields: [userId], references: [id])
+}

@@ -73,7 +73,7 @@ graph TD
 - **Test:** All three packages build. Shared types are importable from both apps. Both dev servers start without errors.
 - **Demo:** Both dev servers running. A placeholder screen renders using theme colors. Shared types import works.
 
-### Task 2: Database schema and Prisma setup
+### Task 2: Database schema and Prisma setup ✅
 
 - **Objective:** Define the Postgres schema and connect Prisma to Neon.
 - **Guidance:**

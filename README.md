@@ -56,7 +56,21 @@ JWT_SECRET="pick-a-strong-secret"
 PORT=3000
 ```
 
-### 3. Run the backend
+### 3. Run database migrations and seed
+
+```bash
+cd apps/server
+npx prisma migrate dev
+npx ts-node -r tsconfig-paths/register prisma/seed.ts
+```
+
+To explore the database visually:
+
+```bash
+npx prisma studio
+```
+
+### 4. Run the backend
 
 ```bash
 pnpm dev:server
@@ -68,7 +82,7 @@ The API will be available at `http://localhost:3000`. Test it with:
 curl http://localhost:3000/api/health
 ```
 
-### 4. Run the mobile app
+### 5. Run the mobile app
 
 In a separate terminal:
 
