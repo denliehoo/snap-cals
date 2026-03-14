@@ -7,7 +7,8 @@ Use conventional commit messages when committing code:
 
 - `feat:` — new functionality or features
 - `fix:` — bug fixes
-- `chore:` — setup, config, tooling, refactoring, non-functional changes
+- `chore:` — setup, config, tooling, non-functional changes
+- `refactor:` — code restructuring without changing behavior
 - `docs:` — documentation only changes
 
 Format: `type: short description`
