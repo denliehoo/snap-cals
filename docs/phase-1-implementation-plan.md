@@ -111,7 +111,7 @@ graph TD
 - **Test:** User can sign up, gets redirected to main app. User can log in. Token persists across app restarts. Invalid credentials show error.
 - **Demo:** Full signup → login → main screen flow on device/simulator.
 
-### Task 5: Food entry CRUD backend
+### Task 5: Food entry CRUD backend ✅
 
 - **Objective:** Implement REST endpoints for food entry management.
 - **Guidance:**

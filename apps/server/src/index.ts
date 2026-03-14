@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import passport from "./middleware/passport";
 import authRoutes from "./routes/auth.routes";
+import entryRoutes from "./routes/entry.routes";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/entries", entryRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
