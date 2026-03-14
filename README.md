@@ -4,6 +4,22 @@ A mobile calorie and macro tracking app built with React Native and a custom Nod
 
 This project was built as an experiment with agentic AI using [Kiro CLI](https://kiro.dev). AI skills in `.kiro/skills/` guide code generation conventions, and `docs/` contains the architecture decisions and implementation plan that the AI follows across sessions.
 
+## AI-Assisted Development Approach
+
+This project is built collaboratively with [Kiro CLI](https://kiro.dev), an agentic AI coding assistant. The workflow looks like this:
+
+1. I describe a feature or task, and Kiro generates the implementation
+2. I review the generated code — reading through it to understand the patterns and decisions
+3. When I spot opportunities to refactor or establish coding standards, I ask Kiro to make those changes
+4. I then ask Kiro to document the conventions in `.kiro/skills/` (so it follows them in future sessions) and in `docs/` (so they're visible to humans too)
+
+This creates a feedback loop: the AI writes code, I shape the standards, and those standards feed back into how the AI writes the next piece of code. Over time the codebase stays consistent even though an AI is doing most of the typing.
+
+Key files that drive this:
+- `.kiro/skills/` — YAML-frontmatter skill files that guide Kiro's code generation (naming conventions, commit format, etc.)
+- `docs/architecture.md` — architectural decisions and patterns
+- `docs/phase-1-implementation-plan.md` — task-by-task plan that gets checked off as we go
+
 ## Tech Stack
 
 | Layer | Tech |
