@@ -7,10 +7,10 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { colors, spacing, fontSize, borderRadius } from "../theme";
-import { useAuthStore } from "../stores/auth.store";
+import { colors, spacing, fontSize, borderRadius, fontWeight } from "../../theme";
+import { useAuthStore } from "../../stores/auth.store";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { AuthStackParamList } from "../navigation";
+import type { AuthStackParamList } from "../../navigation";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Signup">;
 
@@ -66,7 +66,7 @@ export default function SignupScreen({ navigation }: Props) {
         disabled={loading}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color={colors.textOnPrimary} />
         ) : (
           <Text style={styles.buttonText}>Sign Up</Text>
         )}
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSize.xxl,
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
     color: colors.primary,
     textAlign: "center",
     marginBottom: spacing.xs,
@@ -124,9 +124,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   buttonText: {
-    color: "#fff",
+    color: colors.textOnPrimary,
     fontSize: fontSize.md,
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
   },
   link: {
     color: colors.primary,

@@ -5,6 +5,7 @@ export const colors = {
   secondary: "#FF9800",
   background: "#FAFAFA",
   surface: "#FFFFFF",
+  textOnPrimary: "#FFFFFF",
   text: "#212121",
   textSecondary: "#757575",
   border: "#E0E0E0",
@@ -39,4 +40,11 @@ export const borderRadius = {
   md: 8,
   lg: 16,
   full: 9999,
+};
+
+export const fontWeight = {
+  regular: "400" as const,
+  medium: "500" as const,
+  semibold: "600" as const,
+  bold: "700" as const,
 };

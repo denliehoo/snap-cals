@@ -126,7 +126,7 @@ graph TD
 - **Test:** CRUD operations work via Postman. Users can only access their own entries. Invalid data returns validation errors.
 - **Demo:** Full CRUD cycle via Postman — create, read, update, delete food entries.
 
-### Task 6: Food entry form screen (Create + Edit)
+### Task 6: Food entry form screen (Create + Edit) ✅
 
 - **Objective:** Build the food entry form in the React Native app.
 - **Guidance:**

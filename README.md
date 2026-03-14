@@ -2,6 +2,8 @@
 
 A mobile calorie and macro tracking app built with React Native and a custom Node.js backend. Users can log food entries, set daily nutrition goals, and view daily/weekly intake summaries.
 
+This project was built as an experiment with agentic AI using [Kiro CLI](https://kiro.dev). AI skills in `.kiro/skills/` guide code generation conventions, and `docs/` contains the architecture decisions and implementation plan that the AI follows across sessions.
+
 ## Tech Stack
 
 | Layer | Tech |

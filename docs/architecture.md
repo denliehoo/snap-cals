@@ -84,6 +84,21 @@ snap-cals/
 - Models: User, FoodEntry, Goal
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
 
+## Mobile Conventions
+
+### File Naming
+- All files and folders use kebab-case (e.g. `home-screen.tsx`, `use-entry-form.ts`)
+
+### Screen Structure
+- Every screen is a folder in `src/screens/` with an `index.tsx` (e.g. `screens/home/index.tsx`)
+- When a screen needs extracted logic, add a co-located hook file (e.g. `screens/entry-form/use-entry-form.ts`)
+- Screens are thin rendering layers — state, validation, and API calls live in custom hooks
+
+### Theme System
+- All visual tokens live in `src/theme.ts`: `colors`, `spacing`, `fontSize`, `borderRadius`, `fontWeight`
+- No hardcoded colors, font weights, or spacing in components — always reference theme tokens
+- `colors.textOnPrimary` for text on colored backgrounds, `fontWeight.bold`/`semibold` for weights
+
 ## Phase Roadmap
 
 - **Phase 1:** CRUD calorie tracking (current)

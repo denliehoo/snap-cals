@@ -4,17 +4,24 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuthStore } from "./stores/auth.store";
 import { colors } from "./theme";
-import LoginScreen from "./screens/LoginScreen";
-import SignupScreen from "./screens/SignupScreen";
-import HomeScreen from "./screens/HomeScreen";
+import { FoodEntry } from "@snap-cals/shared";
+import LoginScreen from "./screens/login";
+import SignupScreen from "./screens/signup";
+import HomeScreen from "./screens/home";
+import EntryFormScreen from "./screens/entry-form";
 
 export type AuthStackParamList = {
   Login: undefined;
   Signup: undefined;
 };
 
+export type MainStackParamList = {
+  Home: undefined;
+  EntryForm: { entry?: FoodEntry } | undefined;
+};
+
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
-const MainStack = createNativeStackNavigator();
+const MainStack = createNativeStackNavigator<MainStackParamList>();
 
 export default function Navigation() {
   const { token, isLoading, restore } = useAuthStore();
@@ -34,8 +41,9 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       {token ? (
-        <MainStack.Navigator screenOptions={{ headerShown: false }}>
-          <MainStack.Screen name="Home" component={HomeScreen} />
+        <MainStack.Navigator>
+          <MainStack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+          <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "" }} />
         </MainStack.Navigator>
       ) : (
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>

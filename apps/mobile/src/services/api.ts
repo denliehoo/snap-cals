@@ -1,4 +1,10 @@
-import { ApiResponse, AuthResponse } from "@snap-cals/shared";
+import {
+  ApiResponse,
+  AuthResponse,
+  FoodEntry,
+  CreateFoodEntryRequest,
+  UpdateFoodEntryRequest,
+} from "@snap-cals/shared";
 
 const API_URL = __DEV__ ? "http://localhost:3000/api" : "http://localhost:3000/api";
 
@@ -32,4 +38,19 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),
+
+  createEntry: (data: CreateFoodEntryRequest) =>
+    request<ApiResponse<FoodEntry>>("/entries", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  getEntries: (date: string) =>
+    request<ApiResponse<FoodEntry[]>>(`/entries?date=${date}`),
+  updateEntry: (id: string, data: UpdateFoodEntryRequest) =>
+    request<ApiResponse<FoodEntry>>(`/entries/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  deleteEntry: (id: string) =>
+    request<ApiResponse<void>>(`/entries/${id}`, { method: "DELETE" }),
 };
