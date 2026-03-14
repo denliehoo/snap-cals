@@ -2,14 +2,14 @@ import React from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
 } from "react-native";
 import { MealType } from "@snap-cals/shared";
 import { colors, spacing, fontSize, borderRadius, fontWeight } from "../../theme";
+import FormField from "../../components/form-field";
+import Button from "../../components/button";
 import { useEntryForm } from "./use-entry-form";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MainStackParamList } from "../../navigation";
@@ -30,29 +30,22 @@ export default function EntryFormScreen({ navigation, route }: Props) {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <Text style={styles.label}>Food Name *</Text>
-      <TextInput style={styles.input} value={fields.name} onChangeText={setters.setName} placeholder="e.g. Chicken Breast" placeholderTextColor={colors.textSecondary} />
-
-      <Text style={styles.label}>Calories *</Text>
-      <TextInput style={styles.input} value={fields.calories} onChangeText={setters.setCalories} placeholder="0" placeholderTextColor={colors.textSecondary} keyboardType="numeric" />
+      <FormField label="Food Name *" value={fields.name} onChangeText={setters.setName} placeholder="e.g. Chicken Breast" />
+      <FormField label="Calories *" value={fields.calories} onChangeText={setters.setCalories} placeholder="0" keyboardType="numeric" />
 
       <View style={styles.row}>
         <View style={styles.rowItem}>
-          <Text style={styles.label}>Protein (g)</Text>
-          <TextInput style={styles.input} value={fields.protein} onChangeText={setters.setProtein} placeholder="0" placeholderTextColor={colors.textSecondary} keyboardType="numeric" />
+          <FormField label="Protein (g)" value={fields.protein} onChangeText={setters.setProtein} placeholder="0" keyboardType="numeric" />
         </View>
         <View style={styles.rowItem}>
-          <Text style={styles.label}>Carbs (g)</Text>
-          <TextInput style={styles.input} value={fields.carbs} onChangeText={setters.setCarbs} placeholder="0" placeholderTextColor={colors.textSecondary} keyboardType="numeric" />
+          <FormField label="Carbs (g)" value={fields.carbs} onChangeText={setters.setCarbs} placeholder="0" keyboardType="numeric" />
         </View>
         <View style={styles.rowItem}>
-          <Text style={styles.label}>Fat (g)</Text>
-          <TextInput style={styles.input} value={fields.fat} onChangeText={setters.setFat} placeholder="0" placeholderTextColor={colors.textSecondary} keyboardType="numeric" />
+          <FormField label="Fat (g)" value={fields.fat} onChangeText={setters.setFat} placeholder="0" keyboardType="numeric" />
         </View>
       </View>
 
-      <Text style={styles.label}>Serving Size</Text>
-      <TextInput style={styles.input} value={fields.servingSize} onChangeText={setters.setServingSize} placeholder="e.g. 100g, 1 cup" placeholderTextColor={colors.textSecondary} />
+      <FormField label="Serving Size" value={fields.servingSize} onChangeText={setters.setServingSize} placeholder="e.g. 100g, 1 cup" />
 
       <Text style={styles.label}>Meal Type</Text>
       <View style={styles.mealRow}>
@@ -69,21 +62,12 @@ export default function EntryFormScreen({ navigation, route }: Props) {
         ))}
       </View>
 
-      <Text style={styles.label}>Date</Text>
-      <TextInput style={styles.input} value={fields.date} onChangeText={setters.setDate} placeholder="YYYY-MM-DD" placeholderTextColor={colors.textSecondary} />
+      <FormField label="Date" value={fields.date} onChangeText={setters.setDate} placeholder="YYYY-MM-DD" />
 
-      <TouchableOpacity style={styles.button} onPress={() => submit(goBack)} disabled={loading}>
-        {loading ? (
-          <ActivityIndicator color={colors.textOnPrimary} />
-        ) : (
-          <Text style={styles.buttonText}>{isEdit ? "Update" : "Add Entry"}</Text>
-        )}
-      </TouchableOpacity>
+      <Button title={isEdit ? "Update" : "Add Entry"} onPress={() => submit(goBack)} loading={loading} />
 
       {isEdit && (
-        <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDelete(goBack)}>
-          <Text style={styles.deleteButtonText}>Delete Entry</Text>
-        </TouchableOpacity>
+        <Button title="Delete Entry" onPress={() => confirmDelete(goBack)} variant="text-danger" />
       )}
     </ScrollView>
   );
@@ -95,16 +79,6 @@ const styles = StyleSheet.create({
   title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text, marginBottom: spacing.lg },
   label: { fontSize: fontSize.sm, color: colors.textSecondary, marginBottom: spacing.xs },
   error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.md },
-  input: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    fontSize: fontSize.md,
-    color: colors.text,
-    marginBottom: spacing.md,
-  },
   row: { flexDirection: "row", gap: spacing.sm },
   rowItem: { flex: 1 },
   mealRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.md },
@@ -119,19 +93,4 @@ const styles = StyleSheet.create({
   mealChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   mealChipText: { fontSize: fontSize.sm, color: colors.textSecondary },
   mealChipTextActive: { color: colors.textOnPrimary },
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.sm,
-  },
-  buttonText: { color: colors.textOnPrimary, fontSize: fontSize.md, fontWeight: fontWeight.semibold },
-  deleteButton: {
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.md,
-  },
-  deleteButtonText: { color: colors.error, fontSize: fontSize.md, fontWeight: fontWeight.semibold },
 });

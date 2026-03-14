@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { colors, spacing, fontSize, borderRadius, fontWeight } from "../../theme";
+import { View, Text, StyleSheet } from "react-native";
+import { colors, spacing, fontSize, fontWeight } from "../../theme";
+import Button from "../../components/button";
 import { useAuthStore } from "../../stores/auth.store";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MainStackParamList } from "../../navigation";
@@ -16,16 +17,10 @@ export default function HomeScreen({ navigation }: Props) {
       <Text style={styles.title}>Snap Cals</Text>
       <Text style={styles.subtitle}>{user?.email}</Text>
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate("EntryForm")}
-      >
-        <Text style={styles.addButtonText}>+ Add Food Entry</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-        <Text style={styles.logoutText}>Log Out</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonWrapper}>
+        <Button title="+ Add Food Entry" onPress={() => navigation.navigate("EntryForm")} />
+      </View>
+      <Button title="Log Out" onPress={logout} variant="text-danger" />
     </View>
   );
 }
@@ -40,14 +35,5 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: fontSize.xxl, fontWeight: fontWeight.bold, color: colors.primary, marginBottom: spacing.xs },
   subtitle: { fontSize: fontSize.md, color: colors.textSecondary, marginBottom: spacing.xl },
-  addButton: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xl,
-    marginBottom: spacing.md,
-  },
-  addButtonText: { color: colors.textOnPrimary, fontSize: fontSize.md, fontWeight: fontWeight.semibold },
-  logoutButton: { padding: spacing.sm },
-  logoutText: { color: colors.error, fontSize: fontSize.sm },
+  buttonWrapper: { marginBottom: spacing.sm },
 });

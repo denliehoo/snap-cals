@@ -1,38 +1,17 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
-import { colors, spacing, fontSize, borderRadius, fontWeight } from "../../theme";
-import { useAuthStore } from "../../stores/auth.store";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { colors, spacing, fontSize, fontWeight } from "../../theme";
+import FormField from "../../components/form-field";
+import Button from "../../components/button";
+import { useAuthForm } from "../../hooks/use-auth-form";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { AuthStackParamList } from "../../navigation";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
 export default function LoginScreen({ navigation }: Props) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const login = useAuthStore((s) => s.login);
-
-  const handleLogin = async () => {
-    if (!email || !password) return setError("Email and password are required");
-    setLoading(true);
-    setError("");
-    try {
-      await login(email.trim().toLowerCase(), password);
-    } catch (e: any) {
-      setError(e.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { email, setEmail, password, setPassword, loading, error, submit } =
+    useAuthForm("login");
 
   return (
     <View style={styles.container}>
@@ -41,35 +20,12 @@ export default function LoginScreen({ navigation }: Props) {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={colors.textSecondary}
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={colors.textSecondary}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+      <FormField label="Email" value={email} onChangeText={setEmail} placeholder="Email" keyboardType="email-address" />
+      <FormField label="Password" value={password} onChangeText={setPassword} placeholder="Password" secureTextEntry />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleLogin}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color={colors.textOnPrimary} />
-        ) : (
-          <Text style={styles.buttonText}>Log In</Text>
-        )}
-      </TouchableOpacity>
+      <View style={styles.buttonWrapper}>
+        <Button title="Log In" onPress={submit} loading={loading} />
+      </View>
 
       <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
         <Text style={styles.link}>Don't have an account? Sign up</Text>
@@ -104,28 +60,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: spacing.md,
   },
-  input: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    fontSize: fontSize.md,
-    color: colors.text,
-    marginBottom: spacing.md,
-  },
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    alignItems: "center",
+  buttonWrapper: {
     marginTop: spacing.sm,
     marginBottom: spacing.lg,
-  },
-  buttonText: {
-    color: colors.textOnPrimary,
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.semibold,
   },
   link: {
     color: colors.primary,

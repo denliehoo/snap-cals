@@ -66,6 +66,11 @@ npx prisma migrate dev
 npx ts-node -r tsconfig-paths/register prisma/seed.ts
 ```
 
+The seed creates a test account you can use:
+
+- Email: `test@example.com`
+- Password: `password123`
+
 To explore the database visually:
 
 ```bash
