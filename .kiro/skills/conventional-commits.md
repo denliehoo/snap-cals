@@ -1,3 +1,8 @@
+---
+name: conventional-commits
+description: Use conventional commit message format (feat, fix, chore, docs) when committing code.
+---
+
 Use conventional commit messages when committing code:
 
 - `feat:` — new functionality or features
