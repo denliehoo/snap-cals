@@ -10,6 +10,7 @@ import SignupScreen from "./screens/signup";
 import DailyViewScreen from "./screens/daily-view";
 import EntryFormScreen from "./screens/entry-form";
 import GoalsScreen from "./screens/goals";
+import WeeklyViewScreen from "./screens/weekly-view";
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -18,6 +19,7 @@ export type AuthStackParamList = {
 
 export type MainStackParamList = {
   DailyView: undefined;
+  WeeklyView: undefined;
   EntryForm: { entry?: FoodEntry } | undefined;
   Goals: undefined;
 };
@@ -51,6 +53,9 @@ export default function Navigation() {
               title: "Snap Cals",
               headerRight: () => (
                 <View style={{ flexDirection: "row", gap: 16 }}>
+                  <TouchableOpacity onPress={() => navigation.navigate("WeeklyView")}>
+                    <Text style={{ color: colors.primary, fontSize: fontSize.md }}>Weekly</Text>
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate("Goals")}>
                     <Text style={{ color: colors.primary, fontSize: fontSize.md }}>Goals</Text>
                   </TouchableOpacity>
@@ -62,6 +67,7 @@ export default function Navigation() {
             })}
           />
           <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "" }} />
+          <MainStack.Screen name="WeeklyView" component={WeeklyViewScreen} options={{ title: "Weekly View" }} />
           <MainStack.Screen name="Goals" component={GoalsScreen} options={{ title: "Goals" }} />
         </MainStack.Navigator>
       ) : (

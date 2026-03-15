@@ -48,6 +48,8 @@ export const api = {
     }),
   getEntries: (date: string) =>
     request<ApiResponse<FoodEntry[]>>(`/entries?date=${date}`),
+  getWeekEntries: (startDate: string) =>
+    request<ApiResponse<FoodEntry[]>>(`/entries/week?startDate=${startDate}`),
   updateEntry: (id: string, data: UpdateFoodEntryRequest) =>
     request<ApiResponse<FoodEntry>>(`/entries/${id}`, {
       method: "PUT",
