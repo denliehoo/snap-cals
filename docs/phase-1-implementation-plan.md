@@ -180,6 +180,7 @@ graph TD
 - **Objective:** Connect all screens, add navigation tabs, error handling, and loading states.
 - **Guidance:**
   - Bottom tab navigation: Daily View, Weekly View, Add Entry, Goals/Settings
+  - Snackbar/toast component for success and error feedback (replace inline text messages)
   - Global error handling (network errors, expired tokens → redirect to login)
   - Loading spinners/skeletons while data fetches
   - Empty states (no entries for today, no goals set)
