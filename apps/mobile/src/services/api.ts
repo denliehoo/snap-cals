@@ -2,8 +2,10 @@ import {
   ApiResponse,
   AuthResponse,
   FoodEntry,
+  Goal,
   CreateFoodEntryRequest,
   UpdateFoodEntryRequest,
+  UpsertGoalRequest,
 } from "@snap-cals/shared";
 
 const API_URL = __DEV__ ? "http://localhost:3000/api" : "http://localhost:3000/api";
@@ -53,4 +55,9 @@ export const api = {
     }),
   deleteEntry: (id: string) =>
     request<ApiResponse<void>>(`/entries/${id}`, { method: "DELETE" }),
+
+  getGoals: () =>
+    request<ApiResponse<Goal>>("/goals"),
+  upsertGoals: (data: UpsertGoalRequest) =>
+    request<ApiResponse<Goal>>("/goals", { method: "PUT", body: JSON.stringify(data) }),
 };

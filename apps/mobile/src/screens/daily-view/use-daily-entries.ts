@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { api } from "../../services/api";
-import { FoodEntry, MealType } from "@snap-cals/shared";
+import { FoodEntry, MealType, Goal } from "@snap-cals/shared";
 
 function toDateString(d: Date) {
   const y = d.getFullYear();
@@ -36,14 +36,16 @@ export function useDailyEntries() {
   const navigation = useNavigation();
   const [date, setDate] = useState(() => toDateString(new Date()));
   const [entries, setEntries] = useState<FoodEntry[]>([]);
+  const [goals, setGoals] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchEntries = useCallback(async (showLoader = true) => {
     if (showLoader) setLoading(true);
     try {
-      const res = await api.getEntries(date);
-      setEntries(res.data);
+      const [entriesRes, goalsRes] = await Promise.all([api.getEntries(date), api.getGoals()]);
+      setEntries(entriesRes.data);
+      setGoals(goalsRes.data);
     } catch {
       setEntries([]);
     } finally {
@@ -114,5 +116,5 @@ export function useDailyEntries() {
     setEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
-  return { date, sections, totals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry };
+  return { date, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry };
 }

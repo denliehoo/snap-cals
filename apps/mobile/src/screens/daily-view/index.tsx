@@ -13,7 +13,7 @@ import type { MainStackParamList } from "../../navigation";
 type Props = NativeStackScreenProps<MainStackParamList, "DailyView">;
 
 export default function DailyViewScreen({ navigation }: Props) {
-  const { date, sections, totals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry } =
+  const { date, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry } =
     useDailyEntries();
 
   const isToday = date === new Date().toISOString().split("T")[0];
@@ -31,7 +31,7 @@ export default function DailyViewScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <DateNavigator label={dateLabel} onPrevious={goToPreviousDay} onNext={goToNextDay} />
-      <MacroSummary totals={totals} />
+      <MacroSummary totals={totals} goals={goals} />
 
       {loading ? (
         <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />

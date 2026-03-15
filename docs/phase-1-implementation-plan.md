@@ -151,7 +151,7 @@ graph TD
 - **Test:** Entries display correctly for selected date. Totals calculate correctly. Navigating dates loads correct data. Delete removes entry from list.
 - **Demo:** Show a full day of logged meals with totals and goal progress.
 
-### Task 8: Goals setup screen
+### Task 8: Goals setup screen ✅
 
 - **Objective:** Let users set and update their daily calorie/macro goals.
 - **Guidance:**
