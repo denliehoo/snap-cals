@@ -7,7 +7,7 @@ import { colors } from "./theme";
 import { FoodEntry } from "@snap-cals/shared";
 import LoginScreen from "./screens/login";
 import SignupScreen from "./screens/signup";
-import HomeScreen from "./screens/home";
+import DailyViewScreen from "./screens/daily-view";
 import EntryFormScreen from "./screens/entry-form";
 
 export type AuthStackParamList = {
@@ -16,7 +16,7 @@ export type AuthStackParamList = {
 };
 
 export type MainStackParamList = {
-  Home: undefined;
+  DailyView: undefined;
   EntryForm: { entry?: FoodEntry } | undefined;
 };
 
@@ -42,7 +42,7 @@ export default function Navigation() {
     <NavigationContainer>
       {token ? (
         <MainStack.Navigator>
-          <MainStack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+          <MainStack.Screen name="DailyView" component={DailyViewScreen} options={{ title: "Snap Cals" }} />
           <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "" }} />
         </MainStack.Navigator>
       ) : (

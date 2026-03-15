@@ -10,12 +10,17 @@ description: React Native coding conventions for the Snap Cals mobile app
 ## Screen Structure
 - Every screen is a folder in `src/screens/` with an `index.tsx` (e.g. `screens/home/index.tsx`)
 - When a screen needs extracted logic, add a co-located hook file (e.g. `screens/entry-form/use-entry-form.ts`)
-- When a hook is shared across multiple screens, put it in `src/hooks/` (e.g. `hooks/use-auth-form.ts`)
+- Only move a hook to `src/hooks/` when it's used by multiple screens (e.g. `hooks/use-auth-form.ts`). Default is co-location.
 - Screens are thin rendering layers — state, validation, and API calls go in hooks
 
+## Code Style
+- Destructure object props at the top of a component (e.g. `const { name, calories } = entry`) — keeps JSX clean and avoids repeating the object name
+- When rendering repeated UI patterns, use a config array + `.map()` instead of duplicating JSX blocks
+
 ## Reusable Components
-- Shared UI components live in `src/components/` (e.g. `form-field.tsx`, `button.tsx`)
-- Extract a component when the same pattern appears in 2+ screens
+- Shared UI components live in `src/components/` (e.g. `form-field.tsx`, `button.tsx`, `fab.tsx`)
+- Co-locate components in the screen folder when only used by that screen
+- Only move a component to `src/components/` when it's used (or will be used) by multiple screens
 
 ## Theme Usage
 - Never hardcode colors, font weights, font sizes, spacing, or border radii

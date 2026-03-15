@@ -138,7 +138,7 @@ graph TD
 - **Test:** User can create a new entry. User can edit an existing entry. Validation prevents empty/invalid submissions.
 - **Demo:** Create a food entry from the app, see it saved. Edit it, see changes reflected.
 
-### Task 7: Daily view screen
+### Task 7: Daily view screen ✅
 
 - **Objective:** Show all food entries for a selected day with totals and goal progress.
 - **Guidance:**
