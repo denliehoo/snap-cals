@@ -11,9 +11,14 @@ import {
 const API_URL = __DEV__ ? "http://localhost:3000/api" : "http://localhost:3000/api";
 
 let authToken: string | null = null;
+let onUnauthorized: (() => void) | null = null;
 
 export const setToken = (token: string | null) => {
   authToken = token;
+};
+
+export const setOnUnauthorized = (handler: () => void) => {
+  onUnauthorized = handler;
 };
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -25,7 +30,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const res = await fetch(`${API_URL}${path}`, { ...options, headers });
   const body = await res.json();
-  if (!res.ok) throw { status: res.status, ...body };
+  if (!res.ok) {
+    if (res.status === 401 && onUnauthorized) onUnauthorized();
+    throw { status: res.status, ...body };
+  }
   return body;
 }
 

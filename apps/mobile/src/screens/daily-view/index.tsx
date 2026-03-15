@@ -9,12 +9,18 @@ import { useDailyEntries } from "./use-daily-entries";
 import type { FoodEntry } from "@snap-cals/shared";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MainStackParamList } from "../../navigation";
+import type { CompositeScreenProps } from "@react-navigation/native";
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import type { MainTabParamList } from "../../navigation";
 
-type Props = NativeStackScreenProps<MainStackParamList, "DailyView">;
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<MainTabParamList, "DailyTab">,
+  NativeStackScreenProps<MainStackParamList>
+>;
 
-export default function DailyViewScreen({ navigation }: Props) {
+export default function DailyViewScreen({ navigation, route }: Props) {
   const { date, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry } =
-    useDailyEntries();
+    useDailyEntries(route.params?.date);
 
   const isToday = date === new Date().toISOString().split("T")[0];
   const dateLabel = isToday

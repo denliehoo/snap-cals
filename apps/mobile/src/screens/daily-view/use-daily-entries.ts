@@ -32,9 +32,9 @@ const MEAL_LABELS: Record<MealType, string> = {
   [MealType.SNACK]: "Snack",
 };
 
-export function useDailyEntries() {
+export function useDailyEntries(initialDate?: string) {
   const navigation = useNavigation();
-  const [date, setDate] = useState(() => toDateString(new Date()));
+  const [date, setDate] = useState(() => initialDate || toDateString(new Date()));
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);

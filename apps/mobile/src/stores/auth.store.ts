@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import * as SecureStore from "expo-secure-store";
 import { User } from "@snap-cals/shared";
-import { api, setToken } from "../services/api";
+import { api, setToken, setOnUnauthorized } from "../services/api";
 
 interface AuthState {
   token: string | null;
@@ -14,7 +14,7 @@ interface AuthState {
   restore: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   token: null,
   user: null,
   isLoading: true,
@@ -33,6 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch {
       set({ isLoading: false });
     }
+    setOnUnauthorized(() => get().logout());
   },
 
   login: async (email, password) => {

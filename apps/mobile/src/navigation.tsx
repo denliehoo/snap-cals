@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-import { ActivityIndicator, View, TouchableOpacity, Text } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "./stores/auth.store";
-import { colors, fontSize } from "./theme";
+import { colors } from "./theme";
 import { FoodEntry } from "@snap-cals/shared";
 import LoginScreen from "./screens/login";
 import SignupScreen from "./screens/signup";
@@ -11,24 +13,72 @@ import DailyViewScreen from "./screens/daily-view";
 import EntryFormScreen from "./screens/entry-form";
 import GoalsScreen from "./screens/goals";
 import WeeklyViewScreen from "./screens/weekly-view";
+import SettingsScreen from "./screens/settings";
 
 export type AuthStackParamList = {
   Login: undefined;
   Signup: undefined;
 };
 
+export type MainTabParamList = {
+  DailyTab: { date?: string } | undefined;
+  WeeklyTab: undefined;
+  GoalsTab: undefined;
+  SettingsTab: undefined;
+};
+
 export type MainStackParamList = {
-  DailyView: undefined;
-  WeeklyView: undefined;
+  MainTabs: undefined;
   EntryForm: { entry?: FoodEntry } | undefined;
-  Goals: undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const MainStack = createNativeStackNavigator<MainStackParamList>();
+const Tab = createBottomTabNavigator<MainTabParamList>();
+
+function MainTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarIcon: ({ color, size }) => {
+          const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
+            DailyTab: "today-outline",
+            WeeklyTab: "bar-chart-outline",
+            GoalsTab: "flag-outline",
+            SettingsTab: "menu-outline",
+          };
+          return <Ionicons name={icons[route.name]} size={size} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen
+        name="DailyTab"
+        component={DailyViewScreen}
+        options={{ title: "Daily", tabBarLabel: "Daily", headerTitle: "Snap Cals" }}
+      />
+      <Tab.Screen
+        name="WeeklyTab"
+        component={WeeklyViewScreen}
+        options={{ title: "Weekly", tabBarLabel: "Weekly", headerTitle: "Weekly View" }}
+      />
+      <Tab.Screen
+        name="GoalsTab"
+        component={GoalsScreen}
+        options={{ title: "Goals", tabBarLabel: "Goals", headerTitle: "Goals" }}
+      />
+      <Tab.Screen
+        name="SettingsTab"
+        component={SettingsScreen}
+        options={{ title: "More", tabBarLabel: "More", headerTitle: "Settings" }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 export default function Navigation() {
-  const { token, isLoading, restore, logout } = useAuthStore();
+  const { token, isLoading, restore } = useAuthStore();
 
   useEffect(() => {
     restore();
@@ -46,29 +96,8 @@ export default function Navigation() {
     <NavigationContainer>
       {token ? (
         <MainStack.Navigator>
-          <MainStack.Screen
-            name="DailyView"
-            component={DailyViewScreen}
-            options={({ navigation }) => ({
-              title: "Snap Cals",
-              headerRight: () => (
-                <View style={{ flexDirection: "row", gap: 16 }}>
-                  <TouchableOpacity onPress={() => navigation.navigate("WeeklyView")}>
-                    <Text style={{ color: colors.primary, fontSize: fontSize.md }}>Weekly</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate("Goals")}>
-                    <Text style={{ color: colors.primary, fontSize: fontSize.md }}>Goals</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={logout}>
-                    <Text style={{ color: colors.error, fontSize: fontSize.md }}>Logout</Text>
-                  </TouchableOpacity>
-                </View>
-              ),
-            })}
-          />
+          <MainStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
           <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "" }} />
-          <MainStack.Screen name="WeeklyView" component={WeeklyViewScreen} options={{ title: "Weekly View" }} />
-          <MainStack.Screen name="Goals" component={GoalsScreen} options={{ title: "Goals" }} />
         </MainStack.Navigator>
       ) : (
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>

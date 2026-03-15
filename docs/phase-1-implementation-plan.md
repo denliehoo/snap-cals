@@ -175,16 +175,16 @@ graph TD
 - **Test:** Weekly data aggregates correctly. Tapping a day navigates to daily view. Week navigation loads correct data.
 - **Demo:** Show a week of tracked data with totals per day, navigate between weeks, tap into a specific day.
 
-### Task 10: Wiring it all together + polish
+### Task 10: Wiring it all together + polish ✅
 
 - **Objective:** Connect all screens, add navigation tabs, error handling, and loading states.
 - **Guidance:**
-  - Bottom tab navigation: Daily View, Weekly View, Add Entry, Goals/Settings
+  - Bottom tab navigation: Daily View, Weekly View, Goals, More/Settings
+  - Settings screen (More tab) houses logout, dark mode toggle, and future account-related features
   - Snackbar/toast component for success and error feedback (replace inline text messages)
   - Global error handling (network errors, expired tokens → redirect to login)
   - Loading spinners/skeletons while data fetches
   - Empty states (no entries for today, no goals set)
-  - Logout functionality
   - Dark/light mode infrastructure: ThemeContext provider, useColorScheme() for system detection, manual toggle with expo-secure-store persistence, override option
   - Snackbar and tab nav use current theme tokens (will get restyled in Task 12)
 - **Test:** Full user flow works end-to-end: signup → set goals → add entries → view daily → view weekly → edit → delete → logout → login.

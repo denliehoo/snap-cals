@@ -78,6 +78,12 @@ snap-cals/
 - Zustand auth store manages token/user state on frontend
 - React Navigation switches between auth stack and main app stack based on auth state
 
+### Navigation
+- Bottom tabs: Daily, Weekly, Goals, More (settings)
+- More/Settings tab houses logout, dark mode toggle, and future account-related features
+- Auth stack (Login, Signup) shown when unauthenticated; main stack with tabs shown when authenticated
+- `EntryForm` is a modal screen pushed on top of the tab navigator
+
 ### Database
 - Postgres on Neon (free tier)
 - Prisma ORM for schema definition, migrations, and type-safe queries

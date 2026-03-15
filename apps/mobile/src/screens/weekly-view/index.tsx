@@ -5,8 +5,14 @@ import DateNavigator from "../../components/date-navigator";
 import { useWeeklyEntries, DaySummary } from "./use-weekly-entries";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MainStackParamList } from "../../navigation";
+import type { CompositeScreenProps } from "@react-navigation/native";
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import type { MainTabParamList } from "../../navigation";
 
-type Props = NativeStackScreenProps<MainStackParamList, "WeeklyView">;
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<MainTabParamList, "WeeklyTab">,
+  NativeStackScreenProps<MainStackParamList>
+>;
 
 export default function WeeklyViewScreen({ navigation }: Props) {
   const { days, goals, weekLabel, loading, refreshing, onRefresh, goToPreviousWeek, goToNextWeek } =
@@ -22,7 +28,7 @@ export default function WeeklyViewScreen({ navigation }: Props) {
     return (
       <TouchableOpacity
         style={[styles.dayCard, isToday && styles.todayCard]}
-        onPress={() => navigation.navigate("DailyView")}
+        onPress={() => navigation.navigate("DailyTab", { date })}
       >
         <View style={styles.dayHeader}>
           <Text style={[styles.dayLabel, isToday && styles.todayLabel]}>{label}</Text>

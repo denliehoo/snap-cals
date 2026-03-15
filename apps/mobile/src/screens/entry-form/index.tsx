@@ -11,6 +11,7 @@ import { colors, spacing, fontSize, borderRadius, fontWeight } from "../../theme
 import FormField from "../../components/form-field";
 import Button from "../../components/button";
 import { useEntryForm } from "./use-entry-form";
+import { useSnackbar } from "../../components/snackbar";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MainStackParamList } from "../../navigation";
 
@@ -21,8 +22,12 @@ const MEAL_TYPES = Object.values(MealType);
 export default function EntryFormScreen({ navigation, route }: Props) {
   const { isEdit, fields, setters, loading, error, submit, confirmDelete } =
     useEntryForm(route.params?.entry);
+  const { show } = useSnackbar();
 
-  const goBack = () => navigation.goBack();
+  const goBack = () => {
+    show(isEdit ? "Entry updated" : "Entry added");
+    navigation.goBack();
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>

@@ -4,6 +4,7 @@ import { colors, spacing, fontSize, fontWeight } from "../../theme";
 import FormField from "../../components/form-field";
 import Button from "../../components/button";
 import { useGoals } from "./use-goals";
+import { useSnackbar } from "../../components/snackbar";
 
 export default function GoalsScreen() {
   const {
@@ -11,8 +12,9 @@ export default function GoalsScreen() {
     protein, setProtein,
     carbs, setCarbs,
     fat, setFat,
-    loading, saving, error, success, save,
+    loading, saving, error, save,
   } = useGoals();
+  const { show } = useSnackbar();
 
   if (loading) {
     return (
@@ -27,7 +29,6 @@ export default function GoalsScreen() {
       <Text style={styles.title}>Daily Goals</Text>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      {success ? <Text style={styles.success}>Goals saved!</Text> : null}
 
       <FormField label="Calories (kcal)" value={calories} onChangeText={setCalories} keyboardType="numeric" />
       <FormField label="Protein (g)" value={protein} onChangeText={setProtein} keyboardType="numeric" />
@@ -35,7 +36,7 @@ export default function GoalsScreen() {
       <FormField label="Fat (g)" value={fat} onChangeText={setFat} keyboardType="numeric" />
 
       <View style={styles.buttonWrapper}>
-        <Button title="Save Goals" onPress={save} loading={saving} />
+        <Button title="Save Goals" onPress={() => save(() => show("Goals saved!"))} loading={saving} />
       </View>
     </View>
   );
@@ -46,6 +47,5 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background },
   title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text, marginBottom: spacing.lg },
   error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.md },
-  success: { color: colors.success, fontSize: fontSize.sm, marginBottom: spacing.md },
   buttonWrapper: { marginTop: spacing.md },
 });

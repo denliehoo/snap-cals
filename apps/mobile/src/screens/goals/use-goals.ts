@@ -11,7 +11,6 @@ export function useGoals() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -33,7 +32,7 @@ export function useGoals() {
     })();
   }, []);
 
-  const save = async () => {
+  const save = async (onSuccess?: () => void) => {
     const values = {
       dailyCalories: Number(calories),
       dailyProtein: Number(protein),
@@ -46,10 +45,9 @@ export function useGoals() {
     }
     setSaving(true);
     setError("");
-    setSuccess(false);
     try {
       await api.upsertGoals(values);
-      setSuccess(true);
+      onSuccess?.();
     } catch (e: any) {
       setError(e.message || "Failed to save goals");
     } finally {
@@ -57,5 +55,5 @@ export function useGoals() {
     }
   };
 
-  return { calories, setCalories, protein, setProtein, carbs, setCarbs, fat, setFat, loading, saving, error, success, save };
+  return { calories, setCalories, protein, setProtein, carbs, setCarbs, fat, setFat, loading, saving, error, save };
 }
