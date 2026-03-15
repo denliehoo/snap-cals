@@ -17,16 +17,16 @@ Build a mobile calorie tracking app where users can sign up, log food entries wi
 
 ## Tech Stack
 
-| Layer | Tech | Hosting | Cost |
-|-------|------|---------|------|
-| Monorepo | pnpm workspaces | — | Free |
-| Frontend | React Native + Expo + TypeScript | — | Free |
-| Navigation | React Navigation | — | Free |
-| State Management | Zustand | — | Free |
-| Backend | Node.js + Express + TypeScript | Render | Free |
-| Auth | Passport.js + JWT | — | Free |
-| Database | Postgres + Prisma ORM | Neon | Free |
-| AI (Phase 2+) | Gemini API | — | Free tier |
+| Layer            | Tech                             | Hosting | Cost      |
+| ---------------- | -------------------------------- | ------- | --------- |
+| Monorepo         | pnpm workspaces                  | —       | Free      |
+| Frontend         | React Native + Expo + TypeScript | —       | Free      |
+| Navigation       | React Navigation                 | —       | Free      |
+| State Management | Zustand                          | —       | Free      |
+| Backend          | Node.js + Express + TypeScript   | Render  | Free      |
+| Auth             | Passport.js + JWT                | —       | Free      |
+| Database         | Postgres + Prisma ORM            | Neon    | Free      |
+| AI (Phase 2+)    | Gemini API                       | —       | Free tier |
 
 ## Proposed Solution
 
@@ -185,6 +185,8 @@ graph TD
   - Loading spinners/skeletons while data fetches
   - Empty states (no entries for today, no goals set)
   - Logout functionality
+  - Dark/light mode infrastructure: ThemeContext provider, useColorScheme() for system detection, manual toggle with expo-secure-store persistence, override option
+  - Snackbar and tab nav use current theme tokens (will get restyled in Task 12)
 - **Test:** Full user flow works end-to-end: signup → set goals → add entries → view daily → view weekly → edit → delete → logout → login.
 - **Demo:** Complete walkthrough of the app from signup to a full day of tracking.
 
@@ -207,14 +209,11 @@ graph TD
 
 - **Objective:** Visual polish pass across all screens for a more professional look.
 - **Guidance:**
-  - Card-based layout for entry rows and day cards (rounded corners, subtle shadows)
-  - Improved spacing and whitespace between sections
-  - Softer section headers (less saturated, don't compete with content)
-  - Skeleton loaders instead of centered spinners
-  - Better empty states (icon or illustration, not just text)
-  - Haptic feedback on FAB press and delete actions
-  - Smooth transitions when navigating dates (fade or slide)
-  - Swipe-to-delete on entry rows
-  - Audit for any hardcoded values that should use theme tokens
+  - 12a: Update theme.ts — new palette, dark mode colors, shadow/card tokens, theme provider integration
+  - 12b: Daily view — progress bars for macros, card-based entry rows, subtle section headers
+  - 12c: Weekly view — card refinement, progress indicators per day
+  - 12d: Entry form — cleaner input styling, better spacing
+  - 12e: Auth screens — centered card layout, branded header
+  - 12f: Shared components — skeleton loaders, empty states with icons, swipe-to-delete
 - **Test:** All screens render correctly with updated styles. No regressions in functionality.
 - **Demo:** Side-by-side before/after of key screens showing the visual improvements.
