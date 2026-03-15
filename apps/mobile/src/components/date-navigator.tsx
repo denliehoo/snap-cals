@@ -8,9 +8,10 @@ interface Props {
   label: string;
   onPrevious: () => void;
   onNext: () => void;
+  onLabelPress?: () => void;
 }
 
-export default function DateNavigator({ label, onPrevious, onNext }: Props) {
+export default function DateNavigator({ label, onPrevious, onNext, onLabelPress }: Props) {
   const colors = useColors();
 
   return (
@@ -18,7 +19,9 @@ export default function DateNavigator({ label, onPrevious, onNext }: Props) {
       <TouchableOpacity onPress={onPrevious} style={styles.arrow} hitSlop={8}>
         <Ionicons name="chevron-back" size={22} color={colors.primary} />
       </TouchableOpacity>
-      <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
+      <TouchableOpacity onPress={onLabelPress} disabled={!onLabelPress}>
+        <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={onNext} style={styles.arrow} hitSlop={8}>
         <Ionicons name="chevron-forward" size={22} color={colors.primary} />
       </TouchableOpacity>

@@ -38,6 +38,10 @@ export function useDailyEntries(initialDate?: string) {
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (initialDate) setDate(initialDate);
+  }, [initialDate]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchEntries = useCallback(async (showLoader = true) => {
@@ -116,5 +120,5 @@ export function useDailyEntries(initialDate?: string) {
     setEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
-  return { date, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry };
+  return { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry };
 }
