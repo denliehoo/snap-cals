@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet, KeyboardTypeOptions } from "react-native";
-import { colors, spacing, fontSize, borderRadius } from "../theme";
+import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
+import { useColors } from "../contexts/theme-context";
 
 interface FormFieldProps {
   label: string;
@@ -19,11 +20,13 @@ export default function FormField({
   keyboardType,
   secureTextEntry,
 }: FormFieldProps) {
+  const colors = useColors();
+
   return (
-    <View>
-      <Text style={styles.label}>{label}</Text>
+    <View style={styles.wrapper}>
+      <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -36,15 +39,13 @@ export default function FormField({
 }
 
 const styles = StyleSheet.create({
-  label: { fontSize: fontSize.sm, color: colors.textSecondary, marginBottom: spacing.xs },
+  wrapper: { marginBottom: spacing.md },
+  label: { fontSize: fontSize.sm, fontWeight: fontWeight.medium, marginBottom: spacing.xs },
   input: {
-    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
+    borderRadius: borderRadius.lg,
+    paddingVertical: spacing.sm + 4,
+    paddingHorizontal: spacing.md,
     fontSize: fontSize.md,
-    color: colors.text,
-    marginBottom: spacing.md,
   },
 });

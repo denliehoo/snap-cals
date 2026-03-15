@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { colors, spacing, fontSize, fontWeight, borderRadius } from "../theme";
+import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
+import { useColors } from "../contexts/theme-context";
 
 interface Props {
   onPress: () => void;
@@ -8,9 +9,11 @@ interface Props {
 }
 
 export default function Fab({ onPress, label = "+" }: Props) {
+  const colors = useColors();
+
   return (
-    <TouchableOpacity style={styles.fab} onPress={onPress} activeOpacity={0.8}>
-      <Text style={styles.text}>{label}</Text>
+    <TouchableOpacity style={[styles.fab, { backgroundColor: colors.primary }]} onPress={onPress} activeOpacity={0.8}>
+      <Text style={[styles.text, { color: colors.textOnPrimary }]}>{label}</Text>
     </TouchableOpacity>
   );
 }
@@ -23,7 +26,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: borderRadius.full,
-    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
     elevation: 4,
@@ -32,5 +34,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-  text: { fontSize: fontSize.xl, color: colors.textOnPrimary, fontWeight: fontWeight.bold },
+  text: { fontSize: fontSize.xl, fontWeight: fontWeight.bold },
 });

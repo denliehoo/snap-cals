@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, Text, SectionList, Alert, ActivityIndicator, StyleSheet } from "react-native";
-import { colors, spacing, fontSize, fontWeight } from "../../theme";
+import { Ionicons } from "@expo/vector-icons";
+import { spacing, fontSize, fontWeight } from "../../theme";
+import { useColors } from "../../contexts/theme-context";
 import DateNavigator from "../../components/date-navigator";
 import MacroSummary from "../../components/macro-summary";
 import EntryRow from "../../components/entry-row";
@@ -19,6 +21,7 @@ type Props = CompositeScreenProps<
 >;
 
 export default function DailyViewScreen({ navigation, route }: Props) {
+  const colors = useColors();
   const { date, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry } =
     useDailyEntries(route.params?.date);
 
@@ -33,6 +36,8 @@ export default function DailyViewScreen({ navigation, route }: Props) {
       { text: "Delete", style: "destructive", onPress: () => deleteEntry(entry.id) },
     ]);
   };
+
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <View style={styles.container}>
@@ -61,7 +66,13 @@ export default function DailyViewScreen({ navigation, route }: Props) {
           refreshing={refreshing}
           onRefresh={onRefresh}
           contentContainerStyle={sections.length === 0 ? styles.emptyContainer : styles.listContent}
-          ListEmptyComponent={<Text style={styles.emptyText}>No entries for this day.{"\n"}Tap + to add one!</Text>}
+          ListEmptyComponent={
+            <View style={styles.emptyWrap}>
+              <Ionicons name="restaurant-outline" size={48} color={colors.textSecondary} />
+              <Text style={styles.emptyTitle}>No entries yet</Text>
+              <Text style={styles.emptyText}>Tap + to log your first meal</Text>
+            </View>
+          }
         />
       )}
 
@@ -70,20 +81,23 @@ export default function DailyViewScreen({ navigation, route }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    backgroundColor: colors.primaryLight,
-  },
-  sectionTitle: { fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.primaryDark },
-  sectionCals: { fontSize: fontSize.sm, fontWeight: fontWeight.medium, color: colors.primaryDark },
-  listContent: { paddingBottom: 80 },
-  emptyContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
-  emptyText: { fontSize: fontSize.md, color: colors.textSecondary, textAlign: "center" },
-  loader: { flex: 1, justifyContent: "center" },
-});
+const makeStyles = (colors: ReturnType<typeof useColors>) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    sectionHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      marginTop: spacing.sm,
+    },
+    sectionTitle: { fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.textSecondary, textTransform: "uppercase", letterSpacing: 0.5 },
+    sectionCals: { fontSize: fontSize.sm, fontWeight: fontWeight.medium, color: colors.textSecondary },
+    listContent: { paddingBottom: 80 },
+    emptyContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+    emptyWrap: { alignItems: "center" },
+    emptyTitle: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.text, marginTop: spacing.md },
+    emptyText: { fontSize: fontSize.sm, color: colors.textSecondary, marginTop: spacing.xs },
+    loader: { flex: 1, justifyContent: "center" },
+  });

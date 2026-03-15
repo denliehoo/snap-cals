@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { colors, spacing, fontSize, fontWeight } from "../theme";
+import { Ionicons } from "@expo/vector-icons";
+import { spacing, fontSize, fontWeight } from "../theme";
+import { useColors } from "../contexts/theme-context";
 
 interface Props {
   label: string;
@@ -9,14 +11,16 @@ interface Props {
 }
 
 export default function DateNavigator({ label, onPrevious, onNext }: Props) {
+  const colors = useColors();
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={onPrevious} style={styles.arrow}>
-        <Text style={styles.arrowText}>‹</Text>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+      <TouchableOpacity onPress={onPrevious} style={styles.arrow} hitSlop={8}>
+        <Ionicons name="chevron-back" size={22} color={colors.primary} />
       </TouchableOpacity>
-      <Text style={styles.label}>{label}</Text>
-      <TouchableOpacity onPress={onNext} style={styles.arrow}>
-        <Text style={styles.arrowText}>›</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
+      <TouchableOpacity onPress={onNext} style={styles.arrow} hitSlop={8}>
+        <Ionicons name="chevron-forward" size={22} color={colors.primary} />
       </TouchableOpacity>
     </View>
   );
@@ -28,11 +32,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: spacing.md,
-    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   arrow: { paddingHorizontal: spacing.lg },
-  arrowText: { fontSize: fontSize.xl, color: colors.primary, fontWeight: fontWeight.bold },
-  label: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.text, minWidth: 140, textAlign: "center" },
+  label: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, minWidth: 140, textAlign: "center" },
 });

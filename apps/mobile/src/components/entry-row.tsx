@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { colors, spacing, fontSize, fontWeight } from "../theme";
+import { spacing, fontSize, fontWeight, borderRadius, shadow } from "../theme";
+import { useColors } from "../contexts/theme-context";
 import type { FoodEntry } from "@snap-cals/shared";
 
 interface Props {
@@ -10,38 +11,45 @@ interface Props {
 }
 
 export default function EntryRow({ entry, onPress, onLongPress }: Props) {
+  const colors = useColors();
   const { name, servingSize, calories, protein, carbs, fat } = entry;
 
   return (
-    <TouchableOpacity style={styles.row} onPress={onPress} onLongPress={onLongPress}>
-      <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.meta}>{servingSize}</Text>
+    <TouchableOpacity
+      style={[styles.card, { backgroundColor: colors.surface }]}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      activeOpacity={0.7}
+    >
+      <View style={styles.top}>
+        <View style={styles.info}>
+          <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
+          {servingSize ? <Text style={[styles.meta, { color: colors.textSecondary }]}>{servingSize}</Text> : null}
+        </View>
+        <Text style={[styles.cals, { color: colors.calorieColor }]}>{calories} kcal</Text>
       </View>
-      <View style={styles.macros}>
-        <Text style={styles.cals}>{calories} kcal</Text>
-        <Text style={styles.meta}>
-          P {protein}g · C {carbs}g · F {fat}g
-        </Text>
+      <View style={styles.macroRow}>
+        <Text style={[styles.macroPill, { color: colors.proteinColor }]}>P {protein}g</Text>
+        <Text style={[styles.macroPill, { color: colors.carbsColor }]}>C {carbs}g</Text>
+        <Text style={[styles.macroPill, { color: colors.fatColor }]}>F {fat}g</Text>
       </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 4,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+  card: {
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    marginHorizontal: spacing.md,
+    marginVertical: spacing.xs,
+    ...shadow.sm,
   },
+  top: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
   info: { flex: 1, marginRight: spacing.sm },
-  name: { fontSize: fontSize.md, fontWeight: fontWeight.medium, color: colors.text },
-  meta: { fontSize: fontSize.xs, color: colors.textSecondary, marginTop: 2 },
-  macros: { alignItems: "flex-end" },
-  cals: { fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.calorieColor },
+  name: { fontSize: fontSize.md, fontWeight: fontWeight.semibold },
+  meta: { fontSize: fontSize.xs, marginTop: 2 },
+  cals: { fontSize: fontSize.md, fontWeight: fontWeight.bold },
+  macroRow: { flexDirection: "row", gap: spacing.md, marginTop: spacing.sm },
+  macroPill: { fontSize: fontSize.xs, fontWeight: fontWeight.medium },
 });

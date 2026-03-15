@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "./stores/auth.store";
-import { colors } from "./theme";
+import { useTheme, useColors } from "./contexts/theme-context";
 import { FoodEntry } from "@snap-cals/shared";
 import LoginScreen from "./screens/login";
 import SignupScreen from "./screens/signup";
@@ -37,11 +37,16 @@ const MainStack = createNativeStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 function MainTabs() {
+  const colors = useColors();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
+        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
+        headerStyle: { backgroundColor: colors.surface },
+        headerTintColor: colors.text,
         tabBarIcon: ({ color, size }) => {
           const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
             DailyTab: "today-outline",
@@ -53,32 +58,18 @@ function MainTabs() {
         },
       })}
     >
-      <Tab.Screen
-        name="DailyTab"
-        component={DailyViewScreen}
-        options={{ title: "Daily", tabBarLabel: "Daily", headerTitle: "Snap Cals" }}
-      />
-      <Tab.Screen
-        name="WeeklyTab"
-        component={WeeklyViewScreen}
-        options={{ title: "Weekly", tabBarLabel: "Weekly", headerTitle: "Weekly View" }}
-      />
-      <Tab.Screen
-        name="GoalsTab"
-        component={GoalsScreen}
-        options={{ title: "Goals", tabBarLabel: "Goals", headerTitle: "Goals" }}
-      />
-      <Tab.Screen
-        name="SettingsTab"
-        component={SettingsScreen}
-        options={{ title: "More", tabBarLabel: "More", headerTitle: "Settings" }}
-      />
+      <Tab.Screen name="DailyTab" component={DailyViewScreen} options={{ title: "Daily", tabBarLabel: "Daily", headerTitle: "Snap Cals" }} />
+      <Tab.Screen name="WeeklyTab" component={WeeklyViewScreen} options={{ title: "Weekly", tabBarLabel: "Weekly", headerTitle: "Weekly View" }} />
+      <Tab.Screen name="GoalsTab" component={GoalsScreen} options={{ title: "Goals", tabBarLabel: "Goals", headerTitle: "Goals" }} />
+      <Tab.Screen name="SettingsTab" component={SettingsScreen} options={{ title: "More", tabBarLabel: "More", headerTitle: "Settings" }} />
     </Tab.Navigator>
   );
 }
 
 export default function Navigation() {
   const { token, isLoading, restore } = useAuthStore();
+  const { isDark } = useTheme();
+  const colors = useColors();
 
   useEffect(() => {
     restore();
@@ -92,12 +83,16 @@ export default function Navigation() {
     );
   }
 
+  const navTheme = isDark
+    ? { ...DarkTheme, colors: { ...DarkTheme.colors, background: colors.background, card: colors.surface, text: colors.text, border: colors.border, primary: colors.primary } }
+    : { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: colors.background, card: colors.surface, text: colors.text, border: colors.border, primary: colors.primary } };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme}>
       {token ? (
-        <MainStack.Navigator>
+        <MainStack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.surface }, headerTintColor: colors.text }}>
           <MainStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
-          <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "" }} />
+          <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "", headerBackTitle: "Back" }} />
         </MainStack.Navigator>
       ) : (
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>

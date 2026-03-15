@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { colors, spacing, fontSize, fontWeight } from "../theme";
+import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
+import { useColors } from "../contexts/theme-context";
 import type { DailyTotals } from "../screens/daily-view/use-daily-entries";
 import type { Goal } from "@snap-cals/shared";
 
@@ -9,20 +10,24 @@ interface Props {
   goals?: Goal | null;
 }
 
-const MACROS: { key: keyof DailyTotals; goalKey: keyof Goal; label: string; color: string; suffix: string }[] = [
-  { key: "calories", goalKey: "dailyCalories", label: "kcal", color: colors.calorieColor, suffix: "" },
-  { key: "protein", goalKey: "dailyProtein", label: "protein", color: colors.proteinColor, suffix: "g" },
-  { key: "carbs", goalKey: "dailyCarbs", label: "carbs", color: colors.carbsColor, suffix: "g" },
-  { key: "fat", goalKey: "dailyFat", label: "fat", color: colors.fatColor, suffix: "g" },
+const MACRO_KEYS: { key: keyof DailyTotals; goalKey: keyof Goal; label: string; colorKey: "calorieColor" | "proteinColor" | "carbsColor" | "fatColor"; suffix: string }[] = [
+  { key: "calories", goalKey: "dailyCalories", label: "kcal", colorKey: "calorieColor", suffix: "" },
+  { key: "protein", goalKey: "dailyProtein", label: "protein", colorKey: "proteinColor", suffix: "g" },
+  { key: "carbs", goalKey: "dailyCarbs", label: "carbs", colorKey: "carbsColor", suffix: "g" },
+  { key: "fat", goalKey: "dailyFat", label: "fat", colorKey: "fatColor", suffix: "g" },
 ];
 
 export default function MacroSummary({ totals, goals }: Props) {
+  const colors = useColors();
+
   return (
-    <View style={styles.bar}>
-      {MACROS.map(({ key, goalKey, label, color, suffix }) => {
+    <View style={[styles.bar, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+      {MACRO_KEYS.map(({ key, goalKey, label, colorKey, suffix }) => {
         const current = totals[key];
         const goal = goals ? (goals[goalKey] as number) : null;
         const over = goal != null && current > goal;
+        const color = colors[colorKey];
+        const pct = goal ? Math.min(current / goal, 1) : 0;
 
         return (
           <View key={key} style={styles.item}>
@@ -30,9 +35,14 @@ export default function MacroSummary({ totals, goals }: Props) {
               {current}{suffix}
             </Text>
             {goal != null && (
-              <Text style={styles.goal}>/ {goal}{suffix}</Text>
+              <>
+                <Text style={[styles.goal, { color: colors.textSecondary }]}>/ {goal}{suffix}</Text>
+                <View style={[styles.trackBg, { backgroundColor: colors.border }]}>
+                  <View style={[styles.trackFill, { width: `${pct * 100}%`, backgroundColor: over ? colors.error : color }]} />
+                </View>
+              </>
             )}
-            <Text style={styles.label}>{label}</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>
           </View>
         );
       })}
@@ -45,12 +55,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     paddingVertical: spacing.md,
-    backgroundColor: colors.surface,
+    paddingHorizontal: spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
-  item: { alignItems: "center" },
+  item: { alignItems: "center", flex: 1 },
   value: { fontSize: fontSize.lg, fontWeight: fontWeight.bold },
-  goal: { fontSize: fontSize.xs, color: colors.textSecondary },
-  label: { fontSize: fontSize.xs, color: colors.textSecondary, marginTop: 2 },
+  goal: { fontSize: fontSize.xs },
+  trackBg: {
+    width: "80%",
+    height: 4,
+    borderRadius: borderRadius.full,
+    marginTop: spacing.xs,
+    overflow: "hidden",
+  },
+  trackFill: { height: "100%", borderRadius: borderRadius.full },
+  label: { fontSize: fontSize.xs, marginTop: 2 },
 });

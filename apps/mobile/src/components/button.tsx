@@ -1,11 +1,7 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
-import { colors, spacing, fontSize, borderRadius, fontWeight } from "../theme";
+import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { spacing, fontSize, borderRadius, fontWeight } from "../theme";
+import { useColors } from "../contexts/theme-context";
 
 interface ButtonProps {
   title: string;
@@ -22,16 +18,22 @@ export default function Button({
   loading,
   disabled,
 }: ButtonProps) {
+  const colors = useColors();
+
+  const bgMap = { primary: colors.primary, danger: colors.error, "text-danger": "transparent" };
+  const textMap = { primary: colors.textOnPrimary, danger: colors.textOnPrimary, "text-danger": colors.error };
+
   return (
     <TouchableOpacity
-      style={[styles.base, variantStyles[variant]]}
+      style={[styles.base, { backgroundColor: bgMap[variant] }, disabled && styles.disabled]}
       onPress={onPress}
       disabled={loading || disabled}
+      activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "text-danger" ? colors.error : colors.textOnPrimary} />
+        <ActivityIndicator color={textMap[variant]} />
       ) : (
-        <Text style={[styles.text, textStyles[variant]]}>{title}</Text>
+        <Text style={[styles.text, { color: textMap[variant] }]}>{title}</Text>
       )}
     </TouchableOpacity>
   );
@@ -39,24 +41,11 @@ export default function Button({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
+    borderRadius: borderRadius.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
     alignItems: "center",
   },
-  text: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.semibold,
-  },
-});
-
-const variantStyles = StyleSheet.create({
-  primary: { backgroundColor: colors.primary },
-  danger: { backgroundColor: colors.error },
-  "text-danger": { backgroundColor: "transparent" },
-});
-
-const textStyles = StyleSheet.create({
-  primary: { color: colors.textOnPrimary },
-  danger: { color: colors.textOnPrimary },
-  "text-danger": { color: colors.error },
+  text: { fontSize: fontSize.md, fontWeight: fontWeight.semibold },
+  disabled: { opacity: 0.5 },
 });

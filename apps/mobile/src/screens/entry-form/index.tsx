@@ -1,13 +1,8 @@
-import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import React, { useMemo } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { MealType } from "@snap-cals/shared";
-import { colors, spacing, fontSize, borderRadius, fontWeight } from "../../theme";
+import { spacing, fontSize, borderRadius, fontWeight } from "../../theme";
+import { useColors } from "../../contexts/theme-context";
 import FormField from "../../components/form-field";
 import Button from "../../components/button";
 import { useEntryForm } from "./use-entry-form";
@@ -20,9 +15,11 @@ type Props = NativeStackScreenProps<MainStackParamList, "EntryForm">;
 const MEAL_TYPES = Object.values(MealType);
 
 export default function EntryFormScreen({ navigation, route }: Props) {
+  const colors = useColors();
   const { isEdit, fields, setters, loading, error, submit, confirmDelete } =
     useEntryForm(route.params?.entry);
   const { show } = useSnackbar();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const goBack = () => {
     show(isEdit ? "Entry updated" : "Entry added");
@@ -30,7 +27,7 @@ export default function EntryFormScreen({ navigation, route }: Props) {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <Text style={styles.title}>{isEdit ? "Edit Entry" : "Add Entry"}</Text>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -69,33 +66,36 @@ export default function EntryFormScreen({ navigation, route }: Props) {
 
       <FormField label="Date" value={fields.date} onChangeText={setters.setDate} placeholder="YYYY-MM-DD" />
 
-      <Button title={isEdit ? "Update" : "Add Entry"} onPress={() => submit(goBack)} loading={loading} />
-
-      {isEdit && (
-        <Button title="Delete Entry" onPress={() => confirmDelete(goBack)} variant="text-danger" />
-      )}
+      <View style={styles.actions}>
+        <Button title={isEdit ? "Update" : "Add Entry"} onPress={() => submit(goBack)} loading={loading} />
+        {isEdit && (
+          <Button title="Delete Entry" onPress={() => confirmDelete(goBack)} variant="text-danger" />
+        )}
+      </View>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.lg, paddingBottom: spacing.xl * 2 },
-  title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text, marginBottom: spacing.lg },
-  label: { fontSize: fontSize.sm, color: colors.textSecondary, marginBottom: spacing.xs },
-  error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.md },
-  row: { flexDirection: "row", gap: spacing.sm },
-  rowItem: { flex: 1 },
-  mealRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.md },
-  mealChip: {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  mealChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  mealChipText: { fontSize: fontSize.sm, color: colors.textSecondary },
-  mealChipTextActive: { color: colors.textOnPrimary },
-});
+const makeStyles = (colors: ReturnType<typeof useColors>) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.lg, paddingBottom: spacing.xl * 2 },
+    title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text, marginBottom: spacing.lg },
+    label: { fontSize: fontSize.sm, fontWeight: fontWeight.medium, color: colors.text, marginBottom: spacing.sm },
+    error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.md, textAlign: "center" },
+    row: { flexDirection: "row", gap: spacing.sm },
+    rowItem: { flex: 1 },
+    mealRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.lg },
+    mealChip: {
+      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.md,
+      borderRadius: borderRadius.full,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    mealChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+    mealChipText: { fontSize: fontSize.sm, color: colors.textSecondary },
+    mealChipTextActive: { color: colors.textOnPrimary, fontWeight: fontWeight.medium },
+    actions: { marginTop: spacing.sm, gap: spacing.sm },
+  });

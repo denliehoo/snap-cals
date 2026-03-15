@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useRef } from "react";
 import { Text, Animated, StyleSheet } from "react-native";
-import { colors, spacing, fontSize, fontWeight, borderRadius } from "../theme";
+import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
+import { useColors } from "../contexts/theme-context";
 
 type SnackbarType = "success" | "error";
 
@@ -11,6 +12,7 @@ interface SnackbarContextValue {
 const SnackbarContext = createContext<SnackbarContextValue>({ show: () => {} });
 
 export function SnackbarProvider({ children }: { children: React.ReactNode }) {
+  const colors = useColors();
   const [message, setMessage] = useState("");
   const [type, setType] = useState<SnackbarType>("success");
   const opacity = useRef(new Animated.Value(0)).current;
@@ -33,7 +35,7 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
         pointerEvents="none"
         style={[styles.container, { opacity, backgroundColor: type === "error" ? colors.error : colors.success }]}
       >
-        <Text style={styles.text}>{message}</Text>
+        <Text style={[styles.text, { color: colors.textOnPrimary }]}>{message}</Text>
       </Animated.View>
     </SnackbarContext.Provider>
   );
@@ -51,5 +53,5 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     alignItems: "center",
   },
-  text: { color: colors.textOnPrimary, fontSize: fontSize.sm, fontWeight: fontWeight.medium },
+  text: { fontSize: fontSize.sm, fontWeight: fontWeight.medium },
 });

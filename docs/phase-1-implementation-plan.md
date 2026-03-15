@@ -203,7 +203,7 @@ graph TD
 - **Test:** All tests pass. `pnpm test` from root runs the full suite.
 - **Demo:** Run `pnpm test` from root, show passing test suite.
 
-### Task 12: UI revamp
+### Task 12: UI revamp ✅
 
 - **Objective:** Visual polish pass across all screens for a more professional look.
 - **Guidance:**

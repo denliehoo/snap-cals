@@ -1,52 +1,51 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { useColorScheme } from "react-native";
 import * as SecureStore from "expo-secure-store";
-
-type ThemeMode = "system" | "light" | "dark";
+import { colors, darkColors } from "../theme";
 
 interface ThemeContextValue {
-  mode: ThemeMode;
   isDark: boolean;
-  setMode: (mode: ThemeMode) => void;
+  toggle: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  mode: "system",
-  isDark: false,
-  setMode: () => {},
+  isDark: true,
+  toggle: () => {},
 });
 
 const STORAGE_KEY = "theme_mode";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const systemScheme = useColorScheme();
-  const [mode, setModeState] = useState<ThemeMode>("system");
+  const [isDark, setIsDark] = useState(true);
   const [restored, setRestored] = useState(false);
 
   useEffect(() => {
     SecureStore.getItemAsync(STORAGE_KEY).then((stored) => {
-      if (stored === "light" || stored === "dark" || stored === "system") {
-        setModeState(stored);
-      }
+      if (stored === "light") setIsDark(false);
       setRestored(true);
     });
   }, []);
 
-  const setMode = useCallback((newMode: ThemeMode) => {
-    setModeState(newMode);
-    SecureStore.setItemAsync(STORAGE_KEY, newMode);
+  const toggle = useCallback(() => {
+    setIsDark((prev) => {
+      const next = !prev;
+      SecureStore.setItemAsync(STORAGE_KEY, next ? "dark" : "light");
+      return next;
+    });
   }, []);
-
-  const isDark =
-    mode === "dark" ? true : mode === "light" ? false : systemScheme === "dark";
 
   if (!restored) return null;
 
   return (
-    <ThemeContext.Provider value={{ mode, isDark, setMode }}>
+    <ThemeContext.Provider value={{ isDark, toggle }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
 export const useTheme = () => useContext(ThemeContext);
+
+export function useColors() {
+  const { isDark } = useContext(ThemeContext);
+  return isDark ? darkColors : colors;
+}
+
