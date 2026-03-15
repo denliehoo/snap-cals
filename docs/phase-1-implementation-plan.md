@@ -190,19 +190,17 @@ graph TD
 - **Test:** Full user flow works end-to-end: signup → set goals → add entries → view daily → view weekly → edit → delete → logout → login.
 - **Demo:** Complete walkthrough of the app from signup to a full day of tracking.
 
-### Task 11: Unit and integration tests
+### Task 11: Unit and integration tests ✅
 
-- **Objective:** Add test coverage for backend API endpoints and frontend components.
+- **Objective:** Add test coverage for backend API endpoints.
 - **Guidance:**
   - Backend: Jest + Supertest for API endpoint tests
     - Auth: signup (201, 409 duplicate, 400 validation), login (200, 401 bad credentials)
     - Entries: CRUD operations, authorization checks, date filtering
     - Goals: create/update, per-user scoping
-  - Frontend: React Native Testing Library for component tests
-    - Form validation behavior
-    - Screen rendering with mock data
-    - Navigation flows
-- **Test:** All tests pass. Coverage report generated.
+  - Tests run against a separate Neon branch (`unit-test`) via `DATABASE_URL_TEST`
+  - Tests refuse to run if `DATABASE_URL_TEST` is not set
+- **Test:** All tests pass. `pnpm test` from root runs the full suite.
 - **Demo:** Run `pnpm test` from root, show passing test suite.
 
 ### Task 12: UI revamp
@@ -217,3 +215,15 @@ graph TD
   - 12f: Shared components — skeleton loaders, empty states with icons, swipe-to-delete
 - **Test:** All screens render correctly with updated styles. No regressions in functionality.
 - **Demo:** Side-by-side before/after of key screens showing the visual improvements.
+
+### Task 13: Frontend unit tests
+
+- **Objective:** Add test coverage for frontend components now that the UI is stable after the revamp.
+- **Guidance:**
+  - React Native Testing Library for component tests
+  - Form validation behavior (entry form, goals form, auth forms)
+  - Screen rendering with mock data
+  - Navigation flows (auth → main, tab switching)
+  - Mock external dependencies (API calls, secure store, navigation)
+- **Test:** All tests pass. `pnpm test` from root runs both backend and frontend suites.
+- **Demo:** Run `pnpm test`, show passing frontend test suite alongside backend tests.

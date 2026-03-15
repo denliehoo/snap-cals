@@ -89,6 +89,8 @@ snap-cals/
 - Prisma ORM for schema definition, migrations, and type-safe queries
 - Models: User, FoodEntry, Goal
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
+- Neon branching: `main` branch for dev data, `unit-test` branch for automated tests
+- Tests require `DATABASE_URL_TEST` env var pointing to the test branch — they refuse to run without it
 
 ## Mobile Conventions
 

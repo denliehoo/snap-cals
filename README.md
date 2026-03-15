@@ -118,6 +118,25 @@ This starts the Expo dev server. Then either:
 - Press `i` for iOS Simulator
 - Press `a` for Android Emulator
 
+### 6. Run tests
+
+Tests run against a separate Neon database branch (`unit-test`) to avoid touching your dev data.
+
+1. Create a `unit-test` branch in your Neon project dashboard
+2. Add its connection string to `apps/server/.env`:
+
+```
+DATABASE_URL_TEST="your-neon-unit-test-branch-connection-string"
+```
+
+3. Run tests:
+
+```bash
+pnpm test
+```
+
+Tests will refuse to run if `DATABASE_URL_TEST` is not set.
+
 ## Phase Roadmap
 
 See [docs/phase-roadmap.md](./docs/phase-roadmap.md) for the full roadmap.
