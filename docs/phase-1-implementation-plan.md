@@ -164,7 +164,7 @@ graph TD
 - **Test:** User can set goals. Goals persist. Daily view reflects the correct goals. Updating goals updates the daily view.
 - **Demo:** Set goals, navigate to daily view, see progress bars reflect the new targets.
 
-### Task 9: Weekly view screen
+### Task 9: Weekly view screen ✅
 
 - **Objective:** Show a weekly overview of daily calorie/macro totals.
 - **Guidance:**
@@ -202,3 +202,19 @@ graph TD
     - Navigation flows
 - **Test:** All tests pass. Coverage report generated.
 - **Demo:** Run `pnpm test` from root, show passing test suite.
+
+### Task 12: UI revamp
+
+- **Objective:** Visual polish pass across all screens for a more professional look.
+- **Guidance:**
+  - Card-based layout for entry rows and day cards (rounded corners, subtle shadows)
+  - Improved spacing and whitespace between sections
+  - Softer section headers (less saturated, don't compete with content)
+  - Skeleton loaders instead of centered spinners
+  - Better empty states (icon or illustration, not just text)
+  - Haptic feedback on FAB press and delete actions
+  - Smooth transitions when navigating dates (fade or slide)
+  - Swipe-to-delete on entry rows
+  - Audit for any hardcoded values that should use theme tokens
+- **Test:** All screens render correctly with updated styles. No regressions in functionality.
+- **Demo:** Side-by-side before/after of key screens showing the visual improvements.
