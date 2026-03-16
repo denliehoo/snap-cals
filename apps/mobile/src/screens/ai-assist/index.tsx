@@ -98,6 +98,7 @@ export default function AiAssistScreen() {
           onValueChange={setDiscussionMode}
         />
       </View>
+      <Text style={styles.toggleHint}>AI will ask clarifying questions before estimating</Text>
       {assist.error && <Text style={styles.error}>{assist.error}</Text>}
       <Button
         title="Estimate"
@@ -131,9 +132,9 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      marginBottom: spacing.md,
     },
     toggleLabel: { color: colors.text, fontSize: fontSize.md },
+    toggleHint: { color: colors.textSecondary, fontSize: fontSize.sm, marginBottom: spacing.md },
     chatInputRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginTop: spacing.md },
     confirmRow: { paddingVertical: spacing.md },
     chatInput: {
