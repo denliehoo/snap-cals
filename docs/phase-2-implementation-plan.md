@@ -112,7 +112,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 
 ## Task Breakdown
 
-### Task 1: Shared types and server-side Gemini service
+### Task 1: Shared types and server-side Gemini service ✅
 
 - **Objective:** Add AI-related shared types and create a Gemini service module on the server that takes a food description and returns structured nutrition data.
 - **Guidance:**

@@ -83,3 +83,17 @@ export interface ApiError {
   message: string;
   errors?: Record<string, string[]>;
 }
+
+// AI Estimate
+export interface AiEstimateRequest {
+  description: string;
+}
+
+export interface AiEstimateResponse {
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  servingSize: string;
+}
