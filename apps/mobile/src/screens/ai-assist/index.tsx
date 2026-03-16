@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
-import { View, TextInput, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
+import { View, TextInput, Text, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { spacing, fontSize, borderRadius } from "../../theme";
 import { useColors } from "../../contexts/theme-context";
 import Button from "../../components/button";
@@ -36,7 +37,7 @@ export default function AiAssistScreen() {
   // Chat mode active
   if (discussionMode && chatStarted) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={["bottom"]}>
         <KeyboardAvoidingView
           style={styles.flex}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
