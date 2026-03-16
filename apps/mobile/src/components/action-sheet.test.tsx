@@ -1,6 +1,6 @@
 import React from "react";
 import ActionSheet from "./action-sheet";
-import { render, fireEvent } from "../__tests__/helpers";
+import { render, fireEvent } from "@/__tests__/helpers";
 
 describe("ActionSheet", () => {
   const options = [

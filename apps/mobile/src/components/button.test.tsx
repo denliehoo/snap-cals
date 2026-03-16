@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "./button";
-import { render, fireEvent } from "../__tests__/helpers";
+import { render, fireEvent } from "@/__tests__/helpers";
 
 describe("Button", () => {
   it("renders title", async () => {

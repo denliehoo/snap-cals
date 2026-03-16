@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, fontSize, fontWeight } from "../theme";
-import { useColors } from "../contexts/theme-context";
+import { spacing, fontSize, fontWeight } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
 
 interface Props {
   label: string;

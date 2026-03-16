@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { Modal, TouchableOpacity, Text, Animated, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
-import { useColors } from "../contexts/theme-context";
+import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
 
 export interface ActionSheetOption {
   label: string;

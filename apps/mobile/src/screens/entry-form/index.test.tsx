@@ -1,9 +1,9 @@
 import React from "react";
 import EntryFormScreen from "./";
-import { render, fireEvent, waitFor } from "../../__tests__/helpers";
+import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 import { MealType } from "@snap-cals/shared";
 
-jest.mock("../../services/api", () => ({
+jest.mock("@/services/api", () => ({
   api: {
     createEntry: jest.fn().mockResolvedValue({ data: {} }),
     updateEntry: jest.fn().mockResolvedValue({ data: {} }),
@@ -13,7 +13,7 @@ jest.mock("../../services/api", () => ({
   setOnUnauthorized: jest.fn(),
 }));
 
-const { api } = jest.requireMock("../../services/api");
+const { api } = jest.requireMock("@/services/api");
 
 const mockGoBack = jest.fn();
 const mockNavigation = { goBack: mockGoBack } as any;

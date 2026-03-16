@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ChatMessage, AiEstimateResponse } from "@snap-cals/shared";
-import { api } from "../../services/api";
-import { MainStackParamList } from "../../navigation";
+import { api } from "@/services/api";
+import { MainStackParamList } from "@/navigation";
 
 export function useChat() {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();

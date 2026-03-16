@@ -1,8 +1,8 @@
 import React, { useRef, useMemo } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { ChatMessage } from "@snap-cals/shared";
-import { spacing, fontSize, borderRadius } from "../../theme";
-import { useColors } from "../../contexts/theme-context";
+import { spacing, fontSize, borderRadius } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
 
 interface ChatViewProps {
   messages: ChatMessage[];

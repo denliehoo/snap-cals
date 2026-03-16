@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
-import { useColors } from "../contexts/theme-context";
-import type { DailyTotals } from "../screens/daily-view/use-daily-entries";
+import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
+import type { DailyTotals } from "@/screens/daily-view/use-daily-entries";
 import type { Goal } from "@snap-cals/shared";
 
 interface Props {

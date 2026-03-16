@@ -1,18 +1,18 @@
 import React from "react";
 import LoginScreen from "./";
-import { render, fireEvent, waitFor } from "../../__tests__/helpers";
+import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 
 const mockNavigate = jest.fn();
 const mockNavigation = { navigate: mockNavigate } as any;
 const mockRoute = { key: "Login", name: "Login" as const } as any;
 
-jest.mock("../../services/api", () => ({
+jest.mock("@/services/api", () => ({
   api: { login: jest.fn() },
   setToken: jest.fn(),
   setOnUnauthorized: jest.fn(),
 }));
 
-jest.mock("../../stores/auth.store", () => {
+jest.mock("@/stores/auth.store", () => {
   const mockLogin = jest.fn();
   return {
     useAuthStore: (selector?: any) => {
@@ -23,7 +23,7 @@ jest.mock("../../stores/auth.store", () => {
   };
 });
 
-const { __mockLogin: mockLogin } = jest.requireMock("../../stores/auth.store");
+const { __mockLogin: mockLogin } = jest.requireMock("@/stores/auth.store");
 
 beforeEach(() => jest.clearAllMocks());
 

@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius, shadow } from "../../theme";
-import { useColors } from "../../contexts/theme-context";
-import FormField from "../../components/form-field";
-import Button from "../../components/button";
-import { useAuthForm } from "../../hooks/use-auth-form";
+import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
+import FormField from "@/components/form-field";
+import Button from "@/components/button";
+import { useAuthForm } from "@/hooks/use-auth-form";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { AuthStackParamList } from "../../navigation";
+import type { AuthStackParamList } from "@/navigation";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Signup">;
 

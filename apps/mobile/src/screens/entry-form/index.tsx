@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { MealType } from "@snap-cals/shared";
-import { spacing, fontSize, borderRadius, fontWeight } from "../../theme";
-import { useColors } from "../../contexts/theme-context";
-import FormField from "../../components/form-field";
-import Button from "../../components/button";
+import { spacing, fontSize, borderRadius, fontWeight } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
+import FormField from "@/components/form-field";
+import Button from "@/components/button";
 import { useEntryForm } from "./use-entry-form";
-import { useSnackbar } from "../../components/snackbar";
+import { useSnackbar } from "@/components/snackbar";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { MainStackParamList } from "../../navigation";
+import type { MainStackParamList } from "@/navigation";
 
 type Props = NativeStackScreenProps<MainStackParamList, "EntryForm">;
 

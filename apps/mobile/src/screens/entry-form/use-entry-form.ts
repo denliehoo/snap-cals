@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert } from "react-native";
 import { MealType, FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
-import { api } from "../../services/api";
+import { api } from "@/services/api";
 
 function guessMealType(): MealType {
   const hour = new Date().getHours();

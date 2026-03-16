@@ -1,7 +1,7 @@
 import React from "react";
 import { render, RenderOptions, waitFor } from "@testing-library/react-native";
-import { ThemeProvider } from "../contexts/theme-context";
-import { SnackbarProvider } from "../components/snackbar";
+import { ThemeProvider } from "@/contexts/theme-context";
+import { SnackbarProvider } from "@/components/snackbar";
 
 function Providers({ children }: { children: React.ReactNode }) {
   return (

@@ -1,8 +1,8 @@
 import React from "react";
 import GoalsScreen from "./";
-import { render, fireEvent, waitFor } from "../../__tests__/helpers";
+import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 
-jest.mock("../../services/api", () => ({
+jest.mock("@/services/api", () => ({
   api: {
     getGoals: jest.fn(),
     upsertGoals: jest.fn().mockResolvedValue({ data: {} }),
@@ -11,7 +11,7 @@ jest.mock("../../services/api", () => ({
   setOnUnauthorized: jest.fn(),
 }));
 
-const { api } = jest.requireMock("../../services/api");
+const { api } = jest.requireMock("@/services/api");
 
 beforeEach(() => jest.clearAllMocks());
 

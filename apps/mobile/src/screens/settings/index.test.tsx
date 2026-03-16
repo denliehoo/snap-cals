@@ -1,20 +1,20 @@
 import React from "react";
 import SettingsScreen from "./";
-import { render } from "../../__tests__/helpers";
+import { render } from "@/__tests__/helpers";
 
 const mockLogout = jest.fn();
 const mockToggleTheme = jest.fn();
 const mockToggleDiscussion = jest.fn();
 
-jest.mock("../../stores/auth.store", () => ({
+jest.mock("@/stores/auth.store", () => ({
   useAuthStore: () => ({ logout: mockLogout }),
 }));
 
-jest.mock("../../stores/settings.store", () => ({
+jest.mock("@/stores/settings.store", () => ({
   useSettingsStore: () => ({ discussionMode: false, toggleDiscussionMode: mockToggleDiscussion }),
 }));
 
-jest.mock("../../contexts/theme-context", () => {
+jest.mock("@/contexts/theme-context", () => {
   const actual = jest.requireActual("../../contexts/theme-context");
   return {
     ...actual,
@@ -22,7 +22,7 @@ jest.mock("../../contexts/theme-context", () => {
   };
 });
 
-jest.mock("../../services/api", () => ({
+jest.mock("@/services/api", () => ({
   setToken: jest.fn(),
   setOnUnauthorized: jest.fn(),
 }));

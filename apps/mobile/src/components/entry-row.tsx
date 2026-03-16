@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius, shadow } from "../theme";
-import { useColors } from "../contexts/theme-context";
+import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
 import type { FoodEntry } from "@snap-cals/shared";
 
 interface Props {

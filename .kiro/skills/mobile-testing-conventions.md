@@ -8,7 +8,7 @@ description: Conventions for writing and organizing frontend tests in the Snap C
 - Shared test utilities live in `src/__tests__/helpers.tsx`
 
 ## Custom Render
-- Always import `render` from `../../__tests__/helpers` (or appropriate relative path) — never directly from `@testing-library/react-native`
+- Always import `render` from `@/__tests__/helpers` — never directly from `@testing-library/react-native`
 - The custom `render` automatically wraps components in `ThemeProvider` and `SnackbarProvider`
 - `render` is async — always `await render(<Component />)`
 

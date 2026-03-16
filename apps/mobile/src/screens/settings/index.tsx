@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuthStore } from "../../stores/auth.store";
-import { useSettingsStore } from "../../stores/settings.store";
-import { useTheme, useColors } from "../../contexts/theme-context";
-import { spacing, fontSize, fontWeight } from "../../theme";
-import ThemedSwitch from "../../components/themed-switch";
+import { useAuthStore } from "@/stores/auth.store";
+import { useSettingsStore } from "@/stores/settings.store";
+import { useTheme, useColors } from "@/contexts/theme-context";
+import { spacing, fontSize, fontWeight } from "@/theme";
+import ThemedSwitch from "@/components/themed-switch";
 
 type RowProps = {
   icon: keyof typeof Ionicons.glyphMap;

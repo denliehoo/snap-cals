@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, TouchableOpacity, View, StyleSheet } from "react-native";
-import { spacing } from "../theme";
-import { useColors } from "../contexts/theme-context";
+import { spacing } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
 
 interface Props {
   visible: boolean;

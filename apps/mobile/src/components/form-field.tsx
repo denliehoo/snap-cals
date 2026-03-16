@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet, KeyboardTypeOptions } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
-import { useColors } from "../contexts/theme-context";
+import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
 
 interface FormFieldProps {
   label: string;

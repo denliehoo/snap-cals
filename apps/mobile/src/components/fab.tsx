@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius } from "../theme";
-import { useColors } from "../contexts/theme-context";
+import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
 
 interface Props {
   onPress: () => void;

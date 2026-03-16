@@ -7,6 +7,12 @@ description: React Native coding conventions for the Snap Cals mobile app
 - All files and folders use kebab-case (e.g. `home-screen.tsx`, `auth.store.ts`, `use-entry-form.ts`)
 - No PascalCase or camelCase file names
 
+## Import Aliases
+- Use `@/` alias for all imports within the mobile app (maps to `src/`)
+- Example: `import { api } from "@/services/api"` instead of `import { api } from "../../services/api"`
+- Use relative imports (`./`) only for co-located files in the same directory
+- `@snap-cals/shared` remains as-is for shared package imports
+
 ## Screen Structure
 - Every screen is a folder in `src/screens/` with an `index.tsx` (e.g. `screens/home/index.tsx`)
 - When a screen needs extracted logic, add a co-located hook file (e.g. `screens/entry-form/use-entry-form.ts`)

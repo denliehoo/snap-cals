@@ -1,6 +1,6 @@
 import React from "react";
 import FormField from "./form-field";
-import { render, fireEvent } from "../__tests__/helpers";
+import { render, fireEvent } from "@/__tests__/helpers";
 
 describe("FormField", () => {
   it("renders label and input", async () => {

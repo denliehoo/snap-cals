@@ -1,8 +1,8 @@
 import React from "react";
 import AiAssistScreen from "./";
-import { render, fireEvent, waitFor } from "../../__tests__/helpers";
+import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 
-jest.mock("../../services/api", () => ({
+jest.mock("@/services/api", () => ({
   api: {
     estimateNutrition: jest.fn(),
     chatNutrition: jest.fn(),
@@ -15,11 +15,11 @@ jest.mock("@react-navigation/native", () => ({
   useNavigation: () => ({ navigate: mockNavigate }),
 }));
 
-jest.mock("../../stores/settings.store", () => ({
+jest.mock("@/stores/settings.store", () => ({
   useSettingsStore: jest.fn((selector) => selector({ discussionMode: false })),
 }));
 
-const { api } = jest.requireMock("../../services/api");
+const { api } = jest.requireMock("@/services/api");
 const mockNavigate = jest.fn();
 
 beforeEach(() => jest.clearAllMocks());

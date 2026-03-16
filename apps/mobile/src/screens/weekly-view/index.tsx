@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius, shadow } from "../../theme";
-import { useColors } from "../../contexts/theme-context";
-import DateNavigator from "../../components/date-navigator";
+import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
+import DateNavigator from "@/components/date-navigator";
 import { useWeeklyEntries, DaySummary } from "./use-weekly-entries";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { MainStackParamList } from "../../navigation";
+import type { MainStackParamList } from "@/navigation";
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { MainTabParamList } from "../../navigation";
+import type { MainTabParamList } from "@/navigation";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, "WeeklyTab">,

@@ -2,22 +2,22 @@ import React, { useMemo, useState } from "react";
 import { View, Text, SectionList, Alert, ActivityIndicator, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, fontSize, fontWeight } from "../../theme";
-import { useColors } from "../../contexts/theme-context";
-import AppModal from "../../components/app-modal";
-import Button from "../../components/button";
-import DateNavigator from "../../components/date-navigator";
-import MacroSummary from "../../components/macro-summary";
-import EntryRow from "../../components/entry-row";
-import Fab from "../../components/fab";
-import ActionSheet from "../../components/action-sheet";
+import { spacing, fontSize, fontWeight } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
+import AppModal from "@/components/app-modal";
+import Button from "@/components/button";
+import DateNavigator from "@/components/date-navigator";
+import MacroSummary from "@/components/macro-summary";
+import EntryRow from "@/components/entry-row";
+import Fab from "@/components/fab";
+import ActionSheet from "@/components/action-sheet";
 import { useDailyEntries } from "./use-daily-entries";
 import type { FoodEntry } from "@snap-cals/shared";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { MainStackParamList } from "../../navigation";
+import type { MainStackParamList } from "@/navigation";
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { MainTabParamList } from "../../navigation";
+import type { MainTabParamList } from "@/navigation";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, "DailyTab">,

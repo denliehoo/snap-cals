@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import * as SecureStore from "expo-secure-store";
-import { colors, darkColors } from "../theme";
+import { colors, darkColors } from "@/theme";
 
 interface ThemeContextValue {
   isDark: boolean;

@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, fontSize, fontWeight, borderRadius, shadow } from "../../theme";
-import { useColors } from "../../contexts/theme-context";
-import FormField from "../../components/form-field";
-import Button from "../../components/button";
+import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
+import FormField from "@/components/form-field";
+import Button from "@/components/button";
 import { useGoals } from "./use-goals";
-import { useSnackbar } from "../../components/snackbar";
+import { useSnackbar } from "@/components/snackbar";
 
 export default function GoalsScreen() {
   const colors = useColors();

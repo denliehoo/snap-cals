@@ -50,6 +50,7 @@ snap-cals/
 
 ### Shared types via tsconfig path aliases
 - `@snap-cals/shared` maps to `../../packages/shared/src` in both apps' `tsconfig.json`
+- Mobile app uses `@/*` alias mapping to `src/*` for all internal imports (configured in `tsconfig.json`, `jest.config.ts`)
 - Server uses `tsconfig-paths/register` for runtime resolution with ts-node
 - Expo/Metro handles tsconfig paths natively
 - No build step needed — changes to shared types are picked up immediately

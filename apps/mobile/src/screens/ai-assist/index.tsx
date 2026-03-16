@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { View, TextInput, Text, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { spacing, fontSize, borderRadius } from "../../theme";
-import { useColors } from "../../contexts/theme-context";
-import Button from "../../components/button";
+import { spacing, fontSize, borderRadius } from "@/theme";
+import { useColors } from "@/contexts/theme-context";
+import Button from "@/components/button";
 import { useAiAssist } from "./use-ai-assist";
 import { useChat } from "./use-chat";
-import { useSettingsStore } from "../../stores/settings.store";
-import ThemedSwitch from "../../components/themed-switch";
+import { useSettingsStore } from "@/stores/settings.store";
+import ThemedSwitch from "@/components/themed-switch";
 import ChatView from "./chat-view";
 import { AI_DESCRIPTION_MAX_LENGTH, AI_CHAT_REPLY_MAX_LENGTH } from "@snap-cals/shared";
 

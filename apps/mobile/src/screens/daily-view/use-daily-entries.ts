@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { api } from "../../services/api";
+import { api } from "@/services/api";
 import { FoodEntry, MealType, Goal } from "@snap-cals/shared";
 
 function toDateString(d: Date) {
