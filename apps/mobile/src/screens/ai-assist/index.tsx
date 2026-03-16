@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from "react";
-import { View, TextInput, Text, Switch, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
+import { View, TextInput, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
 import { spacing, fontSize, borderRadius } from "../../theme";
 import { useColors } from "../../contexts/theme-context";
 import Button from "../../components/button";
 import { useAiAssist } from "./use-ai-assist";
 import { useChat } from "./use-chat";
 import { useSettingsStore } from "../../stores/settings.store";
+import ThemedSwitch from "../../components/themed-switch";
 import ChatView from "./chat-view";
 
 export default function AiAssistScreen() {
@@ -91,10 +92,9 @@ export default function AiAssistScreen() {
       />
       <View style={styles.toggleRow}>
         <Text style={styles.toggleLabel}>Discussion Mode</Text>
-        <Switch
+        <ThemedSwitch
           value={discussionMode}
           onValueChange={setDiscussionMode}
-          trackColor={{ true: colors.primary, false: colors.border }}
         />
       </View>
       {assist.error && <Text style={styles.error}>{assist.error}</Text>}

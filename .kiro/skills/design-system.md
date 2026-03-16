@@ -70,3 +70,13 @@ No `borderWidth` or `borderBottomWidth` on cards — shadows provide separation.
 - **No saturated Material colors**: All accent colors are muted/desaturated. Never use stock Material palette values
 - **Typography hierarchy**: `xxl` + `bold` for screen titles, `lg` + `bold` for primary numbers (calories), `md` + `medium` for secondary info, `sm`/`xs` for labels and meta
 - **Dark mode**: Use ThemeContext to resolve colors. Components never hardcode light or dark values — always reference theme tokens
+
+## Reusable Components
+
+| Component      | Path                              | Usage                                                  |
+| -------------- | --------------------------------- | ------------------------------------------------------ |
+| Button         | `components/button.tsx`           | All tappable actions — supports `loading`, `variant`   |
+| FormField      | `components/form-field.tsx`       | Labeled text inputs with error display                 |
+| ThemedSwitch   | `components/themed-switch.tsx`    | Drop-in `Switch` with themed track and thumb colors    |
+
+Always use `ThemedSwitch` instead of the raw React Native `Switch` to ensure consistent styling across platforms.

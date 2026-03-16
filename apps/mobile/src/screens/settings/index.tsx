@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
-import { View, Text, TouchableOpacity, Switch, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../stores/auth.store";
 import { useSettingsStore } from "../../stores/settings.store";
 import { useTheme, useColors } from "../../contexts/theme-context";
 import { spacing, fontSize, fontWeight } from "../../theme";
+import ThemedSwitch from "../../components/themed-switch";
 
 type RowProps = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -23,7 +24,15 @@ function SettingsRow({ icon, label, onPress, color, right }: RowProps) {
     <TouchableOpacity style={styles.row} onPress={onPress} disabled={!onPress}>
       <Ionicons name={icon} size={22} color={tint} style={styles.rowIcon} />
       <Text style={[styles.rowLabel, { color: tint }]}>{label}</Text>
-      {right !== undefined ? right : <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />}
+      {right !== undefined ? (
+        right
+      ) : (
+        <Ionicons
+          name="chevron-forward"
+          size={18}
+          color={colors.textSecondary}
+        />
+      )}
     </TouchableOpacity>
   );
 }
@@ -43,10 +52,9 @@ export default function SettingsScreen() {
           icon={isDark ? "moon" : "sunny-outline"}
           label="Dark Mode"
           right={
-            <Switch
+            <ThemedSwitch
               value={isDark}
               onValueChange={toggle}
-              trackColor={{ true: colors.primary, false: colors.border }}
             />
           }
         />
@@ -58,10 +66,9 @@ export default function SettingsScreen() {
           icon="chatbubbles-outline"
           label="Discussion Mode"
           right={
-            <Switch
+            <ThemedSwitch
               value={discussionMode}
               onValueChange={toggleDiscussionMode}
-              trackColor={{ true: colors.primary, false: colors.border }}
             />
           }
         />
@@ -69,7 +76,13 @@ export default function SettingsScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
-        <SettingsRow icon="log-out-outline" label="Logout" onPress={logout} color={colors.error} right={null} />
+        <SettingsRow
+          icon="log-out-outline"
+          label="Logout"
+          onPress={logout}
+          color={colors.error}
+          right={null}
+        />
       </View>
     </View>
   );
@@ -77,7 +90,11 @@ export default function SettingsScreen() {
 
 const makeStyles = (colors: ReturnType<typeof useColors>) =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background, paddingTop: spacing.md },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      paddingTop: spacing.md,
+    },
     section: { marginBottom: spacing.lg },
     sectionTitle: {
       fontSize: fontSize.xs,
