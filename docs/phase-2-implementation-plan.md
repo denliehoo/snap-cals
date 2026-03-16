@@ -148,7 +148,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Verify FAB tap opens action sheet. Verify "Manual Entry" navigates to EntryForm. Verify "AI Assist" navigates to AI Assist screen.
 - **Demo:** Tap FAB on daily view → see bottom sheet with two options → tap each and see correct navigation.
 
-### Task 4: AI Assist screen with text input and API integration
+### Task 4: AI Assist screen with text input and API integration ✅
 
 - **Objective:** Build the AI Assist screen where users type a food description, tap "Estimate", and see loading state while the API call happens.
 - **Guidance:**

@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "./stores/auth.store";
 import { useTheme, useColors } from "./contexts/theme-context";
-import { FoodEntry } from "@snap-cals/shared";
+import { FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
 import LoginScreen from "./screens/login";
 import SignupScreen from "./screens/signup";
 import DailyViewScreen from "./screens/daily-view";
@@ -30,7 +30,7 @@ export type MainTabParamList = {
 
 export type MainStackParamList = {
   MainTabs: undefined;
-  EntryForm: { entry?: FoodEntry } | undefined;
+  EntryForm: { entry?: FoodEntry; prefill?: AiEstimateResponse } | undefined;
   AiAssist: undefined;
 };
 
