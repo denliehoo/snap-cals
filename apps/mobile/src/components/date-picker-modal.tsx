@@ -38,6 +38,7 @@ export default function DatePickerModal({ visible, value, onClose, onSelect }: D
         <Button title="Done" variant="text" onPress={handleDone} />
       </View>
       <Calendar
+        key={pickerDate.slice(0, 7)}
         current={pickerDate}
         onDayPress={(day: { dateString: string }) => setPickerDate(day.dateString)}
         markedDates={{ [pickerDate]: { selected: true, selectedColor: colors.primary } }}
