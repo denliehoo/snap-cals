@@ -27,7 +27,7 @@ Instead of manually entering food details, the user can type a food name and the
 
 **Status:** Completed — see [Phase 2 Implementation Plan](./phase-2-implementation-plan.md)
 
-### Phase 3: AI Chat
+### Phase 3: AI Chat & Server Improvements
 
 The AI can ask clarifying questions (e.g., "Where did you buy this?", "What size was the portion?") to refine its estimates. This is a conversational flow before the food entry is confirmed. Users can toggle this off if they just want a quick rough estimate without the back-and-forth.
 

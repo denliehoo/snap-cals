@@ -1,4 +1,4 @@
-# Phase 3 Implementation Plan — AI Chat
+# Phase 3 Implementation Plan — AI Chat & Server Improvements
 
 ## Problem Statement
 
@@ -182,7 +182,18 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** Full end-to-end flow works in both modes. Error states display correctly. Back navigation preserves chat. Settings persist.
 - **Demo:** Complete walkthrough of both modes. Discussion Mode on: full chat → estimate → confirm → entry form → back → chat preserved. Discussion Mode off: one-shot estimate (unchanged). Error handling when API fails.
 
-### Task 7: Comprehensive test coverage
+### Task 7: Strongly type all controllers with shared types
+
+- **Objective:** Ensure all server controllers use shared request/response types for type safety, and fix the server tsconfig so `@snap-cals/shared` imports compile.
+- **Guidance:**
+  - Update `apps/server/tsconfig.json` to allow importing from the shared package (adjust `rootDir` or use project references)
+  - In every controller, type `req` using Express generics: `Request<Params, ResBody, ReqBody>` with the corresponding shared interface (`CreateFoodEntryRequest`, `AiEstimateRequest`, `AiChatRequest`, `LoginRequest`, `SignupRequest`, `UpsertGoalRequest`, etc.)
+  - Remove any locally duplicated request/response interfaces that already exist in shared (e.g., `ChatMessage` in `chat.service.ts`)
+  - Verify the mobile app already imports shared types for API calls; add any missing imports
+- **Test:** `tsc --noEmit` passes for both server and mobile. No `any`-typed request bodies in controllers.
+- **Demo:** Change a field name in a shared interface → compiler errors surface in both server and mobile.
+
+### Task 8: Comprehensive test coverage
 
 - **Objective:** Add tests for all Phase 3 features (backend + frontend).
 - **Guidance:**
