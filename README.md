@@ -72,7 +72,10 @@ Edit `apps/server/.env` with your database connection string and a JWT secret:
 DATABASE_URL="your-neon-postgres-connection-string"
 JWT_SECRET="pick-a-strong-secret"
 PORT=3000
+GEMINI_API_KEY="your-gemini-api-key"
 ```
+
+Get a free Postgres database at [neon.tech](https://neon.tech) — copy the connection string from the Neon dashboard. Get a free Gemini API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). Required for AI food estimation features.
 
 ### 3. Run database migrations and seed
 

@@ -174,7 +174,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Verify form fields populated from prefill. Verify user can edit pre-filled fields. Verify save works with pre-filled data. Verify edit mode still works (entry param takes precedence).
 - **Demo:** Full flow — Daily View → FAB → AI Assist → type food → Estimate → Entry Form pre-filled → edit → save → entry in daily view.
 
-### Task 6: Wiring, error handling, and polish
+### Task 6: Wiring, error handling, and polish ✅
 
 - **Objective:** End-to-end integration, edge case handling, UX polish, and documentation.
 - **Guidance:**

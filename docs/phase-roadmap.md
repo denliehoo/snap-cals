@@ -21,11 +21,11 @@ A foundational mobile app with email/password auth, full CRUD for food entries (
 
 **Status:** Planning complete — see [Phase 1 Implementation Plan](./phase-1-implementation-plan.md)
 
-### Phase 2: AI Autofill
+### Phase 2: AI Autofill & UI/UX Refinements
 
-Instead of manually entering food details, the user can type a food name and the AI (Gemini API) returns estimated calories and macros. The user can then edit or confirm the values before saving. Manual entry from Phase 1 remains available as a fallback.
+Instead of manually entering food details, the user can type a food name and the AI (Gemini API) returns estimated calories and macros. The user can then edit or confirm the values before saving. Manual entry from Phase 1 remains available as a fallback. Includes UI/UX refinements like smart meal type detection and inline form validation.
 
-**Status:** Planning complete — see [Phase 2 Implementation Plan](./phase-2-implementation-plan.md)
+**Status:** In progress — see [Phase 2 Implementation Plan](./phase-2-implementation-plan.md)
 
 ### Phase 3: AI Chat
 

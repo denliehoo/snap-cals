@@ -35,6 +35,7 @@ snap-cals/
 │       └── src/
 │           ├── routes/        # Express route definitions
 │           ├── controllers/   # Request handlers
+│           ├── services/      # Business logic (Gemini AI, etc.)
 │           └── middleware/     # Auth, validation, error handling
 ├── packages/
 │   └── shared/          # Shared TypeScript types and enums
@@ -65,6 +66,7 @@ snap-cals/
 - Base path: `/api`
 - Auth routes: `/api/auth/signup`, `/api/auth/login`
 - Resource routes: `/api/entries`, `/api/goals`
+- AI routes: `/api/ai/estimate` — accepts food description, returns structured nutrition estimates via Gemini API
 - All non-auth routes protected via Passport.js JWT middleware
 - Request/response types defined in `@snap-cals/shared`
 - Standard response wrapper: `{ data: T, message?: string }`
