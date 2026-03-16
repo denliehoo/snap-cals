@@ -168,7 +168,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** Chat view renders messages correctly. Sending a message appends it and shows AI response. Force estimate triggers estimate. Confirm navigates to EntryForm. Going back preserves chat history.
 - **Demo:** Full chat flow — type "big mac" → Estimate → AI asks "What size?" → user replies "large" → AI asks "Any modifications?" → user replies "no" → AI returns estimate → Confirm → Entry Form pre-filled. Go back → chat history still there.
 
-### Task 6: Wiring, edge cases, and polish
+### Task 6: Wiring, edge cases, and polish ✅
 
 - **Objective:** End-to-end integration, error handling, and documentation.
 - **Guidance:**
@@ -208,3 +208,4 @@ apps/mobile/src/services/api.ts                  # Add chat API method
   - Follow existing conventions in `.kiro/skills/mobile-testing-conventions.md`
 - **Test:** All new tests pass. Existing tests unaffected. `pnpm test` runs full suite.
 - **Demo:** Run `pnpm test` — all green, including new Phase 3 tests.
+- Mark Phase 3 as completed in `docs/phase-roadmap.md` and `docs/architecture.md`

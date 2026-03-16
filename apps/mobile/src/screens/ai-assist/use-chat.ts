@@ -9,11 +9,9 @@ export function useChat() {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [estimate, setEstimate] = useState<AiEstimateResponse | null>(null);
 
   const sendMessage = async (text: string, forceEstimate = false) => {
-    setError(null);
     const updated: ChatMessage[] = text
       ? [...messages, { role: "user", content: text }]
       : messages;
@@ -30,7 +28,7 @@ export function useChat() {
       setMessages([...updated, { role: "assistant", content }]);
     } catch (e: any) {
       const msg = e.status === 429 ? "AI is busy, try again in a moment" : e.message || "Failed to process chat";
-      setError(msg);
+      setMessages((prev) => [...prev, { role: "assistant", content: `⚠️ ${msg}` }]);
     } finally {
       setLoading(false);
     }
@@ -40,5 +38,5 @@ export function useChat() {
     if (estimate) navigation.navigate("EntryForm", { prefill: estimate });
   };
 
-  return { messages, loading, error, estimate, sendMessage, confirm };
+  return { messages, loading, estimate, sendMessage, confirm };
 }

@@ -44,7 +44,6 @@ export default function AiAssistScreen() {
           keyboardVerticalOffset={100}
         >
           <ChatView messages={chat.messages} />
-          {chat.error && <Text style={styles.error}>{chat.error}</Text>}
           <View style={styles.chatInputRow}>
             <TextInput
               style={styles.chatInput}

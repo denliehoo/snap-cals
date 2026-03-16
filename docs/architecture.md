@@ -55,6 +55,12 @@ snap-cals/
 - No build step needed — changes to shared types are picked up immediately
 - Nodemon watches `packages/shared/src` so the server restarts on shared type changes
 
+### Discussion Mode (AI Chat)
+- Toggleable per-session on the AI Assist screen, with a global default persisted in SecureStore via a Zustand settings store
+- When on, the AI asks clarifying questions before estimating; when off, behavior is one-shot (Phase 2)
+- Chat is stateless on the server — the mobile app sends the full `ChatMessage[]` history each request
+- Chat history is ephemeral (screen state only, not persisted to DB)
+
 ### Theme / Design System
 - Centralized in `apps/mobile/src/theme.ts`
 - Exports `colors`, `spacing`, `fontSize`, `borderRadius` objects
@@ -67,6 +73,7 @@ snap-cals/
 - Auth routes: `/api/auth/signup`, `/api/auth/login`
 - Resource routes: `/api/entries`, `/api/goals`
 - AI routes: `/api/ai/estimate` — accepts food description, returns structured nutrition estimates via Gemini API
+- AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`) and optional `forceEstimate` flag, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
 - All non-auth routes protected via Passport.js JWT middleware
 - Request/response types defined in `@snap-cals/shared`
 - Standard response wrapper: `{ data: T, message?: string }`
@@ -133,5 +140,5 @@ snap-cals/
 
 - **Phase 1:** CRUD calorie tracking (current)
 - **Phase 2:** AI autofill via Gemini API
-- **Phase 3:** AI chat with clarifying questions (toggleable)
+- **Phase 3:** AI chat with clarifying questions (toggleable) — in progress
 - **Phase 4:** Image-based food recognition
