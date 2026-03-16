@@ -26,4 +26,18 @@ describe("FormField", () => {
     );
     expect(getByDisplayValue("Oatmeal")).toBeTruthy();
   });
+
+  it("shows error text when error prop is set", async () => {
+    const { getByText } = await render(
+      <FormField label="Name" value="" onChangeText={jest.fn()} error="Name is required" />
+    );
+    expect(getByText("Name is required")).toBeTruthy();
+  });
+
+  it("does not show error text when error prop is not set", async () => {
+    const { queryByText } = await render(
+      <FormField label="Name" value="" onChangeText={jest.fn()} />
+    );
+    expect(queryByText("Name is required")).toBeNull();
+  });
 });

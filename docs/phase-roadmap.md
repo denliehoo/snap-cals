@@ -2,16 +2,16 @@
 
 ## Tech Stack
 
-| Layer | Tech | Hosting | Cost |
-|-------|------|---------|------|
-| Monorepo | pnpm workspaces | — | Free |
-| Frontend | React Native + Expo + TypeScript | — | Free |
-| Navigation | React Navigation | — | Free |
-| State Management | Zustand | — | Free |
-| Backend | Node.js + Express + TypeScript | Render | Free |
-| Auth | Passport.js + JWT | — | Free |
-| Database | Postgres + Prisma ORM | Neon | Free |
-| AI (Phase 2+) | Gemini API | — | Free tier |
+| Layer            | Tech                             | Hosting | Cost      |
+| ---------------- | -------------------------------- | ------- | --------- |
+| Monorepo         | pnpm workspaces                  | —       | Free      |
+| Frontend         | React Native + Expo + TypeScript | —       | Free      |
+| Navigation       | React Navigation                 | —       | Free      |
+| State Management | Zustand                          | —       | Free      |
+| Backend          | Node.js + Express + TypeScript   | Render  | Free      |
+| Auth             | Passport.js + JWT                | —       | Free      |
+| Database         | Postgres + Prisma ORM            | Neon    | Free      |
+| AI (Phase 2+)    | Gemini API                       | —       | Free tier |
 
 ## Phases
 
@@ -19,13 +19,13 @@
 
 A foundational mobile app with email/password auth, full CRUD for food entries (name, calories, protein, carbs, fat, serving size, meal type, timestamp), user-configurable daily calorie/macro goals, a daily view with meals grouped by type and progress toward goals, and a weekly overview of daily totals. Built as a pnpm monorepo with shared types.
 
-**Status:** Planning complete — see [Phase 1 Implementation Plan](./phase-1-implementation-plan.md)
+**Status:** Completed — see [Phase 1 Implementation Plan](./phase-1-implementation-plan.md)
 
 ### Phase 2: AI Autofill & UI/UX Refinements
 
 Instead of manually entering food details, the user can type a food name and the AI (Gemini API) returns estimated calories and macros. The user can then edit or confirm the values before saving. Manual entry from Phase 1 remains available as a fallback. Includes UI/UX refinements like smart meal type detection and inline form validation.
 
-**Status:** In progress — see [Phase 2 Implementation Plan](./phase-2-implementation-plan.md)
+**Status:** Completed — see [Phase 2 Implementation Plan](./phase-2-implementation-plan.md)
 
 ### Phase 3: AI Chat
 

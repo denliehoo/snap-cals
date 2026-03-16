@@ -16,6 +16,7 @@ Use conventional commit messages when committing code:
 - `chore:` — setup, config, tooling, non-functional changes
 - `refactor:` — code restructuring without changing behavior
 - `docs:` — documentation only changes
+- `test:` — adding or updating tests only
 
 Format: `type: short description`
 

@@ -210,7 +210,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Verify red border and error text appear on invalid fields. Verify error clears on input. Verify API errors still show at the top.
 - **Demo:** Submit empty form → see red borders on name and calories fields with inline error messages.
 
-### Task 9: Comprehensive test coverage
+### Task 9: Comprehensive test coverage ✅
 
 - **Objective:** Add missing frontend and backend tests for all Phase 2 features.
 - **Guidance:**
