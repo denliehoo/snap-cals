@@ -14,9 +14,15 @@ interface DatePickerModalProps {
   onSelect: (date: string) => void;
 }
 
-export default function DatePickerModal({ visible, value, onClose, onSelect }: DatePickerModalProps) {
+export default function DatePickerModal({
+  visible,
+  value,
+  onClose,
+  onSelect,
+}: DatePickerModalProps) {
   const colors = useColors();
   const [pickerDate, setPickerDate] = useState(value);
+  const [calendarKey, setCalendarKey] = useState(0);
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   useEffect(() => {
@@ -28,20 +34,30 @@ export default function DatePickerModal({ visible, value, onClose, onSelect }: D
     onClose();
   };
 
+  const handleTodayPress = () => {
+    const today = toLocalDateString();
+    setPickerDate(today);
+    setCalendarKey((k) => k + 1);
+  };
+
   return (
     <AppModal visible={visible} onClose={onClose}>
       <View style={styles.toolbar}>
         <View style={styles.toolbarLeft}>
           <Button title="Cancel" variant="text-secondary" onPress={onClose} />
-          <Button title="Today" variant="text" onPress={() => setPickerDate(toLocalDateString())} />
+          <Button title="Today" variant="text" onPress={handleTodayPress} />
         </View>
         <Button title="Done" variant="text" onPress={handleDone} />
       </View>
       <Calendar
-        key={pickerDate.slice(0, 7)}
+        key={calendarKey}
         current={pickerDate}
-        onDayPress={(day: { dateString: string }) => setPickerDate(day.dateString)}
-        markedDates={{ [pickerDate]: { selected: true, selectedColor: colors.primary } }}
+        onDayPress={(day: { dateString: string }) =>
+          setPickerDate(day.dateString)
+        }
+        markedDates={{
+          [pickerDate]: { selected: true, selectedColor: colors.primary },
+        }}
         theme={{
           backgroundColor: colors.surface,
           calendarBackground: colors.surface,
@@ -61,6 +77,11 @@ export default function DatePickerModal({ visible, value, onClose, onSelect }: D
 
 const makeStyles = (colors: ReturnType<typeof useColors>) =>
   StyleSheet.create({
-    toolbar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: spacing.xs },
+    toolbar: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: spacing.xs,
+    },
     toolbarLeft: { flexDirection: "row", alignItems: "center" },
   });
