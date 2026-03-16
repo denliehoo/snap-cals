@@ -4,6 +4,7 @@ import passport from "./middleware/passport";
 import authRoutes from "./routes/auth.routes";
 import entryRoutes from "./routes/entry.routes";
 import goalRoutes from "./routes/goal.routes";
+import aiRoutes from "./routes/ai.routes";
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/entries", entryRoutes);
 app.use("/api/goals", goalRoutes);
+app.use("/api/ai", aiRoutes);
 
 export default app;

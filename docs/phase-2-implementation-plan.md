@@ -125,7 +125,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Unit test the Gemini service with a mocked `@google/genai` client — verify it sends the right prompt structure and parses a valid response. Verify it throws a meaningful error on invalid/empty responses.
 - **Demo:** Run the service function directly with "grilled chicken breast 200g" and see structured JSON output.
 
-### Task 2: AI estimate API endpoint
+### Task 2: AI estimate API endpoint ✅
 
 - **Objective:** Expose a `POST /api/ai/estimate` endpoint that accepts a food description and returns nutrition estimates.
 - **Guidance:**
