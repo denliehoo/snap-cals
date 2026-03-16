@@ -1,10 +1,6 @@
 import { z, toJSONSchema } from "zod";
 import { createGeminiClient, NutritionEstimate } from "./gemini.service";
-
-interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-}
+import { ChatMessage } from "@snap-cals/shared";
 
 const chatResponseSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("question"), content: z.string() }),

@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { MealType as PrismaMealType, User } from "@prisma/client";
+import { CreateFoodEntryRequest, UpdateFoodEntryRequest } from "@snap-cals/shared";
 
 const userId = (req: Request) => (req.user as User).id;
 
-export const create = async (req: Request, res: Response) => {
+export const create = async (req: Request<{}, {}, CreateFoodEntryRequest>, res: Response) => {
   try {
     const { name, calories, protein, carbs, fat, servingSize, mealType, date } =
       req.body;
@@ -86,7 +87,7 @@ export const getByWeek = async (req: Request, res: Response) => {
   }
 };
 
-export const update = async (req: Request, res: Response) => {
+export const update = async (req: Request<{ id: string }, {}, UpdateFoodEntryRequest>, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -122,7 +123,7 @@ export const update = async (req: Request, res: Response) => {
   }
 };
 
-export const remove = async (req: Request, res: Response) => {
+export const remove = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.params;
 

@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
+import { SignupRequest, LoginRequest } from "@snap-cals/shared";
 
 const signToken = (userId: string) =>
   jwt.sign({ sub: userId }, process.env.JWT_SECRET!, { expiresIn: "7d" });
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (req: Request<{}, {}, SignupRequest>, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -39,7 +40,7 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request<{}, {}, LoginRequest>, res: Response) => {
   try {
     const { email, password } = req.body;
 

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { User } from "@prisma/client";
+import { UpsertGoalRequest } from "@snap-cals/shared";
 
 const userId = (req: Request) => (req.user as User).id;
 
@@ -20,7 +21,7 @@ export const get = async (req: Request, res: Response) => {
   }
 };
 
-export const upsert = async (req: Request, res: Response) => {
+export const upsert = async (req: Request<{}, {}, UpsertGoalRequest>, res: Response) => {
   try {
     const { dailyCalories, dailyProtein, dailyCarbs, dailyFat } = req.body;
     if ([dailyCalories, dailyProtein, dailyCarbs, dailyFat].some((v) => v == null || v < 0)) {

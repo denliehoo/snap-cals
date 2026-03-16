@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { estimateNutrition } from "../services/gemini.service";
+import { AiEstimateRequest } from "@snap-cals/shared";
 
-export const estimate = async (req: Request, res: Response) => {
+export const estimate = async (req: Request<{}, {}, AiEstimateRequest>, res: Response) => {
   try {
     const { description } = req.body;
     if (!description || typeof description !== "string" || !description.trim()) {

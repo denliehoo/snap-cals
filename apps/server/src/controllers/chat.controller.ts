@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { chat } from "../services/chat.service";
+import { AiChatRequest } from "@snap-cals/shared";
 
-export const handleChat = async (req: Request, res: Response) => {
+export const handleChat = async (req: Request<{}, {}, AiChatRequest>, res: Response) => {
   try {
     const { messages, forceEstimate } = req.body;
     if (!Array.isArray(messages) || messages.length === 0) {

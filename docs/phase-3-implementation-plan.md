@@ -182,7 +182,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** Full end-to-end flow works in both modes. Error states display correctly. Back navigation preserves chat. Settings persist.
 - **Demo:** Complete walkthrough of both modes. Discussion Mode on: full chat → estimate → confirm → entry form → back → chat preserved. Discussion Mode off: one-shot estimate (unchanged). Error handling when API fails.
 
-### Task 7: Strongly type all controllers with shared types
+### Task 7: Strongly type all controllers with shared types ✅
 
 - **Objective:** Ensure all server controllers use shared request/response types for type safety, and fix the server tsconfig so `@snap-cals/shared` imports compile.
 - **Guidance:**
