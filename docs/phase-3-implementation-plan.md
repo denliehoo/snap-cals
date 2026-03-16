@@ -106,7 +106,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 
 ## Task Breakdown
 
-### Task 1: Shared types and settings store
+### Task 1: Shared types and settings store ✅
 
 - **Objective:** Add chat-related shared types and create a persisted settings store for the Discussion Mode default.
 - **Guidance:**
@@ -116,7 +116,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** Shared types compile and are importable from both apps. Settings store persists and restores the toggle value.
 - **Demo:** Import the new types in both apps — no errors. Toggle the setting in a quick test, restart, value persists.
 
-### Task 2: Chat service on the server (multi-turn Gemini)
+### Task 2: Chat service on the server (multi-turn Gemini) ✅
 
 - **Objective:** Create a server-side chat service that accepts a conversation history and returns the AI's next response — either a clarifying question or a final nutrition estimate.
 - **Guidance:**
