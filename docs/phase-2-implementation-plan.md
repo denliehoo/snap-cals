@@ -1,4 +1,4 @@
-# Phase 2 Implementation Plan — AI Autofill
+# Phase 2 Implementation Plan — AI Autofill & UI/UX Refinements
 
 ## Problem Statement
 
@@ -188,7 +188,29 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Full end-to-end flow works. Error states display correctly. Navigation correct. Manual entry unaffected.
 - **Demo:** Complete walkthrough: Daily View → FAB → AI Assist → estimate → review → save. Also: error handling when API fails, manual entry still works.
 
-### Task 7: Comprehensive test coverage
+### Task 7: Smart meal type detection based on time of day
+
+- **Objective:** Make `useEntryForm` intelligently guess the meal type based on the device's current time instead of always defaulting to Lunch.
+- **Guidance:**
+  - Read the device's current hour (local timezone)
+  - Estimate meal type windows: Breakfast (~6–10), Lunch (~11–14), Dinner (~17–21), Snack (everything else)
+  - Apply this default only when creating a new entry (not editing, not prefill — prefill should also use this since AI doesn't return meal type)
+  - Keep it simple — a helper function that maps hour to MealType
+- **Test:** Verify correct meal type for different hours. Verify edit mode still uses the entry's existing meal type.
+- **Demo:** Open the entry form at different times of day and see the meal type chip pre-selected correctly.
+
+### Task 8: Inline form validation with field-level errors
+
+- **Objective:** Replace the single top-level error message in the entry form with inline field-level validation — highlight invalid inputs with a red border and show error text below each field.
+- **Guidance:**
+  - Update `FormField` component to accept optional `error` prop — when set, show red border on the input and error text below it
+  - Update `useEntryForm` validation to track per-field errors (e.g. `{ name: "Name is required", calories: "Calories is required" }`)
+  - Clear field error when user starts typing in that field
+  - Remove the top-level error text for validation errors (keep it for API errors)
+- **Test:** Verify red border and error text appear on invalid fields. Verify error clears on input. Verify API errors still show at the top.
+- **Demo:** Submit empty form → see red borders on name and calories fields with inline error messages.
+
+### Task 9: Comprehensive test coverage
 
 - **Objective:** Add missing frontend and backend tests for all Phase 2 features.
 - **Guidance:**
@@ -198,6 +220,8 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
     - Daily View FAB (opens action sheet, "Manual Entry" navigates to EntryForm, "AI Assist" navigates to AiAssist)
     - AI Assist screen (renders input and button, button disabled when empty, loading state, successful response navigates to EntryForm with prefill)
     - Entry Form prefill (fields populated from prefill param, user can edit, save works, edit mode unaffected)
+    - Smart meal type detection (correct meal type for different hours)
+    - Inline form validation (red borders, field-level errors, error clearing)
   - Follow existing mobile testing conventions in `.kiro/skills/mobile-testing-conventions.md`
 - **Test:** All new tests pass. Existing tests unaffected.
 - **Demo:** Run full test suite for both server and mobile — all green.
