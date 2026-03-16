@@ -1,10 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { MealType } from "@snap-cals/shared";
 import { spacing, fontSize, borderRadius, fontWeight } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
+import { parseLocalDate } from "@/utils/date";
 import FormField from "@/components/form-field";
 import Button from "@/components/button";
+import DatePickerModal from "@/components/date-picker-modal";
 import { useEntryForm } from "./use-entry-form";
 import { useSnackbar } from "@/components/snackbar";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -19,7 +21,10 @@ export default function EntryFormScreen({ navigation, route }: Props) {
   const { isEdit, isPrefill, fields, setters, loading, error, fieldErrors, clearFieldError, submit, confirmDelete } =
     useEntryForm(route.params?.entry, route.params?.prefill);
   const { show } = useSnackbar();
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  const dateLabel = parseLocalDate(fields.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
 
   const goBack = () => {
     show(isEdit ? "Entry updated" : "Entry added");
@@ -70,7 +75,13 @@ export default function EntryFormScreen({ navigation, route }: Props) {
         ))}
       </View>
 
-      <FormField label="Date" value={fields.date} onChangeText={setters.setDate} placeholder="YYYY-MM-DD" />
+      <FormField label="Date" value={dateLabel} onChangeText={() => {}} onPress={() => setShowDatePicker(true)} editable={false} />
+      <DatePickerModal
+        visible={showDatePicker}
+        value={fields.date}
+        onClose={() => setShowDatePicker(false)}
+        onSelect={setters.setDate}
+      />
 
       <View style={styles.actions}>
         <Button title={isEdit ? "Update" : "Add Entry"} onPress={() => submit(goBack)} loading={loading} />

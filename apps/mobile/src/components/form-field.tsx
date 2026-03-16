@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput, StyleSheet, KeyboardTypeOptions } from "react-native";
+import { View, Text, TextInput, StyleSheet, KeyboardTypeOptions, Pressable } from "react-native";
 import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
 
@@ -11,6 +11,8 @@ interface FormFieldProps {
   keyboardType?: KeyboardTypeOptions;
   secureTextEntry?: boolean;
   error?: string;
+  editable?: boolean;
+  onPress?: () => void;
 }
 
 export default function FormField({
@@ -21,21 +23,29 @@ export default function FormField({
   keyboardType,
   secureTextEntry,
   error,
+  editable = true,
+  onPress,
 }: FormFieldProps) {
   const colors = useColors();
+
+  const input = (
+    <TextInput
+      style={[styles.input, { backgroundColor: colors.surface, borderColor: error ? colors.error : colors.border, color: colors.text }]}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      placeholderTextColor={colors.textSecondary}
+      keyboardType={keyboardType}
+      secureTextEntry={secureTextEntry}
+      editable={editable}
+      pointerEvents={onPress ? "none" : "auto"}
+    />
+  );
 
   return (
     <View style={styles.wrapper}>
       <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
-      <TextInput
-        style={[styles.input, { backgroundColor: colors.surface, borderColor: error ? colors.error : colors.border, color: colors.text }]}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={colors.textSecondary}
-        keyboardType={keyboardType}
-        secureTextEntry={secureTextEntry}
-      />
+      {onPress ? <Pressable onPress={onPress}>{input}</Pressable> : input}
       {error ? <Text style={[styles.error, { color: colors.error }]}>{error}</Text> : null}
     </View>
   );

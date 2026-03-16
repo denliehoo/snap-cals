@@ -1,13 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { View, Text, SectionList, Alert, ActivityIndicator, StyleSheet } from "react-native";
-import { Calendar } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
 import { spacing, fontSize, fontWeight } from "@/theme";
 import { toLocalDateString, parseLocalDate } from "@/utils/date";
 import { useColors } from "@/contexts/theme-context";
-import AppModal from "@/components/app-modal";
-import Button from "@/components/button";
 import DateNavigator from "@/components/date-navigator";
+import DatePickerModal from "@/components/date-picker-modal";
 import MacroSummary from "@/components/macro-summary";
 import EntryRow from "@/components/entry-row";
 import Fab from "@/components/fab";
@@ -30,7 +28,6 @@ export default function DailyViewScreen({ navigation, route }: Props) {
   const { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry } =
     useDailyEntries(route.params?.date);
   const [showPicker, setShowPicker] = useState(false);
-  const [pickerDate, setPickerDate] = useState(date);
   const [showActions, setShowActions] = useState(false);
 
   const isToday = date === toLocalDateString();
@@ -49,33 +46,13 @@ export default function DailyViewScreen({ navigation, route }: Props) {
 
   return (
     <View style={styles.container}>
-      <DateNavigator label={dateLabel} onPrevious={goToPreviousDay} onNext={goToNextDay} onLabelPress={() => { setPickerDate(date); setShowPicker(true); }} />
-      <AppModal visible={showPicker} onClose={() => setShowPicker(false)}>
-        <View style={styles.toolbar}>
-          <View style={styles.toolbarLeft}>
-            <Button title="Cancel" variant="text-secondary" onPress={() => setShowPicker(false)} />
-            <Button title="Today" variant="text" onPress={() => { setPickerDate(toLocalDateString()); }} />
-          </View>
-          <Button title="Done" variant="text" onPress={() => { setDate(pickerDate); setShowPicker(false); }} />
-        </View>
-        <Calendar
-          current={pickerDate}
-          onDayPress={(day: { dateString: string }) => setPickerDate(day.dateString)}
-          markedDates={{ [pickerDate]: { selected: true, selectedColor: colors.primary } }}
-          theme={{
-            backgroundColor: colors.surface,
-            calendarBackground: colors.surface,
-            dayTextColor: colors.text,
-            monthTextColor: colors.text,
-            textDisabledColor: colors.textSecondary,
-            arrowColor: colors.primary,
-            todayTextColor: colors.primary,
-            textSectionTitleColor: colors.textSecondary,
-            selectedDayBackgroundColor: colors.primary,
-            selectedDayTextColor: colors.textOnPrimary,
-          }}
-        />
-      </AppModal>
+      <DateNavigator label={dateLabel} onPrevious={goToPreviousDay} onNext={goToNextDay} onLabelPress={() => setShowPicker(true)} />
+      <DatePickerModal
+        visible={showPicker}
+        value={date}
+        onClose={() => setShowPicker(false)}
+        onSelect={setDate}
+      />
       <MacroSummary totals={totals} goals={goals} />
 
       {loading ? (
@@ -142,6 +119,4 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
     emptyTitle: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.text, marginTop: spacing.md },
     emptyText: { fontSize: fontSize.sm, color: colors.textSecondary, marginTop: spacing.xs },
     loader: { flex: 1, justifyContent: "center" },
-    toolbar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: spacing.xs },
-    toolbarLeft: { flexDirection: "row", alignItems: "center" },
   });
