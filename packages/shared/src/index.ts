@@ -97,3 +97,19 @@ export interface AiEstimateResponse {
   fat: number;
   servingSize: string;
 }
+
+// AI Chat
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface AiChatRequest {
+  messages: ChatMessage[];
+  forceEstimate?: boolean;
+}
+
+export interface AiChatResponse {
+  message: string;
+  estimate?: AiEstimateResponse;
+}
