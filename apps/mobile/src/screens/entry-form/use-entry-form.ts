@@ -3,6 +3,14 @@ import { Alert } from "react-native";
 import { MealType, FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
 import { api } from "../../services/api";
 
+function guessMealType(): MealType {
+  const hour = new Date().getHours();
+  if (hour >= 6 && hour <= 10) return MealType.BREAKFAST;
+  if (hour >= 11 && hour <= 14) return MealType.LUNCH;
+  if (hour >= 17 && hour <= 21) return MealType.DINNER;
+  return MealType.SNACK;
+}
+
 export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
   const isEdit = !!entry;
   const isPrefill = !isEdit && !!prefill;
@@ -14,7 +22,7 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
   const [fat, setFat] = useState(entry ? String(entry.fat) : prefill ? String(prefill.fat) : "");
   const [servingSize, setServingSize] = useState(entry?.servingSize || prefill?.servingSize || "");
   const [mealType, setMealType] = useState<MealType>(
-    (entry?.mealType as MealType) || MealType.LUNCH
+    (entry?.mealType as MealType) || guessMealType()
   );
   const [date, setDate] = useState(
     entry?.date?.split("T")[0] || new Date().toISOString().split("T")[0]

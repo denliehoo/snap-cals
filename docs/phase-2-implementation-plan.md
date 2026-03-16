@@ -188,7 +188,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Full end-to-end flow works. Error states display correctly. Navigation correct. Manual entry unaffected.
 - **Demo:** Complete walkthrough: Daily View → FAB → AI Assist → estimate → review → save. Also: error handling when API fails, manual entry still works.
 
-### Task 7: Smart meal type detection based on time of day
+### Task 7: Smart meal type detection based on time of day ✅
 
 - **Objective:** Make `useEntryForm` intelligently guess the meal type based on the device's current time instead of always defaulting to Lunch.
 - **Guidance:**
