@@ -129,7 +129,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** Unit test with mocked Gemini client — verify it sends correct multi-turn format, handles question responses, handles estimate responses, and respects `forceEstimate`.
 - **Demo:** Call the service directly with a sample conversation and see it return a question or estimate.
 
-### Task 3: Chat API endpoint
+### Task 3: Chat API endpoint ✅
 
 - **Objective:** Expose `POST /api/ai/chat` that accepts a message history and returns the AI's next response.
 - **Guidance:**
