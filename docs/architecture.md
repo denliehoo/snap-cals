@@ -12,7 +12,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Frontend | React Native + Expo + TypeScript | Cross-platform mobile, fast iteration with Expo |
 | Navigation | React Navigation | Standard for React Native/Expo |
 | State Management | Zustand | Lightweight, minimal boilerplate, easy to learn |
-| Backend | Node.js + Express + TypeScript | Full control over API, resume-worthy, JS/TS everywhere |
+| Backend | Node.js + Express + TypeScript | Full control over API, unified language with frontend (TS) |
 | Auth | Passport.js + JWT | Abstracts auth strategy, JWT for stateless mobile auth |
 | Database | Postgres + Prisma ORM | Relational data (users, entries, goals), strong aggregation support, Prisma for type-safe queries |
 | DB Hosting | Neon | Free tier Postgres, no expiry, serverless |
