@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "./stores/auth.store";
+import { useSettingsStore } from "./stores/settings.store";
 import { useTheme, useColors } from "./contexts/theme-context";
 import { FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
 import LoginScreen from "./screens/login";
@@ -70,11 +71,13 @@ function MainTabs() {
 
 export default function Navigation() {
   const { token, isLoading, restore } = useAuthStore();
+  const restoreSettings = useSettingsStore((s) => s.restore);
   const { isDark } = useTheme();
   const colors = useColors();
 
   useEffect(() => {
     restore();
+    restoreSettings();
   }, []);
 
   if (isLoading) {

@@ -1,13 +1,16 @@
 import React, { useMemo } from "react";
-import { View, TextInput, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { View, TextInput, Text, ActivityIndicator, Switch, StyleSheet } from "react-native";
 import { spacing, fontSize, fontWeight, borderRadius } from "../../theme";
 import { useColors } from "../../contexts/theme-context";
 import Button from "../../components/button";
 import { useAiAssist } from "./use-ai-assist";
+import { useSettingsStore } from "../../stores/settings.store";
 
 export default function AiAssistScreen() {
   const colors = useColors();
   const { description, setDescription, loading, error, estimate } = useAiAssist();
+  const globalDefault = useSettingsStore((s) => s.discussionMode);
+  const [discussionMode, setDiscussionMode] = React.useState(globalDefault);
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
@@ -22,6 +25,14 @@ export default function AiAssistScreen() {
         autoFocus
         editable={!loading}
       />
+      <View style={styles.toggleRow}>
+        <Text style={styles.toggleLabel}>Discussion Mode</Text>
+        <Switch
+          value={discussionMode}
+          onValueChange={setDiscussionMode}
+          trackColor={{ true: colors.primary, false: colors.border }}
+        />
+      </View>
       {error && <Text style={styles.error}>{error}</Text>}
       <Button
         title={loading ? "" : "Estimate"}
@@ -50,6 +61,13 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       borderColor: colors.border,
     },
     error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.sm },
+    toggleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: spacing.md,
+    },
+    toggleLabel: { color: colors.text, fontSize: fontSize.md },
     spinner: { marginTop: spacing.md },
     disclaimer: { color: colors.textSecondary, fontSize: fontSize.xs, textAlign: "center", marginTop: spacing.lg },
   });

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { View, Text, TouchableOpacity, Switch, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../stores/auth.store";
+import { useSettingsStore } from "../../stores/settings.store";
 import { useTheme, useColors } from "../../contexts/theme-context";
 import { spacing, fontSize, fontWeight } from "../../theme";
 
@@ -30,6 +31,7 @@ function SettingsRow({ icon, label, onPress, color, right }: RowProps) {
 export default function SettingsScreen() {
   const colors = useColors();
   const { logout } = useAuthStore();
+  const { discussionMode, toggleDiscussionMode } = useSettingsStore();
   const { isDark, toggle } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
@@ -44,6 +46,21 @@ export default function SettingsScreen() {
             <Switch
               value={isDark}
               onValueChange={toggle}
+              trackColor={{ true: colors.primary, false: colors.border }}
+            />
+          }
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>AI</Text>
+        <SettingsRow
+          icon="chatbubbles-outline"
+          label="Discussion Mode"
+          right={
+            <Switch
+              value={discussionMode}
+              onValueChange={toggleDiscussionMode}
               trackColor={{ true: colors.primary, false: colors.border }}
             />
           }
