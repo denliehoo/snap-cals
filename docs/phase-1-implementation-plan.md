@@ -216,7 +216,7 @@ graph TD
 - **Test:** All screens render correctly with updated styles. No regressions in functionality.
 - **Demo:** Side-by-side before/after of key screens showing the visual improvements.
 
-### Task 13: Frontend unit tests
+### Task 13: Frontend unit tests ✅
 
 - **Objective:** Add test coverage for frontend components now that the UI is stable after the revamp.
 - **Guidance:**

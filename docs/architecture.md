@@ -113,6 +113,20 @@ snap-cals/
 - No hardcoded colors, font weights, or spacing in components — always reference theme tokens
 - `colors.textOnPrimary` for text on colored backgrounds, `fontWeight.bold`/`semibold` for weights
 
+## Testing
+
+### Backend
+- Jest + Supertest for API endpoint tests
+- Tests run against a separate Neon branch (`unit-test`) via `DATABASE_URL_TEST`
+- Tests refuse to run if `DATABASE_URL_TEST` is not set
+
+### Frontend (Mobile)
+- Jest + React Native Testing Library with `jest-expo` preset
+- Tests are co-located next to source files (e.g. `screens/login/index.test.tsx`)
+- Custom `render` in `src/__tests__/helpers.tsx` wraps components in ThemeProvider + SnackbarProvider
+- Always import `render` from helpers, not directly from `@testing-library/react-native`
+- `pnpm test` runs both suites; `pnpm test:server` and `pnpm test:mobile` run individually
+
 ## Phase Roadmap
 
 - **Phase 1:** CRUD calorie tracking (current)
