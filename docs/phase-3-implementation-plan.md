@@ -193,7 +193,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** `tsc --noEmit` passes for both server and mobile. No `any`-typed request bodies in controllers.
 - **Demo:** Change a field name in a shared interface → compiler errors surface in both server and mobile.
 
-### Task 8: Comprehensive test coverage
+### Task 8: Comprehensive test coverage ✅
 
 - **Objective:** Add tests for all Phase 3 features (backend + frontend).
 - **Guidance:**

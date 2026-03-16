@@ -140,5 +140,5 @@ snap-cals/
 
 - **Phase 1:** CRUD calorie tracking (current)
 - **Phase 2:** AI autofill via Gemini API
-- **Phase 3:** AI chat with clarifying questions (toggleable) — in progress
+- **Phase 3:** AI chat with clarifying questions (toggleable) — completed
 - **Phase 4:** Image-based food recognition

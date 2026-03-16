@@ -31,7 +31,7 @@ Instead of manually entering food details, the user can type a food name and the
 
 The AI can ask clarifying questions (e.g., "Where did you buy this?", "What size was the portion?") to refine its estimates. This is a conversational flow before the food entry is confirmed. Users can toggle this off if they just want a quick rough estimate without the back-and-forth.
 
-**Status:** In progress — see [Phase 3 Implementation Plan](./phase-3-implementation-plan.md)
+**Status:** Completed — see [Phase 3 Implementation Plan](./phase-3-implementation-plan.md)
 
 ### Phase 4: Image Input
 
