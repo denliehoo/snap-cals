@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Alert } from "react-native";
 import { MealType, FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
 import { api } from "@/services/api";
+import { toLocalDateString } from "@/utils/date";
 
 function guessMealType(): MealType {
   const hour = new Date().getHours();
@@ -25,7 +26,7 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
     (entry?.mealType as MealType) || guessMealType()
   );
   const [date, setDate] = useState(
-    entry?.date?.split("T")[0] || new Date().toISOString().split("T")[0]
+    entry?.date?.split("T")[0] || toLocalDateString()
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

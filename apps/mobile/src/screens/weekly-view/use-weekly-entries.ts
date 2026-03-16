@@ -2,13 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { api } from "@/services/api";
 import { FoodEntry, Goal } from "@snap-cals/shared";
-
-function toDateString(d: Date) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
+import { toLocalDateString, parseLocalDate } from "@/utils/date";
 
 function getMonday(d: Date) {
   const date = new Date(d);
@@ -30,7 +24,7 @@ export interface DaySummary {
 
 export function useWeeklyEntries() {
   const navigation = useNavigation();
-  const [weekStart, setWeekStart] = useState(() => toDateString(getMonday(new Date())));
+  const [weekStart, setWeekStart] = useState(() => toLocalDateString(getMonday(new Date())));
   const [days, setDays] = useState<DaySummary[]>([]);
   const [goals, setGoals] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,12 +47,12 @@ export function useWeeklyEntries() {
         byDate.set(d, list);
       }
 
-      const start = new Date(weekStart + "T00:00:00");
+      const start = parseLocalDate(weekStart);
       const summaries: DaySummary[] = [];
       for (let i = 0; i < 7; i++) {
         const d = new Date(start);
         d.setDate(d.getDate() + i);
-        const dateStr = toDateString(d);
+        const dateStr = toLocalDateString(d);
         const entries = byDate.get(dateStr) || [];
         summaries.push({
           date: dateStr,
@@ -94,19 +88,19 @@ export function useWeeklyEntries() {
   }, [fetchWeek]);
 
   const goToPreviousWeek = () => {
-    const d = new Date(weekStart + "T00:00:00");
+    const d = parseLocalDate(weekStart);
     d.setDate(d.getDate() - 7);
-    setWeekStart(toDateString(d));
+    setWeekStart(toLocalDateString(d));
   };
 
   const goToNextWeek = () => {
-    const d = new Date(weekStart + "T00:00:00");
+    const d = parseLocalDate(weekStart);
     d.setDate(d.getDate() + 7);
-    setWeekStart(toDateString(d));
+    setWeekStart(toLocalDateString(d));
   };
 
   const weekLabel = useMemo(() => {
-    const start = new Date(weekStart + "T00:00:00");
+    const start = parseLocalDate(weekStart);
     const end = new Date(start);
     end.setDate(end.getDate() + 6);
     const fmt = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });

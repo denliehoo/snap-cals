@@ -2,13 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { api } from "@/services/api";
 import { FoodEntry, MealType, Goal } from "@snap-cals/shared";
-
-function toDateString(d: Date) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
+import { toLocalDateString, parseLocalDate } from "@/utils/date";
 
 export interface MealSection {
   title: string;
@@ -34,7 +28,7 @@ const MEAL_LABELS: Record<MealType, string> = {
 
 export function useDailyEntries(initialDate?: string) {
   const navigation = useNavigation();
-  const [date, setDate] = useState(() => initialDate || toDateString(new Date()));
+  const [date, setDate] = useState(() => initialDate || toLocalDateString(new Date()));
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
@@ -104,15 +98,15 @@ export function useDailyEntries(initialDate?: string) {
   }, [entries]);
 
   const goToPreviousDay = () => {
-    const d = new Date(date + "T00:00:00");
+    const d = parseLocalDate(date);
     d.setDate(d.getDate() - 1);
-    setDate(toDateString(d));
+    setDate(toLocalDateString(d));
   };
 
   const goToNextDay = () => {
-    const d = new Date(date + "T00:00:00");
+    const d = parseLocalDate(date);
     d.setDate(d.getDate() + 1);
-    setDate(toDateString(d));
+    setDate(toLocalDateString(d));
   };
 
   const deleteEntry = async (id: string) => {

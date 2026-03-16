@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet }
 import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
 import DateNavigator from "@/components/date-navigator";
+import { toLocalDateString } from "@/utils/date";
 import { useWeeklyEntries, DaySummary } from "./use-weekly-entries";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MainStackParamList } from "@/navigation";
@@ -25,7 +26,7 @@ export default function WeeklyViewScreen({ navigation }: Props) {
 
   const renderDay = ({ item }: { item: DaySummary }) => {
     const { date, label, calories, protein, carbs, fat, entryCount } = item;
-    const isToday = date === new Date().toISOString().split("T")[0];
+    const isToday = date === toLocalDateString();
     const over = calories > goalCalories;
     const pct = Math.min(calories / goalCalories, 1);
 

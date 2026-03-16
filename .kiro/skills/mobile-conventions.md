@@ -34,3 +34,9 @@ description: React Native coding conventions for the Snap Cals mobile app
 - Use `colors.textOnPrimary` for text on primary-colored backgrounds (not `"#fff"`)
 - Use `fontWeight.bold`, `fontWeight.semibold`, etc. (not `"700"`, `"600"`)
 - If a new token is needed, add it to the theme file first
+
+## Date Handling
+- Always use `toLocalDateString()` from `@/utils/date` to get a `YYYY-MM-DD` string from a `Date` object
+- Always use `parseLocalDate()` from `@/utils/date` to convert a `YYYY-MM-DD` string back to a `Date` object
+- Never use `new Date().toISOString().split("T")[0]` — this converts to UTC first
+- Never use `new Date("YYYY-MM-DD")` without a time component — JavaScript parses this as UTC midnight, not local

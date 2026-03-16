@@ -3,6 +3,7 @@ import { View, Text, SectionList, Alert, ActivityIndicator, StyleSheet } from "r
 import { Calendar } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
 import { spacing, fontSize, fontWeight } from "@/theme";
+import { toLocalDateString, parseLocalDate } from "@/utils/date";
 import { useColors } from "@/contexts/theme-context";
 import AppModal from "@/components/app-modal";
 import Button from "@/components/button";
@@ -32,10 +33,10 @@ export default function DailyViewScreen({ navigation, route }: Props) {
   const [pickerDate, setPickerDate] = useState(date);
   const [showActions, setShowActions] = useState(false);
 
-  const isToday = date === new Date().toISOString().split("T")[0];
+  const isToday = date === toLocalDateString();
   const dateLabel = isToday
     ? "Today"
-    : new Date(date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    : parseLocalDate(date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 
   const handleDelete = (entry: FoodEntry) => {
     Alert.alert("Delete Entry", `Delete "${entry.name}"?`, [
@@ -53,7 +54,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
         <View style={styles.toolbar}>
           <View style={styles.toolbarLeft}>
             <Button title="Cancel" variant="text-secondary" onPress={() => setShowPicker(false)} />
-            <Button title="Today" variant="text" onPress={() => { const today = new Date().toISOString().split("T")[0]; setPickerDate(today); }} />
+            <Button title="Today" variant="text" onPress={() => { setPickerDate(toLocalDateString()); }} />
           </View>
           <Button title="Done" variant="text" onPress={() => { setDate(pickerDate); setShowPicker(false); }} />
         </View>
