@@ -136,7 +136,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Integration test with Supertest — verify 401 without token, 400 with empty description, 200 with valid description (mock Gemini service to avoid real API calls). Verify response shape matches `ApiResponse<AiEstimateResponse>`.
 - **Demo:** Use curl/Postman to `POST /api/ai/estimate` with `{"description": "big mac"}` and see structured nutrition JSON.
 
-### Task 3: Bottom sheet FAB menu on Daily View
+### Task 3: Bottom sheet FAB menu on Daily View ✅
 
 - **Objective:** Replace the single FAB with a FAB that opens a bottom sheet offering "Manual Entry" and "AI Assist" options.
 - **Guidance:**
@@ -187,3 +187,17 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
   - Add `GEMINI_API_KEY` setup instructions to README
 - **Test:** Full end-to-end flow works. Error states display correctly. Navigation correct. Manual entry unaffected.
 - **Demo:** Complete walkthrough: Daily View → FAB → AI Assist → estimate → review → save. Also: error handling when API fails, manual entry still works.
+
+### Task 7: Comprehensive test coverage
+
+- **Objective:** Add missing frontend and backend tests for all Phase 2 features.
+- **Guidance:**
+  - **Backend:** Ensure integration tests exist for `POST /api/ai/estimate` (already done in Task 2 — verify coverage is complete)
+  - **Frontend:** Add React Native Testing Library tests for:
+    - ActionSheet component (renders options, calls onPress, dismisses on backdrop tap)
+    - Daily View FAB (opens action sheet, "Manual Entry" navigates to EntryForm, "AI Assist" navigates to AiAssist)
+    - AI Assist screen (renders input and button, button disabled when empty, loading state, successful response navigates to EntryForm with prefill)
+    - Entry Form prefill (fields populated from prefill param, user can edit, save works, edit mode unaffected)
+  - Follow existing mobile testing conventions in `.kiro/skills/mobile-testing-conventions.md`
+- **Test:** All new tests pass. Existing tests unaffected.
+- **Demo:** Run full test suite for both server and mobile — all green.

@@ -14,6 +14,7 @@ import EntryFormScreen from "./screens/entry-form";
 import GoalsScreen from "./screens/goals";
 import WeeklyViewScreen from "./screens/weekly-view";
 import SettingsScreen from "./screens/settings";
+import AiAssistScreen from "./screens/ai-assist";
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -30,6 +31,7 @@ export type MainTabParamList = {
 export type MainStackParamList = {
   MainTabs: undefined;
   EntryForm: { entry?: FoodEntry } | undefined;
+  AiAssist: undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -93,6 +95,7 @@ export default function Navigation() {
         <MainStack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.surface }, headerTintColor: colors.text }}>
           <MainStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
           <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "", headerBackTitle: "Back" }} />
+          <MainStack.Screen name="AiAssist" component={AiAssistScreen} options={{ title: "AI Assist", headerBackTitle: "Back" }} />
         </MainStack.Navigator>
       ) : (
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>

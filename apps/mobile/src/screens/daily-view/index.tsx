@@ -10,6 +10,7 @@ import DateNavigator from "../../components/date-navigator";
 import MacroSummary from "../../components/macro-summary";
 import EntryRow from "../../components/entry-row";
 import Fab from "../../components/fab";
+import ActionSheet from "../../components/action-sheet";
 import { useDailyEntries } from "./use-daily-entries";
 import type { FoodEntry } from "@snap-cals/shared";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -29,6 +30,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
     useDailyEntries(route.params?.date);
   const [showPicker, setShowPicker] = useState(false);
   const [pickerDate, setPickerDate] = useState(date);
+  const [showActions, setShowActions] = useState(false);
 
   const isToday = date === new Date().toISOString().split("T")[0];
   const dateLabel = isToday
@@ -107,7 +109,15 @@ export default function DailyViewScreen({ navigation, route }: Props) {
         />
       )}
 
-      <Fab onPress={() => navigation.navigate("EntryForm")} />
+      <Fab onPress={() => setShowActions(true)} />
+      <ActionSheet
+        visible={showActions}
+        onClose={() => setShowActions(false)}
+        options={[
+          { label: "Manual Entry", icon: "create-outline", onPress: () => navigation.navigate("EntryForm") },
+          { label: "AI Assist", icon: "sparkles-outline", onPress: () => navigation.navigate("AiAssist") },
+        ]}
+      />
     </View>
   );
 }
