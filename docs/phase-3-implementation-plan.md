@@ -140,7 +140,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** Integration test with Supertest — 401 without token, 400 with empty messages, 200 with valid messages (mock chat service). Verify response shape matches `ApiResponse<AiChatResponse>`.
 - **Demo:** Use curl to `POST /api/ai/chat` with a conversation and see the AI's response.
 
-### Task 4: Discussion Mode toggle on AI Assist screen + Settings
+### Task 4: Discussion Mode toggle on AI Assist screen + Settings ✅
 
 - **Objective:** Add the Discussion Mode toggle to the AI Assist screen and a global default in Settings.
 - **Guidance:**
@@ -152,7 +152,7 @@ apps/mobile/src/services/api.ts                  # Add chat API method
 - **Test:** Toggle renders and reflects settings store value. Toggling in Settings persists. AI Assist screen picks up the default. When off, Estimate still works as before.
 - **Demo:** Toggle Discussion Mode in Settings → open AI Assist → see toggle reflects the default. Toggle it locally on the screen. One-shot mode still works when off.
 
-### Task 5: Chat UI and conversation flow
+### Task 5: Chat UI and conversation flow ✅
 
 - **Objective:** Build the chat message list and wire up the conversational flow when Discussion Mode is on.
 - **Guidance:**

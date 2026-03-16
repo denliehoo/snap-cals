@@ -15,7 +15,7 @@ export function useAiAssist() {
     setLoading(true);
     try {
       const { data } = await api.estimateNutrition(description.trim());
-      navigation.replace("EntryForm", { prefill: data });
+      navigation.navigate("EntryForm", { prefill: data });
     } catch (e: any) {
       setError(e.message || "Failed to estimate nutrition");
     } finally {

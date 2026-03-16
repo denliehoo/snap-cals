@@ -23,7 +23,13 @@ export default function EntryFormScreen({ navigation, route }: Props) {
 
   const goBack = () => {
     show(isEdit ? "Entry updated" : "Entry added");
-    navigation.goBack();
+    // AI flow (one-shot or chat): popToTop clears AiAssist + EntryForm from the stack
+    // Manual/edit flow: goBack returns to the previous screen (Daily View)
+    if (isPrefill) {
+      navigation.popToTop();
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
