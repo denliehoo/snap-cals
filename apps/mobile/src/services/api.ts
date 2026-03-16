@@ -8,7 +8,10 @@ import {
   UpsertGoalRequest,
 } from "@snap-cals/shared";
 
-const API_URL = __DEV__ ? "http://localhost:3000/api" : "http://localhost:3000/api";
+import { Platform } from "react-native";
+
+const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
+const API_URL = __DEV__ ? `http://${DEV_HOST}:3000/api` : "http://localhost:3000/api";
 
 let authToken: string | null = null;
 let onUnauthorized: (() => void) | null = null;
