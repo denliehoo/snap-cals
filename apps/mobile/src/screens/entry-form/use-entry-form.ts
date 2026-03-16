@@ -29,13 +29,23 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const clearFieldError = (field: string) => {
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
 
   const validate = () => {
-    if (!name || !calories) {
-      setError("Name and calories are required");
-      return false;
-    }
-    return true;
+    const errors: Record<string, string> = {};
+    if (!name.trim()) errors.name = "Name is required";
+    if (!calories.trim()) errors.calories = "Calories is required";
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const submit = async (onSuccess: () => void) => {
@@ -91,6 +101,8 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
     setters: { setName, setCalories, setProtein, setCarbs, setFat, setServingSize, setMealType, setDate },
     loading,
     error,
+    fieldErrors,
+    clearFieldError,
     submit,
     confirmDelete,
   };

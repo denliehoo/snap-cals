@@ -10,6 +10,7 @@ interface FormFieldProps {
   placeholder?: string;
   keyboardType?: KeyboardTypeOptions;
   secureTextEntry?: boolean;
+  error?: string;
 }
 
 export default function FormField({
@@ -19,6 +20,7 @@ export default function FormField({
   placeholder,
   keyboardType,
   secureTextEntry,
+  error,
 }: FormFieldProps) {
   const colors = useColors();
 
@@ -26,7 +28,7 @@ export default function FormField({
     <View style={styles.wrapper}>
       <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
+        style={[styles.input, { backgroundColor: colors.surface, borderColor: error ? colors.error : colors.border, color: colors.text }]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -34,6 +36,7 @@ export default function FormField({
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
       />
+      {error ? <Text style={[styles.error, { color: colors.error }]}>{error}</Text> : null}
     </View>
   );
 }
@@ -48,4 +51,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     fontSize: fontSize.md,
   },
+  error: { fontSize: fontSize.xs, marginTop: spacing.xs },
 });

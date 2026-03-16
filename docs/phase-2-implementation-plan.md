@@ -199,7 +199,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Verify correct meal type for different hours. Verify edit mode still uses the entry's existing meal type.
 - **Demo:** Open the entry form at different times of day and see the meal type chip pre-selected correctly.
 
-### Task 8: Inline form validation with field-level errors
+### Task 8: Inline form validation with field-level errors ✅
 
 - **Objective:** Replace the single top-level error message in the entry form with inline field-level validation — highlight invalid inputs with a red border and show error text below each field.
 - **Guidance:**

@@ -16,7 +16,7 @@ const MEAL_TYPES = Object.values(MealType);
 
 export default function EntryFormScreen({ navigation, route }: Props) {
   const colors = useColors();
-  const { isEdit, isPrefill, fields, setters, loading, error, submit, confirmDelete } =
+  const { isEdit, isPrefill, fields, setters, loading, error, fieldErrors, clearFieldError, submit, confirmDelete } =
     useEntryForm(route.params?.entry, route.params?.prefill);
   const { show } = useSnackbar();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -32,8 +32,8 @@ export default function EntryFormScreen({ navigation, route }: Props) {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <FormField label="Food Name *" value={fields.name} onChangeText={setters.setName} placeholder="e.g. Chicken Breast" />
-      <FormField label="Calories *" value={fields.calories} onChangeText={setters.setCalories} placeholder="0" keyboardType="numeric" />
+      <FormField label="Food Name *" value={fields.name} onChangeText={(v) => { setters.setName(v); clearFieldError("name"); }} placeholder="e.g. Chicken Breast" error={fieldErrors.name} />
+      <FormField label="Calories *" value={fields.calories} onChangeText={(v) => { setters.setCalories(v); clearFieldError("calories"); }} placeholder="0" keyboardType="numeric" error={fieldErrors.calories} />
 
       <View style={styles.row}>
         <View style={styles.rowItem}>
