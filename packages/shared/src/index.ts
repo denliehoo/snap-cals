@@ -84,6 +84,10 @@ export interface ApiError {
   errors?: Record<string, string[]>;
 }
 
+// AI Chat limits
+export const AI_DESCRIPTION_MAX_LENGTH = 200;
+export const AI_CHAT_REPLY_MAX_LENGTH = 300;
+
 // AI Estimate
 export interface AiEstimateRequest {
   description: string;

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { chat } from "../services/chat.service";
-import { AiChatRequest } from "@snap-cals/shared";
+import { AiChatRequest, AI_CHAT_REPLY_MAX_LENGTH } from "@snap-cals/shared";
 
 export const handleChat = async (req: Request<{}, {}, AiChatRequest>, res: Response) => {
   try {
@@ -12,6 +12,9 @@ export const handleChat = async (req: Request<{}, {}, AiChatRequest>, res: Respo
     for (const msg of messages) {
       if (!msg.role || !msg.content || !["user", "assistant"].includes(msg.role)) {
         return res.status(400).json({ message: "Each message must have a valid role and content" });
+      }
+      if (msg.role === "user" && msg.content.length > AI_CHAT_REPLY_MAX_LENGTH) {
+        return res.status(400).json({ message: `Message content must not exceed ${AI_CHAT_REPLY_MAX_LENGTH} characters` });
       }
     }
 

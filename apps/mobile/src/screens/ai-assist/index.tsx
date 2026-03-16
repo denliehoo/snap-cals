@@ -9,6 +9,7 @@ import { useChat } from "./use-chat";
 import { useSettingsStore } from "../../stores/settings.store";
 import ThemedSwitch from "../../components/themed-switch";
 import ChatView from "./chat-view";
+import { AI_DESCRIPTION_MAX_LENGTH, AI_CHAT_REPLY_MAX_LENGTH } from "@snap-cals/shared";
 
 export default function AiAssistScreen() {
   const colors = useColors();
@@ -51,6 +52,7 @@ export default function AiAssistScreen() {
               placeholderTextColor={colors.textSecondary}
               value={reply}
               onChangeText={setReply}
+              maxLength={AI_CHAT_REPLY_MAX_LENGTH}
               editable={!chat.loading}
             />
             <Button
@@ -60,6 +62,11 @@ export default function AiAssistScreen() {
               loading={chat.loading}
             />
           </View>
+          {reply.length >= AI_CHAT_REPLY_MAX_LENGTH * 0.8 && (
+            <Text style={[styles.charCount, reply.length >= AI_CHAT_REPLY_MAX_LENGTH && styles.charCountLimit]}>
+              {reply.length}/{AI_CHAT_REPLY_MAX_LENGTH}
+            </Text>
+          )}
           {chat.estimate ? (
             <View style={styles.confirmRow}>
               <Button title="Confirm Estimate" onPress={chat.confirm} />
@@ -86,10 +93,16 @@ export default function AiAssistScreen() {
         placeholderTextColor={colors.textSecondary}
         value={assist.description}
         onChangeText={assist.setDescription}
+        maxLength={AI_DESCRIPTION_MAX_LENGTH}
         multiline
         autoFocus
         editable={!assist.loading}
       />
+      {assist.description.length >= AI_DESCRIPTION_MAX_LENGTH * 0.8 && (
+        <Text style={[styles.charCount, assist.description.length >= AI_DESCRIPTION_MAX_LENGTH && styles.charCountLimit]}>
+          {assist.description.length}/{AI_DESCRIPTION_MAX_LENGTH}
+        </Text>
+      )}
       <View style={styles.toggleRow}>
         <Text style={styles.toggleLabel}>Discussion Mode</Text>
         <ThemedSwitch
@@ -134,6 +147,8 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
     },
     toggleLabel: { color: colors.text, fontSize: fontSize.md },
     toggleHint: { color: colors.textSecondary, fontSize: fontSize.sm, marginBottom: spacing.md },
+    charCount: { color: colors.textSecondary, fontSize: fontSize.xs, marginBottom: spacing.xs },
+    charCountLimit: { color: colors.error },
     chatInputRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginTop: spacing.md },
     confirmRow: { paddingVertical: spacing.md },
     chatInput: {

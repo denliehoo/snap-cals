@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
 import { estimateNutrition } from "../services/gemini.service";
-import { AiEstimateRequest } from "@snap-cals/shared";
+import { AiEstimateRequest, AI_DESCRIPTION_MAX_LENGTH } from "@snap-cals/shared";
 
 export const estimate = async (req: Request<{}, {}, AiEstimateRequest>, res: Response) => {
   try {
     const { description } = req.body;
     if (!description || typeof description !== "string" || !description.trim()) {
       return res.status(400).json({ message: "description is required" });
+    }
+    if (description.length > AI_DESCRIPTION_MAX_LENGTH) {
+      return res.status(400).json({ message: `Description must not exceed ${AI_DESCRIPTION_MAX_LENGTH} characters` });
     }
 
     const data = await estimateNutrition(description.trim());
