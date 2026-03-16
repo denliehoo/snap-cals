@@ -162,7 +162,7 @@ apps/mobile/src/screens/entry-form/   # Accept prefill param, show "Review AI Es
 - **Test:** Verify screen renders with input and button. Verify button disabled when empty. Verify loading state during API call. Verify successful response navigates to EntryForm.
 - **Demo:** Type "grande oat milk latte" → tap Estimate → loading → land on EntryForm with macros pre-filled.
 
-### Task 5: Entry form pre-fill support
+### Task 5: Entry form pre-fill support ✅
 
 - **Objective:** Update the entry form to accept pre-filled data from the AI Assist screen.
 - **Guidance:**

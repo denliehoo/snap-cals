@@ -16,8 +16,8 @@ const MEAL_TYPES = Object.values(MealType);
 
 export default function EntryFormScreen({ navigation, route }: Props) {
   const colors = useColors();
-  const { isEdit, fields, setters, loading, error, submit, confirmDelete } =
-    useEntryForm(route.params?.entry);
+  const { isEdit, isPrefill, fields, setters, loading, error, submit, confirmDelete } =
+    useEntryForm(route.params?.entry, route.params?.prefill);
   const { show } = useSnackbar();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
@@ -28,7 +28,7 @@ export default function EntryFormScreen({ navigation, route }: Props) {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-      <Text style={styles.title}>{isEdit ? "Edit Entry" : "Add Entry"}</Text>
+      <Text style={styles.title}>{isPrefill ? "Review AI Estimate" : isEdit ? "Edit Entry" : "Add Entry"}</Text>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 

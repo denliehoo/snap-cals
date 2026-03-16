@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { Alert } from "react-native";
-import { MealType, FoodEntry } from "@snap-cals/shared";
+import { MealType, FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
 import { api } from "../../services/api";
 
-export function useEntryForm(entry?: FoodEntry) {
+export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
   const isEdit = !!entry;
+  const isPrefill = !isEdit && !!prefill;
 
-  const [name, setName] = useState(entry?.name || "");
-  const [calories, setCalories] = useState(entry ? String(entry.calories) : "");
-  const [protein, setProtein] = useState(entry ? String(entry.protein) : "");
-  const [carbs, setCarbs] = useState(entry ? String(entry.carbs) : "");
-  const [fat, setFat] = useState(entry ? String(entry.fat) : "");
-  const [servingSize, setServingSize] = useState(entry?.servingSize || "");
+  const [name, setName] = useState(entry?.name || prefill?.name || "");
+  const [calories, setCalories] = useState(entry ? String(entry.calories) : prefill ? String(prefill.calories) : "");
+  const [protein, setProtein] = useState(entry ? String(entry.protein) : prefill ? String(prefill.protein) : "");
+  const [carbs, setCarbs] = useState(entry ? String(entry.carbs) : prefill ? String(prefill.carbs) : "");
+  const [fat, setFat] = useState(entry ? String(entry.fat) : prefill ? String(prefill.fat) : "");
+  const [servingSize, setServingSize] = useState(entry?.servingSize || prefill?.servingSize || "");
   const [mealType, setMealType] = useState<MealType>(
     (entry?.mealType as MealType) || MealType.LUNCH
   );
@@ -77,6 +78,7 @@ export function useEntryForm(entry?: FoodEntry) {
 
   return {
     isEdit,
+    isPrefill,
     fields: { name, calories, protein, carbs, fat, servingSize, mealType, date },
     setters: { setName, setCalories, setProtein, setCarbs, setFat, setServingSize, setMealType, setDate },
     loading,
