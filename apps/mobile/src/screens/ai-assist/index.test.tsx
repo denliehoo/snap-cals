@@ -53,7 +53,7 @@ describe("AiAssistScreen", () => {
     fireEvent.press(getByText("Estimate"));
 
     await waitFor(() => {
-      expect(api.estimateNutrition).toHaveBeenCalledWith("latte");
+      expect(api.estimateNutrition).toHaveBeenCalledWith("latte", undefined);
       expect(mockNavigate).toHaveBeenCalledWith("EntryForm", { prefill: mockData });
     });
   });

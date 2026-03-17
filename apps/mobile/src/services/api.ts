@@ -9,6 +9,7 @@ import {
   AiEstimateResponse,
   AiChatRequest,
   AiChatResponse,
+  ImageData,
 } from "@snap-cals/shared";
 
 import { Platform } from "react-native";
@@ -77,10 +78,10 @@ export const api = {
   upsertGoals: (data: UpsertGoalRequest) =>
     request<ApiResponse<Goal>>("/goals", { method: "PUT", body: JSON.stringify(data) }),
 
-  estimateNutrition: (description: string) =>
+  estimateNutrition: (description: string, image?: ImageData) =>
     request<ApiResponse<AiEstimateResponse>>("/ai/estimate", {
       method: "POST",
-      body: JSON.stringify({ description }),
+      body: JSON.stringify({ description, image }),
     }),
 
   chatNutrition: (data: AiChatRequest) =>

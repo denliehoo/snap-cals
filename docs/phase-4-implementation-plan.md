@@ -140,7 +140,7 @@ apps/mobile/app.json                                    # Add expo-image-picker 
 - **Test:** Verify hook returns correct state shape. Verify `clearImage` resets state.
 - **Demo:** Call `pickFromCamera()` and `pickFromGallery()` from a test button — see image URI and base64 returned.
 
-### Task 4: AI Assist screen — camera button, image preview, and wiring
+### Task 4: AI Assist screen — camera button, image preview, and wiring ✅
 
 - **Objective:** Add the camera button to the AI Assist screen, show image preview, and wire image data through the estimate and chat flows.
 - **Guidance:**

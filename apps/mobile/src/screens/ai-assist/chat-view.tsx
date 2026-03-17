@@ -1,14 +1,15 @@
 import React, { useRef, useMemo } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, Image, FlatList, StyleSheet } from "react-native";
 import { ChatMessage } from "@snap-cals/shared";
 import { spacing, fontSize, borderRadius } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
 
 interface ChatViewProps {
   messages: ChatMessage[];
+  imageUri?: string | null;
 }
 
-export default function ChatView({ messages }: ChatViewProps) {
+export default function ChatView({ messages, imageUri }: ChatViewProps) {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const listRef = useRef<FlatList>(null);
@@ -25,6 +26,11 @@ export default function ChatView({ messages }: ChatViewProps) {
       contentContainerStyle={{ paddingTop: spacing.md }}
       onContentSizeChange={scrollToBottom}
       onLayout={scrollToBottom}
+      ListHeaderComponent={imageUri ? (
+        <View style={styles.imageRow}>
+          <Image source={{ uri: imageUri }} style={styles.chatImage} />
+        </View>
+      ) : null}
       renderItem={({ item }) => {
         const isUser = item.role === "user";
         return (
@@ -41,6 +47,8 @@ export default function ChatView({ messages }: ChatViewProps) {
 
 const makeStyles = (colors: ReturnType<typeof useColors>) =>
   StyleSheet.create({
+    imageRow: { alignItems: "flex-end", marginBottom: spacing.md },
+    chatImage: { width: 150, height: 150, borderRadius: borderRadius.md },
     bubble: {
       maxWidth: "80%",
       padding: spacing.sm,
