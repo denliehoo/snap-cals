@@ -64,7 +64,7 @@ describe("POST /api/ai/estimate", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.data).toEqual(MOCK_RESULT);
-    expect(geminiService.estimateNutrition).toHaveBeenCalledWith("big mac");
+    expect(geminiService.estimateNutrition).toHaveBeenCalledWith("big mac", undefined);
   });
 
   it("returns 429 on rate limit", async () => {

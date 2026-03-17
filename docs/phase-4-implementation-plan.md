@@ -102,7 +102,7 @@ apps/mobile/app.json                                    # Add expo-image-picker 
 
 ## Task Breakdown
 
-### Task 1: Shared types and server-side image support in Gemini services
+### Task 1: Shared types and server-side image support in Gemini services ✅
 
 - **Objective:** Add `ImageData` type to shared package and update both Gemini services to accept an optional image alongside text.
 - **Guidance:**
@@ -115,7 +115,7 @@ apps/mobile/app.json                                    # Add expo-image-picker 
 - **Test:** Unit test both services with mocked Gemini client — verify the `contents` array includes `inlineData` when image is provided, and remains text-only when not.
 - **Demo:** Call `estimateNutrition("chicken rice", { base64: "...", mimeType: "image/jpeg" })` directly and see structured JSON output.
 
-### Task 2: Update API endpoints to accept image data
+### Task 2: Update API endpoints to accept image data ✅
 
 - **Objective:** Update the estimate and chat controllers to validate and forward image data to the services.
 - **Guidance:**

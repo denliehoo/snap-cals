@@ -102,6 +102,7 @@ describe("POST /api/ai/chat", () => {
     expect(chatService.chat).toHaveBeenCalledWith(
       [{ role: "user", content: "big mac" }],
       true,
+      undefined,
     );
   });
 
