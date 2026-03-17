@@ -1,5 +1,6 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Part } from "@google/genai";
 import { z, toJSONSchema } from "zod";
+import { ImageData } from "@snap-cals/shared";
 
 const nutritionSchema = z.object({
   name: z.string(),
@@ -23,11 +24,18 @@ export function createGeminiClient(apiKey = process.env.GEMINI_API_KEY!) {
 
 export async function estimateNutrition(
   description: string,
+  image?: ImageData,
   client = createGeminiClient(),
 ): Promise<NutritionEstimate> {
+  const parts: Part[] = [];
+  if (image) {
+    parts.push({ inlineData: { mimeType: image.mimeType, data: image.base64 } });
+  }
+  parts.push({ text: description });
+
   const response = await client.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: description,
+    contents: [{ role: "user", parts }],
     config: {
       systemInstruction: SYSTEM_PROMPT,
       responseMimeType: "application/json",

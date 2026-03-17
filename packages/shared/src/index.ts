@@ -88,9 +88,18 @@ export interface ApiError {
 export const AI_DESCRIPTION_MAX_LENGTH = 200;
 export const AI_CHAT_REPLY_MAX_LENGTH = 300;
 
+// Image
+export interface ImageData {
+  base64: string;
+  mimeType: string;
+}
+
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB base64 string length limit
+
 // AI Estimate
 export interface AiEstimateRequest {
   description: string;
+  image?: ImageData;
 }
 
 export interface AiEstimateResponse {
@@ -111,6 +120,7 @@ export interface ChatMessage {
 export interface AiChatRequest {
   messages: ChatMessage[];
   forceEstimate?: boolean;
+  image?: ImageData;
 }
 
 export interface AiChatResponse {

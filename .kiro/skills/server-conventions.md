@@ -24,6 +24,11 @@ description: Express/Node.js coding conventions for the Snap Cals server app
 - Error responses: `{ message }` with appropriate status (400, 404, 429, 500)
 - Rate limit errors from external APIs → 429
 
+## TypeScript Strictness
+
+- Never use `any` — use proper types from libraries or define explicit interfaces
+- Only use `any` as a last resort when no type exists and `unknown` won't work
+
 ## File Structure
 
 - Controllers: `src/controllers/<name>.controller.ts`

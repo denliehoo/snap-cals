@@ -19,6 +19,11 @@ description: React Native coding conventions for the Snap Cals mobile app
 - Only move a hook to `src/hooks/` when it's used by multiple screens (e.g. `hooks/use-auth-form.ts`). Default is co-location.
 - Screens are thin rendering layers — state, validation, and API calls go in hooks
 
+## TypeScript Strictness
+
+- Never use `any` — use proper types from libraries or define explicit interfaces
+- Only use `any` as a last resort when no type exists and `unknown` won't work
+
 ## Code Style
 - Destructure object props at the top of a component (e.g. `const { name, calories } = entry`) — keeps JSX clean and avoids repeating the object name
 - When rendering repeated UI patterns, use a config array + `.map()` instead of duplicating JSX blocks

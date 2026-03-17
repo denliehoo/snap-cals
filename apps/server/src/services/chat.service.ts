@@ -1,6 +1,7 @@
 import { z, toJSONSchema } from "zod";
 import { createGeminiClient, NutritionEstimate } from "./gemini.service";
-import { ChatMessage } from "@snap-cals/shared";
+import { ChatMessage, ImageData } from "@snap-cals/shared";
+import { Part } from "@google/genai";
 
 const chatResponseSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("question"), content: z.string() }),
@@ -30,12 +31,20 @@ const SYSTEM_PROMPT =
 export async function chat(
   messages: ChatMessage[],
   forceEstimate = false,
+  image?: ImageData,
   client = createGeminiClient(),
 ): Promise<{ message: string; estimate?: NutritionEstimate }> {
-  const contents = messages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
-  }));
+  const contents = messages.map((m, i) => {
+    const parts: Part[] = [];
+    if (i === 0 && m.role === "user" && image) {
+      parts.push({ inlineData: { mimeType: image.mimeType, data: image.base64 } });
+    }
+    parts.push({ text: m.content });
+    return {
+      role: m.role === "assistant" ? "model" : "user",
+      parts,
+    };
+  });
 
   if (forceEstimate) {
     contents.push({
