@@ -27,6 +27,14 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": []
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Allow Snap Cals to take photos of food for nutrition estimation",
+          "photosPermission": "Allow Snap Cals to select food photos for nutrition estimation"
+        }
+      ]
+    ]
   }
 }

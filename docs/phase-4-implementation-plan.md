@@ -125,7 +125,7 @@ apps/mobile/app.json                                    # Add expo-image-picker 
 - **Test:** Integration tests — verify 400 with invalid mimeType, 400 with oversized image, 200 with valid image + description, 200 with image-only (no description). Existing text-only tests still pass.
 - **Demo:** Use curl to `POST /api/ai/estimate` with a base64-encoded food photo and see nutrition estimates returned.
 
-### Task 3: Install expo-image-picker and create image picker hook
+### Task 3: Install expo-image-picker and create image picker hook ✅
 
 - **Objective:** Add `expo-image-picker` to the mobile app and create a reusable hook for camera/gallery image selection.
 - **Guidance:**
