@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { spacing, fontSize, borderRadius } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
 import Button from "@/components/button";
+import { useSnackbar } from "@/components/snackbar";
 import { useAiAssist } from "./use-ai-assist";
 import { useChat } from "./use-chat";
 import { useSettingsStore } from "@/stores/settings.store";
@@ -13,7 +14,8 @@ import { AI_DESCRIPTION_MAX_LENGTH, AI_CHAT_REPLY_MAX_LENGTH } from "@snap-cals/
 
 export default function AiAssistScreen() {
   const colors = useColors();
-  const assist = useAiAssist();
+  const { show } = useSnackbar();
+  const assist = useAiAssist((msg) => show(msg, "error"));
   const chat = useChat();
   const globalDefault = useSettingsStore((s) => s.discussionMode);
   const [discussionMode, setDiscussionMode] = useState(globalDefault);
@@ -111,7 +113,6 @@ export default function AiAssistScreen() {
         />
       </View>
       <Text style={styles.toggleHint}>AI will ask clarifying questions before estimating</Text>
-      {assist.error && <Text style={styles.error}>{assist.error}</Text>}
       <Button
         title="Estimate"
         onPress={discussionMode ? startChat : assist.estimate}
@@ -139,7 +140,6 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       borderWidth: 1,
       borderColor: colors.border,
     },
-    error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.sm },
     toggleRow: {
       flexDirection: "row",
       alignItems: "center",

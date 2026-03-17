@@ -123,6 +123,11 @@ snap-cals/
 - No hardcoded colors, font weights, or spacing in components — always reference theme tokens
 - `colors.textOnPrimary` for text on colored backgrounds, `fontWeight.bold`/`semibold` for weights
 
+### Error & Success Feedback
+- Validation errors display inline below each field via the `FormField` `error` prop (per-field `fieldErrors` state, not a single error string)
+- API errors show as error snackbars via `useSnackbar().show(msg, "error")` — hooks accept an `onError` callback rather than managing error state
+- API success shows as a success snackbar when the outcome isn't obvious from navigation (e.g. entry added/deleted, goals saved — but not login/signup)
+
 ## Testing
 
 ### Backend

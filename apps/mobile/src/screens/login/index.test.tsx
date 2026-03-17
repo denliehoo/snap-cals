@@ -44,7 +44,8 @@ describe("LoginScreen", () => {
     );
     fireEvent.press(getByText("Log In"));
     await waitFor(() => {
-      expect(getByText("Email and password are required")).toBeTruthy();
+      expect(getByText("Email is required")).toBeTruthy();
+      expect(getByText("Password is required")).toBeTruthy();
     });
     expect(mockLogin).not.toHaveBeenCalled();
   });

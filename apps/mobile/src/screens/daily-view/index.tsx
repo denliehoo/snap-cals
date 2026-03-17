@@ -10,6 +10,7 @@ import MacroSummary from "@/components/macro-summary";
 import EntryRow from "@/components/entry-row";
 import Fab from "@/components/fab";
 import ActionSheet from "@/components/action-sheet";
+import { useSnackbar } from "@/components/snackbar";
 import { useDailyEntries } from "./use-daily-entries";
 import type { FoodEntry } from "@snap-cals/shared";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -25,8 +26,9 @@ type Props = CompositeScreenProps<
 
 export default function DailyViewScreen({ navigation, route }: Props) {
   const colors = useColors();
+  const { show } = useSnackbar();
   const { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry } =
-    useDailyEntries(route.params?.date);
+    useDailyEntries(route.params?.date, (msg) => show(msg, "error"));
   const [showPicker, setShowPicker] = useState(false);
   const [showActions, setShowActions] = useState(false);
 
@@ -38,7 +40,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
   const handleDelete = (entry: FoodEntry) => {
     Alert.alert("Delete Entry", `Delete "${entry.name}"?`, [
       { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => deleteEntry(entry.id) },
+      { text: "Delete", style: "destructive", onPress: async () => { await deleteEntry(entry.id); show("Entry deleted"); } },
     ]);
   };
 

@@ -10,7 +10,16 @@ export function useGoals() {
   const [fat, setFat] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const clearFieldError = (field: string) => {
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
 
   useEffect(() => {
     (async () => {
@@ -32,28 +41,33 @@ export function useGoals() {
     })();
   }, []);
 
-  const save = async (onSuccess?: () => void) => {
-    const values = {
-      dailyCalories: Number(calories),
-      dailyProtein: Number(protein),
-      dailyCarbs: Number(carbs),
-      dailyFat: Number(fat),
-    };
-    if (Object.values(values).some((v) => isNaN(v) || v < 0)) {
-      setError("All values must be valid numbers >= 0");
-      return;
+  const save = async (onSuccess?: () => void, onError?: (msg: string) => void) => {
+    const fields = { calories, protein, carbs, fat };
+    const labels: Record<string, string> = { calories: "Calories (kcal)", protein: "Protein (g)", carbs: "Carbs (g)", fat: "Fat (g)" };
+    const errors: Record<string, string> = {};
+    for (const [key, val] of Object.entries(fields)) {
+      if (!val.trim()) { errors[key] = `${labels[key]} is required`; continue; }
+      const n = Number(val);
+      if (isNaN(n) || n < 0) errors[key] = `${labels[key]} must be a valid number >= 0`;
     }
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
     setSaving(true);
-    setError("");
     try {
-      await api.upsertGoals(values);
+      await api.upsertGoals({
+        dailyCalories: Number(calories),
+        dailyProtein: Number(protein),
+        dailyCarbs: Number(carbs),
+        dailyFat: Number(fat),
+      });
       onSuccess?.();
     } catch (e: any) {
-      setError(e.message || "Failed to save goals");
+      onError?.(e.message || "Failed to save goals");
     } finally {
       setSaving(false);
     }
   };
 
-  return { calories, setCalories, protein, setProtein, carbs, setCarbs, fat, setFat, loading, saving, error, save };
+  return { calories, setCalories, protein, setProtein, carbs, setCarbs, fat, setFat, loading, saving, fieldErrors, clearFieldError, save };
 }

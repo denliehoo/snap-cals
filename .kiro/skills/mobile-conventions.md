@@ -35,6 +35,14 @@ description: React Native coding conventions for the Snap Cals mobile app
 - Use `fontWeight.bold`, `fontWeight.semibold`, etc. (not `"700"`, `"600"`)
 - If a new token is needed, add it to the theme file first
 
+## Error & Success Feedback
+- **Validation errors**: Always display inline, directly below the relevant field using the `FormField` `error` prop. Never show validation errors in a banner or snackbar. Use per-field `fieldErrors` state (not a single error string) so each field shows its own message.
+- **API errors**: Always show in an error snackbar via `useSnackbar().show(msg, "error")`. Never display API errors inline. Hooks should accept an `onError` callback instead of managing error state internally.
+- **API success**: Show a success snackbar when the result isn't obvious from navigation alone. Examples:
+  - Show snackbar: entry added/updated/deleted, goals saved
+  - Skip snackbar: login/signup success (navigation change makes it obvious)
+- Snackbar is provided by `components/snackbar.tsx` (`SnackbarProvider` wraps the app in `App.tsx`)
+
 ## Date Handling
 - Always use `toLocalDateString()` from `@/utils/date` to get a `YYYY-MM-DD` string from a `Date` object
 - Always use `parseLocalDate()` from `@/utils/date` to convert a `YYYY-MM-DD` string back to a `Date` object

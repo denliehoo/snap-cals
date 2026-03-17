@@ -12,7 +12,7 @@ function guessMealType(): MealType {
   return MealType.SNACK;
 }
 
-export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
+export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse, onError?: (msg: string) => void) {
   const isEdit = !!entry;
   const isPrefill = !isEdit && !!prefill;
 
@@ -29,7 +29,6 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
     entry?.date?.split("T")[0] || toLocalDateString()
   );
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const clearFieldError = (field: string) => {
@@ -52,7 +51,6 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
   const submit = async (onSuccess: () => void) => {
     if (!validate()) return;
     setLoading(true);
-    setError("");
     try {
       const data = {
         name,
@@ -71,7 +69,7 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
       }
       onSuccess();
     } catch (e: any) {
-      setError(e.message || "Failed to save entry");
+      onError?.(e.message || "Failed to save entry");
     } finally {
       setLoading(false);
     }
@@ -88,7 +86,7 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
             await api.deleteEntry(entry!.id);
             onSuccess();
           } catch (e: any) {
-            setError(e.message || "Failed to delete");
+            onError?.(e.message || "Failed to delete");
           }
         },
       },
@@ -101,7 +99,6 @@ export function useEntryForm(entry?: FoodEntry, prefill?: AiEstimateResponse) {
     fields: { name, calories, protein, carbs, fat, servingSize, mealType, date },
     setters: { setName, setCalories, setProtein, setCarbs, setFat, setServingSize, setMealType, setDate },
     loading,
-    error,
     fieldErrors,
     clearFieldError,
     submit,

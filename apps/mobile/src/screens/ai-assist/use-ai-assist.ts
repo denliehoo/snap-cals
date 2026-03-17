@@ -4,24 +4,22 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { api } from "@/services/api";
 import { MainStackParamList } from "@/navigation";
 
-export function useAiAssist() {
+export function useAiAssist(onError?: (msg: string) => void) {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const estimate = async () => {
-    setError(null);
     setLoading(true);
     try {
       const { data } = await api.estimateNutrition(description.trim());
       navigation.navigate("EntryForm", { prefill: data });
     } catch (e: any) {
-      setError(e.message || "Failed to estimate nutrition");
+      onError?.(e.message || "Failed to estimate nutrition");
     } finally {
       setLoading(false);
     }
   };
 
-  return { description, setDescription, loading, error, estimate };
+  return { description, setDescription, loading, estimate };
 }

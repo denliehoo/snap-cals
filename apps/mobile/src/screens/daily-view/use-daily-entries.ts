@@ -26,7 +26,7 @@ const MEAL_LABELS: Record<MealType, string> = {
   [MealType.SNACK]: "Snack",
 };
 
-export function useDailyEntries(initialDate?: string) {
+export function useDailyEntries(initialDate?: string, onError?: (msg: string) => void) {
   const navigation = useNavigation();
   const [date, setDate] = useState(() => initialDate || toLocalDateString(new Date()));
   const [entries, setEntries] = useState<FoodEntry[]>([]);
@@ -44,8 +44,9 @@ export function useDailyEntries(initialDate?: string) {
       const [entriesRes, goalsRes] = await Promise.all([api.getEntries(date), api.getGoals()]);
       setEntries(entriesRes.data);
       setGoals(goalsRes.data);
-    } catch {
+    } catch (e: any) {
       setEntries([]);
+      onError?.(e.message || "Failed to load entries");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -110,8 +111,12 @@ export function useDailyEntries(initialDate?: string) {
   };
 
   const deleteEntry = async (id: string) => {
-    await api.deleteEntry(id);
-    setEntries((prev) => prev.filter((e) => e.id !== id));
+    try {
+      await api.deleteEntry(id);
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+    } catch (e: any) {
+      onError?.(e.message || "Failed to delete entry");
+    }
   };
 
   return { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry };

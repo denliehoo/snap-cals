@@ -22,7 +22,7 @@ export interface DaySummary {
   entryCount: number;
 }
 
-export function useWeeklyEntries() {
+export function useWeeklyEntries(onError?: (msg: string) => void) {
   const navigation = useNavigation();
   const [weekStart, setWeekStart] = useState(() => toLocalDateString(getMonday(new Date())));
   const [days, setDays] = useState<DaySummary[]>([]);
@@ -65,8 +65,9 @@ export function useWeeklyEntries() {
         });
       }
       setDays(summaries);
-    } catch {
+    } catch (e: any) {
       setDays([]);
+      onError?.(e.message || "Failed to load weekly data");
     } finally {
       setLoading(false);
       setRefreshing(false);

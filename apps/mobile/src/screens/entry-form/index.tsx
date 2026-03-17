@@ -18,18 +18,16 @@ const MEAL_TYPES = Object.values(MealType);
 
 export default function EntryFormScreen({ navigation, route }: Props) {
   const colors = useColors();
-  const { isEdit, isPrefill, fields, setters, loading, error, fieldErrors, clearFieldError, submit, confirmDelete } =
-    useEntryForm(route.params?.entry, route.params?.prefill);
   const { show } = useSnackbar();
+  const { isEdit, isPrefill, fields, setters, loading, fieldErrors, clearFieldError, submit, confirmDelete } =
+    useEntryForm(route.params?.entry, route.params?.prefill, (msg) => show(msg, "error"));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const dateLabel = parseLocalDate(fields.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
 
-  const goBack = () => {
-    show(isEdit ? "Entry updated" : "Entry added");
-    // AI flow (one-shot or chat): popToTop clears AiAssist + EntryForm from the stack
-    // Manual/edit flow: goBack returns to the previous screen (Daily View)
+  const goBack = (message: string) => {
+    show(message);
     if (isPrefill) {
       navigation.popToTop();
     } else {
@@ -40,8 +38,6 @@ export default function EntryFormScreen({ navigation, route }: Props) {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <Text style={styles.title}>{isPrefill ? "Review AI Estimate" : isEdit ? "Edit Entry" : "Add Entry"}</Text>
-
-      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <FormField label="Food Name *" value={fields.name} onChangeText={(v) => { setters.setName(v); clearFieldError("name"); }} placeholder="e.g. Chicken Breast" error={fieldErrors.name} />
       <FormField label="Calories *" value={fields.calories} onChangeText={(v) => { setters.setCalories(v); clearFieldError("calories"); }} placeholder="0" keyboardType="numeric" error={fieldErrors.calories} />
@@ -84,9 +80,9 @@ export default function EntryFormScreen({ navigation, route }: Props) {
       />
 
       <View style={styles.actions}>
-        <Button title={isEdit ? "Update" : "Add Entry"} onPress={() => submit(goBack)} loading={loading} />
+        <Button title={isEdit ? "Update" : "Add Entry"} onPress={() => submit(() => goBack(isEdit ? "Entry updated" : "Entry added"))} loading={loading} />
         {isEdit && (
-          <Button title="Delete Entry" onPress={() => confirmDelete(goBack)} variant="text-danger" />
+          <Button title="Delete Entry" onPress={() => confirmDelete(() => goBack("Entry deleted"))} variant="text-danger" />
         )}
       </View>
     </ScrollView>
@@ -99,7 +95,6 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
     content: { padding: spacing.lg, paddingBottom: spacing.xl * 2 },
     title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text, marginBottom: spacing.lg },
     label: { fontSize: fontSize.sm, fontWeight: fontWeight.medium, color: colors.text, marginBottom: spacing.sm },
-    error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.md, textAlign: "center" },
     row: { flexDirection: "row", gap: spacing.sm },
     rowItem: { flex: 1 },
     mealRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.lg },

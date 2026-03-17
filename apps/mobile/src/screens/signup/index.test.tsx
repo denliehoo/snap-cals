@@ -44,7 +44,8 @@ describe("SignupScreen", () => {
     );
     fireEvent.press(getByText("Sign Up"));
     await waitFor(() => {
-      expect(getByText("Email and password are required")).toBeTruthy();
+      expect(getByText("Email is required")).toBeTruthy();
+      expect(getByText("Password is required")).toBeTruthy();
     });
   });
 
@@ -56,7 +57,7 @@ describe("SignupScreen", () => {
     fireEvent.changeText(getByPlaceholderText("Password"), "abc");
     fireEvent.press(getByText("Sign Up"));
     await waitFor(() => {
-      expect(getByText("Password must be at least 6 characters")).toBeTruthy();
+      expect(getByText("Must be at least 6 characters")).toBeTruthy();
     });
     expect(mockSignup).not.toHaveBeenCalled();
   });

@@ -72,7 +72,7 @@ describe("GoalsScreen", () => {
     fireEvent.press(getByText("Save Goals"));
 
     await waitFor(() => {
-      expect(getByText("All values must be valid numbers >= 0")).toBeTruthy();
+      expect(getByText("Calories (kcal) must be a valid number >= 0")).toBeTruthy();
     });
     expect(api.upsertGoals).not.toHaveBeenCalled();
   });

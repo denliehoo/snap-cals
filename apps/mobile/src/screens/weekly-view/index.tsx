@@ -4,6 +4,7 @@ import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
 import DateNavigator from "@/components/date-navigator";
 import { toLocalDateString } from "@/utils/date";
+import { useSnackbar } from "@/components/snackbar";
 import { useWeeklyEntries, DaySummary } from "./use-weekly-entries";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MainStackParamList } from "@/navigation";
@@ -18,8 +19,9 @@ type Props = CompositeScreenProps<
 
 export default function WeeklyViewScreen({ navigation }: Props) {
   const colors = useColors();
+  const { show } = useSnackbar();
   const { days, goals, weekLabel, loading, refreshing, onRefresh, goToPreviousWeek, goToNextWeek } =
-    useWeeklyEntries();
+    useWeeklyEntries((msg) => show(msg, "error"));
 
   const goalCalories = goals?.dailyCalories ?? 2000;
   const styles = useMemo(() => makeStyles(colors), [colors]);

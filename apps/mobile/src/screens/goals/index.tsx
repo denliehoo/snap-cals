@@ -15,7 +15,7 @@ export default function GoalsScreen() {
     protein, setProtein,
     carbs, setCarbs,
     fat, setFat,
-    loading, saving, error, save,
+    loading, saving, fieldErrors, clearFieldError, save,
   } = useGoals();
   const { show } = useSnackbar();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -36,15 +36,13 @@ export default function GoalsScreen() {
           <Text style={styles.title}>Daily Goals</Text>
         </View>
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        <FormField label="Calories (kcal)" value={calories} onChangeText={setCalories} keyboardType="numeric" />
-        <FormField label="Protein (g)" value={protein} onChangeText={setProtein} keyboardType="numeric" />
-        <FormField label="Carbs (g)" value={carbs} onChangeText={setCarbs} keyboardType="numeric" />
-        <FormField label="Fat (g)" value={fat} onChangeText={setFat} keyboardType="numeric" />
+        <FormField label="Calories (kcal)" value={calories} onChangeText={(v) => { setCalories(v); clearFieldError("calories"); }} keyboardType="numeric" error={fieldErrors.calories} />
+        <FormField label="Protein (g)" value={protein} onChangeText={(v) => { setProtein(v); clearFieldError("protein"); }} keyboardType="numeric" error={fieldErrors.protein} />
+        <FormField label="Carbs (g)" value={carbs} onChangeText={(v) => { setCarbs(v); clearFieldError("carbs"); }} keyboardType="numeric" error={fieldErrors.carbs} />
+        <FormField label="Fat (g)" value={fat} onChangeText={(v) => { setFat(v); clearFieldError("fat"); }} keyboardType="numeric" error={fieldErrors.fat} />
 
         <View style={styles.buttonWrapper}>
-          <Button title="Save Goals" onPress={() => save(() => show("Goals saved!"))} loading={saving} />
+          <Button title="Save Goals" onPress={() => save(() => show("Goals saved!"), (msg) => show(msg, "error"))} loading={saving} />
         </View>
       </View>
     </View>
@@ -58,6 +56,5 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
     card: { backgroundColor: colors.surface, borderRadius: borderRadius.lg, padding: spacing.lg, ...shadow.sm },
     header: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.lg },
     title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text },
-    error: { color: colors.error, fontSize: fontSize.sm, marginBottom: spacing.md, textAlign: "center" },
     buttonWrapper: { marginTop: spacing.sm },
   });

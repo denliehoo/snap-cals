@@ -76,7 +76,8 @@ No `borderWidth` or `borderBottomWidth` on cards — shadows provide separation.
 | Component      | Path                              | Usage                                                  |
 | -------------- | --------------------------------- | ------------------------------------------------------ |
 | Button         | `components/button.tsx`           | All tappable actions — supports `loading`, `variant`   |
-| FormField      | `components/form-field.tsx`       | Labeled text inputs with error display                 |
+| FormField      | `components/form-field.tsx`       | Labeled text inputs with inline error display           |
 | ThemedSwitch   | `components/themed-switch.tsx`    | Drop-in `Switch` with themed track and thumb colors    |
+| Snackbar       | `components/snackbar.tsx`         | Toast-style feedback — API errors (`"error"`) and success (`"success"`) |
 
 Always use `ThemedSwitch` instead of the raw React Native `Switch` to ensure consistent styling across platforms.

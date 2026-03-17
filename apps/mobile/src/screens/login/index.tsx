@@ -5,6 +5,7 @@ import { useColors } from "@/contexts/theme-context";
 import FormField from "@/components/form-field";
 import Button from "@/components/button";
 import { useAuthForm } from "@/hooks/use-auth-form";
+import { useSnackbar } from "@/components/snackbar";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { AuthStackParamList } from "@/navigation";
 
@@ -12,8 +13,9 @@ type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
 export default function LoginScreen({ navigation }: Props) {
   const colors = useColors();
-  const { email, setEmail, password, setPassword, loading, error, submit } =
-    useAuthForm("login");
+  const { show } = useSnackbar();
+  const { email, setEmail, password, setPassword, loading, fieldErrors, clearFieldError, submit } =
+    useAuthForm("login", (msg) => show(msg, "error"));
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
@@ -22,10 +24,8 @@ export default function LoginScreen({ navigation }: Props) {
         <Text style={styles.title}>🔥 Snap Cals</Text>
         <Text style={styles.subtitle}>Log in to your account</Text>
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        <FormField label="Email" value={email} onChangeText={setEmail} placeholder="Email" keyboardType="email-address" />
-        <FormField label="Password" value={password} onChangeText={setPassword} placeholder="Password" secureTextEntry />
+        <FormField label="Email" value={email} onChangeText={(v) => { setEmail(v); clearFieldError("email"); }} placeholder="Email" keyboardType="email-address" error={fieldErrors.email} />
+        <FormField label="Password" value={password} onChangeText={(v) => { setPassword(v); clearFieldError("password"); }} placeholder="Password" secureTextEntry error={fieldErrors.password} />
 
         <View style={styles.buttonWrapper}>
           <Button title="Log In" onPress={submit} loading={loading} />
@@ -45,7 +45,6 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
     card: { backgroundColor: colors.surface, borderRadius: borderRadius.lg, padding: spacing.lg, ...shadow.md },
     title: { fontSize: fontSize.xxl, fontWeight: fontWeight.bold, color: colors.primary, textAlign: "center", marginBottom: spacing.xs },
     subtitle: { fontSize: fontSize.md, color: colors.textSecondary, textAlign: "center", marginBottom: spacing.xl },
-    error: { color: colors.error, fontSize: fontSize.sm, textAlign: "center", marginBottom: spacing.md },
     buttonWrapper: { marginTop: spacing.sm, marginBottom: spacing.lg },
     link: { color: colors.primary, fontSize: fontSize.sm, fontWeight: fontWeight.medium, textAlign: "center" },
   });
