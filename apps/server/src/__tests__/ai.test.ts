@@ -91,4 +91,60 @@ describe("POST /api/ai/estimate", () => {
 
     expect(res.status).toBe(500);
   });
+
+  // --- Image support ---
+
+  it("returns 200 with valid image and description", async () => {
+    const image = { base64: "abc123", mimeType: "image/jpeg" };
+    const res = await request(app)
+      .post("/api/ai/estimate")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "chicken rice", image });
+
+    expect(res.status).toBe(200);
+    expect(geminiService.estimateNutrition).toHaveBeenCalledWith("chicken rice", image);
+  });
+
+  it("returns 200 with image only (no description)", async () => {
+    const image = { base64: "abc123", mimeType: "image/png" };
+    const res = await request(app)
+      .post("/api/ai/estimate")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "", image });
+
+    expect(res.status).toBe(200);
+    expect(geminiService.estimateNutrition).toHaveBeenCalledWith(
+      "Estimate the nutrition of this food",
+      image,
+    );
+  });
+
+  it("returns 400 with invalid mimeType", async () => {
+    const res = await request(app)
+      .post("/api/ai/estimate")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "food", image: { base64: "abc", mimeType: "image/gif" } });
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch(/mimeType/i);
+  });
+
+  it("returns 400 with oversized image", async () => {
+    const res = await request(app)
+      .post("/api/ai/estimate")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "food", image: { base64: "a".repeat(5 * 1024 * 1024 + 1), mimeType: "image/jpeg" } });
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch(/too large/i);
+  });
+
+  it("returns 400 when image missing base64", async () => {
+    const res = await request(app)
+      .post("/api/ai/estimate")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "food", image: { mimeType: "image/jpeg" } });
+
+    expect(res.status).toBe(400);
+  });
 });

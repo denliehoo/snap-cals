@@ -2,6 +2,20 @@ import React from "react";
 import AiAssistScreen from "./";
 import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 
+const mockPickFromCamera = jest.fn();
+const mockPickFromGallery = jest.fn();
+const mockClearImage = jest.fn();
+let mockImage: any = null;
+
+jest.mock("./use-image-picker", () => ({
+  useImagePicker: () => ({
+    image: mockImage,
+    pickFromCamera: mockPickFromCamera,
+    pickFromGallery: mockPickFromGallery,
+    clearImage: mockClearImage,
+  }),
+}));
+
 jest.mock("@/services/api", () => ({
   api: {
     estimateNutrition: jest.fn(),
@@ -23,7 +37,10 @@ jest.mock("@/stores/settings.store", () => ({
 const { api } = jest.requireMock("@/services/api");
 const mockNavigate = jest.fn();
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockImage = null;
+});
 
 describe("AiAssistScreen", () => {
   it("renders input, button, and disclaimer", async () => {
@@ -77,6 +94,32 @@ describe("AiAssistScreen", () => {
 
     await waitFor(() => {
       expect(getByText("170/200")).toBeTruthy();
+    });
+  });
+
+  // --- Image support ---
+
+  it("renders camera button", async () => {
+    const { getByTestId } = await render(<AiAssistScreen />);
+    expect(getByTestId("camera-button")).toBeTruthy();
+  });
+
+  it("shows image preview when image is selected", async () => {
+    mockImage = { uri: "file://photo.jpg", base64: "abc", mimeType: "image/jpeg" };
+    const { getByTestId } = await render(<AiAssistScreen />);
+    // The close-circle icon button is rendered next to the thumbnail
+    expect(getByTestId("camera-button")).toBeTruthy();
+  });
+
+  it("enables Estimate button with image only (no text)", async () => {
+    mockImage = { uri: "file://photo.jpg", base64: "abc", mimeType: "image/jpeg" };
+    api.estimateNutrition.mockResolvedValue({ data: { name: "Food", calories: 100, protein: 5, carbs: 10, fat: 3, servingSize: "1 serving" } });
+
+    const { getByText } = await render(<AiAssistScreen />);
+    fireEvent.press(getByText("Estimate"));
+
+    await waitFor(() => {
+      expect(api.estimateNutrition).toHaveBeenCalledWith("", { base64: "abc", mimeType: "image/jpeg" });
     });
   });
 });

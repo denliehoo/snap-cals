@@ -49,4 +49,26 @@ describe("gemini.service", () => {
     const client = mockClient("not json");
     await expect(estimateNutrition("pizza", undefined, client)).rejects.toThrow();
   });
+
+  it("includes inlineData when image is provided", async () => {
+    const client = mockClient(JSON.stringify(VALID_RESPONSE));
+    const image = { base64: "abc123", mimeType: "image/jpeg" };
+
+    await estimateNutrition("chicken rice", image, client);
+
+    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    expect(contents[0].parts).toEqual([
+      { inlineData: { mimeType: "image/jpeg", data: "abc123" } },
+      { text: "chicken rice" },
+    ]);
+  });
+
+  it("sends text-only parts when no image", async () => {
+    const client = mockClient(JSON.stringify(VALID_RESPONSE));
+
+    await estimateNutrition("pizza", undefined, client);
+
+    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    expect(contents[0].parts).toEqual([{ text: "pizza" }]);
+  });
 });

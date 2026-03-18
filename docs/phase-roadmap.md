@@ -37,7 +37,7 @@ The AI can ask clarifying questions (e.g., "Where did you buy this?", "What size
 
 Users can take a photo of their food and send it to the AI instead of typing. The AI analyzes the image and returns estimated calories and macros. Same confirmation/chat flow as Phase 3 applies. Users can still type or manually enter as alternatives.
 
-**Status:** In Progress — see [Phase 4 Implementation Plan](./phase-4-implementation-plan.md)
+**Status:** Completed — see [Phase 4 Implementation Plan](./phase-4-implementation-plan.md)
 
 ### Phase 5: Subscription & Usage Limits
 

@@ -139,6 +139,7 @@ export default function AiAssistScreen() {
           style={[styles.cameraButton, { borderColor: colors.border }]}
           onPress={() => setSheetVisible(true)}
           disabled={assist.loading}
+          testID="camera-button"
         >
           <Ionicons name="camera-outline" size={24} color={colors.primary} />
         </TouchableOpacity>

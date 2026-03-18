@@ -58,4 +58,39 @@ describe("chat.service", () => {
     const client = mockClient(JSON.stringify({ foo: "bar" }));
     await expect(chat([{ role: "user", content: "pizza" }], false, undefined, client)).rejects.toThrow();
   });
+
+  it("includes inlineData in first user message when image provided", async () => {
+    const client = mockClient(JSON.stringify(QUESTION_RESPONSE));
+    const image = { base64: "img123", mimeType: "image/png" };
+
+    await chat([{ role: "user", content: "what is this" }], false, image, client);
+
+    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    expect(contents[0].parts).toEqual([
+      { inlineData: { mimeType: "image/png", data: "img123" } },
+      { text: "what is this" },
+    ]);
+  });
+
+  it("does not include inlineData in subsequent messages", async () => {
+    const client = mockClient(JSON.stringify(QUESTION_RESPONSE));
+    const image = { base64: "img123", mimeType: "image/png" };
+
+    await chat(
+      [
+        { role: "user", content: "what is this" },
+        { role: "assistant", content: "What size?" },
+        { role: "user", content: "medium" },
+      ],
+      false,
+      image,
+      client,
+    );
+
+    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    // First message has image
+    expect(contents[0].parts).toHaveLength(2);
+    // Third message (second user message) has text only
+    expect(contents[2].parts).toEqual([{ text: "medium" }]);
+  });
 });

@@ -166,7 +166,7 @@ apps/mobile/app.json                                    # Add expo-image-picker 
 - **Test:** Full end-to-end flow works for all four combinations (text-only one-shot, text-only chat, image one-shot, image chat). Error states display correctly. Existing flows unaffected.
 - **Demo:** Complete walkthrough of all input modes. Image one-shot: photo → estimate → entry form. Image chat: photo → AI asks "How much did you eat?" → reply → estimate → confirm. Error: oversized image shows error. Permission denied shows alert.
 
-### Task 6: Comprehensive test coverage
+### Task 6: Comprehensive test coverage ✅
 
 - **Objective:** Add tests for all Phase 4 features (backend + frontend).
 - **Guidance:**
