@@ -39,7 +39,19 @@ Users can take a photo of their food and send it to the AI instead of typing. Th
 
 **Status:** Completed — see [Phase 4 Implementation Plan](./phase-4-implementation-plan.md)
 
-### Phase 5: Subscription & Usage Limits
+### Phase 5: Developer Experience + Quick Features
+
+Add Biome as the project linter and formatter across all packages. Add favorites and recent foods for quick-add without re-entering details or burning an AI lookup. Add a picture preview and cropping screen after taking a food photo so users can review and frame the image before sending it to the AI.
+
+**Status:** Not started
+
+### Phase 6: AI Goal Coach
+
+A conversational AI flow (separate from food logging) that helps users set their daily calorie/macro goals. The AI asks about their objectives (lose weight, gain muscle, maintain), current weight, target weight, activity level, timeline, etc., then recommends daily calorie and macro targets and auto-sets them as the user's goals.
+
+**Status:** Not started
+
+### Phase 7: Subscription & Usage Limits
 
 Introduce a freemium model with monthly AI usage limits. Free users get a set number of AI lookups per month (estimate, chat, image); paid subscribers get unlimited access. Includes server-side usage tracking per user, limit enforcement middleware on AI endpoints, and frontend UI for displaying remaining usage and upgrade prompts.
 
@@ -53,8 +65,5 @@ Ideas for future phases, not yet prioritized or planned.
 
 - **Google OAuth:** Add Google OAuth login as an alternative to email/password, using `passport-google-oauth20` building on the existing Passport.js setup. Includes Expo AuthSession for the mobile OAuth redirect flow, account linking (Google + existing email accounts), and DB schema updates to support multiple auth providers per user.
 - **BYOK (Bring Your Own Key):** Let power users enter their own Gemini API key in settings to get unlimited AI usage without a subscription. Useful as an alternative to paid plans for technical users. Key would be stored encrypted and sent server-side per request.
-- **Favorites & Recent Foods:** Quick-add from a list of frequently logged or recently logged items without re-entering details or burning an AI lookup. Tap a favorite → goes straight to entry form pre-filled.
-- **AI Goal Coach:** A conversational AI flow (separate from food logging) that helps users set their daily calorie/macro goals. The AI asks about their objectives (lose weight, gain muscle, maintain), current weight, target weight, activity level, timeline, etc., then recommends daily calorie and macro targets and auto-sets them as the user's goals.
-- **Biome for Linting + Formatting:** Add [Biome](https://biomejs.dev/) as the project linter and formatter. Configure rules for both apps and shared packages, add scripts to `package.json`, and ensure AI-generated code follows the Biome rules (add to `.kiro/skills/`).
 - **Optimize Image Token Usage in AI Chat:** Currently the food photo is re-sent with every message in the AI chat flow, costing ~250 extra tokens per message. Investigate alternatives (e.g., send image only on first message, cache a text description of the image server-side, or let the user explicitly re-attach). Balance between cost savings and the ability for the AI to reference the photo when asked.
-- **Picture Preview & Cropping:** After taking a food photo, show a preview screen where the user can review and crop the image before sending it to the AI. Helps users frame the food better and reduces noise in the image for more accurate AI estimates.
+
