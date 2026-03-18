@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { View, TextInput, Text, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { spacing, fontSize, borderRadius } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
@@ -29,6 +30,19 @@ export default function AiAssistScreen() {
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const imageData = image ? { base64: image.base64, mimeType: image.mimeType } : undefined;
+
+  // Reset ephemeral state when returning to this screen (e.g. after confirming an entry)
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        clearImage();
+        assist.setDescription("");
+        setChatStarted(false);
+        setReply("");
+        chat.reset();
+      };
+    }, [])
+  );
 
   // Delay picker launch so the ActionSheet modal fully dismisses first —
   // on iOS, the system photo picker conflicts with an in-progress modal animation

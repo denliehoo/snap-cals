@@ -13,6 +13,7 @@ jest.mock("@/services/api", () => ({
 
 jest.mock("@react-navigation/native", () => ({
   useNavigation: () => ({ navigate: mockNavigate }),
+  useFocusEffect: jest.fn(),
 }));
 
 jest.mock("@/stores/settings.store", () => ({

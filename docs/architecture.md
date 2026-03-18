@@ -18,6 +18,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | DB Hosting | Neon | Free tier Postgres, no expiry, serverless |
 | Backend Hosting | Render | Free tier, simple git-push deploys |
 | AI (Phase 2+) | Gemini API | Free tier, multimodal (text + image) |
+| Image Picker | expo-image-picker | Camera and gallery access, returns base64 for Gemini |
 
 ## Monorepo Structure
 
@@ -62,6 +63,14 @@ snap-cals/
 - Chat is stateless on the server — the mobile app sends the full `ChatMessage[]` history each request
 - Chat history is ephemeral (screen state only, not persisted to DB)
 
+### Image Input (Phase 4)
+- Users can take a photo or pick from gallery via `expo-image-picker` on the AI Assist screen
+- Image is sent as base64 + mimeType to the server, which forwards it to Gemini as `inlineData`
+- Works in both one-shot mode (image → estimate → entry form) and chat mode (image starts conversation)
+- Image is validated client-side and server-side: allowed types (`image/jpeg`, `image/png`, `image/webp`, `image/heic`), max size `MAX_IMAGE_SIZE` (5MB base64 length)
+- In chat mode, the image is sent with the first message only; subsequent messages rely on Gemini's context
+- Image is ephemeral — not persisted to DB, cleared when navigating away from the screen
+
 ### Theme / Design System
 - Centralized in `apps/mobile/src/theme.ts`
 - Exports `colors`, `spacing`, `fontSize`, `borderRadius` objects
@@ -73,8 +82,8 @@ snap-cals/
 - Base path: `/api`
 - Auth routes: `/api/auth/signup`, `/api/auth/login`
 - Resource routes: `/api/entries`, `/api/goals`
-- AI routes: `/api/ai/estimate` — accepts food description, returns structured nutrition estimates via Gemini API
-- AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`) and optional `forceEstimate` flag, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
+- AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API
+- AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`), optional `forceEstimate` flag, and optional image, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
 - All non-auth routes protected via Passport.js JWT middleware
 - Request/response types defined in `@snap-cals/shared`
 - Standard response wrapper: `{ data: T, message?: string }`
@@ -147,4 +156,4 @@ snap-cals/
 - **Phase 1:** CRUD calorie tracking (current)
 - **Phase 2:** AI autofill via Gemini API
 - **Phase 3:** AI chat with clarifying questions (toggleable) — completed
-- **Phase 4:** Image-based food recognition
+- **Phase 4:** Image-based food recognition — completed

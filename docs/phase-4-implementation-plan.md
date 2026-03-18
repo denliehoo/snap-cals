@@ -153,7 +153,7 @@ apps/mobile/app.json                                    # Add expo-image-picker 
 - **Test:** Verify camera button renders. Verify image preview shows after selection. Verify remove button clears image. Verify Estimate button enabled with image-only. Verify image data flows through to API calls.
 - **Demo:** Full flow — tap camera → take photo → see preview → tap Estimate → loading → Entry Form pre-filled with nutrition data from the photo. Also: image + Discussion Mode on → chat flow with image context.
 
-### Task 5: Edge cases, polish, and documentation
+### Task 5: Edge cases, polish, and documentation ✅
 
 - **Objective:** Handle error cases, polish the UX, and update documentation.
 - **Guidance:**
@@ -162,7 +162,6 @@ apps/mobile/app.json                                    # Add expo-image-picker 
   - Handle Gemini errors specific to image input (e.g., image not recognized as food — the AI should still return its best guess, but handle cases where it can't)
   - Image preview should be small and not dominate the screen (e.g., 80x80 rounded thumbnail)
   - Clear image state when navigating away from AI Assist screen and coming back
-  - Update `docs/phase-roadmap.md` to mark Phase 4 as completed
   - Update `docs/architecture.md` with image input flow and `expo-image-picker` addition
 - **Test:** Full end-to-end flow works for all four combinations (text-only one-shot, text-only chat, image one-shot, image chat). Error states display correctly. Existing flows unaffected.
 - **Demo:** Complete walkthrough of all input modes. Image one-shot: photo → estimate → entry form. Image chat: photo → AI asks "How much did you eat?" → reply → estimate → confirm. Error: oversized image shows error. Permission denied shows alert.
@@ -171,6 +170,7 @@ apps/mobile/app.json                                    # Add expo-image-picker 
 
 - **Objective:** Add tests for all Phase 4 features (backend + frontend).
 - **Guidance:**
+  - Update `docs/phase-roadmap.md` to mark Phase 4 as completed
   - Backend: Integration tests for estimate endpoint with image (valid image, invalid mimeType, oversized, image-only no description)
   - Backend: Integration tests for chat endpoint with image
   - Backend: Unit tests for gemini.service with image (verify inlineData in contents)

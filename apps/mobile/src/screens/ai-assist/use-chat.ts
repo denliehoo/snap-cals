@@ -46,5 +46,13 @@ export function useChat() {
     if (estimate) navigation.navigate("EntryForm", { prefill: estimate });
   };
 
-  return { messages, loading, estimate, imageUri, sendMessage, confirm };
+  const reset = () => {
+    setMessages([]);
+    setLoading(false);
+    setEstimate(null);
+    setStoredImage(undefined);
+    setImageUri(null);
+  };
+
+  return { messages, loading, estimate, imageUri, sendMessage, confirm, reset };
 }
