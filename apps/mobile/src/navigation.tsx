@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "./stores/auth.store";
 import { useSettingsStore } from "./stores/settings.store";
 import { useTheme, useColors } from "./contexts/theme-context";
-import { FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
+import { FoodEntry, AiEstimateResponse, MealType } from "@snap-cals/shared";
 import LoginScreen from "./screens/login";
 import SignupScreen from "./screens/signup";
 import DailyViewScreen from "./screens/daily-view";
@@ -16,6 +16,7 @@ import GoalsScreen from "./screens/goals";
 import WeeklyViewScreen from "./screens/weekly-view";
 import SettingsScreen from "./screens/settings";
 import AiAssistScreen from "./screens/ai-assist";
+import QuickAddScreen from "./screens/quick-add";
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -29,10 +30,13 @@ export type MainTabParamList = {
   SettingsTab: undefined;
 };
 
+export type EntryFormPrefill = AiEstimateResponse & { mealType?: MealType };
+
 export type MainStackParamList = {
   MainTabs: undefined;
-  EntryForm: { entry?: FoodEntry; prefill?: AiEstimateResponse } | undefined;
+  EntryForm: { entry?: FoodEntry; prefill?: EntryFormPrefill } | undefined;
   AiAssist: undefined;
+  QuickAdd: undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -99,6 +103,7 @@ export default function Navigation() {
           <MainStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
           <MainStack.Screen name="EntryForm" component={EntryFormScreen} options={{ title: "", headerBackTitle: "Back" }} />
           <MainStack.Screen name="AiAssist" component={AiAssistScreen} options={{ title: "AI Assist", headerBackTitle: "Back" }} />
+          <MainStack.Screen name="QuickAdd" component={QuickAddScreen} options={{ title: "Quick Add", headerBackTitle: "Back" }} />
         </MainStack.Navigator>
       ) : (
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>

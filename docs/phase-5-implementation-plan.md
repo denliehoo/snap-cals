@@ -82,7 +82,7 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 
 ### Task 3: Mobile API layer + Quick Add screen
 
-- [ ] **Objective:** Build the Quick Add screen showing favorites and recents, accessible from the FAB action sheet
+- [x] **Objective:** Build the Quick Add screen showing favorites and recents, accessible from the FAB action sheet
 - **Implementation:**
   - Add `getFavorites`, `createFavorite`, `deleteFavorite`, `getRecentFoods` to `api.ts`
   - Create `src/screens/quick-add/` with `index.tsx` and `use-quick-add.ts`

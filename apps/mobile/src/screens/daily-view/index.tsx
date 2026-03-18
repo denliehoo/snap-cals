@@ -96,6 +96,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
         options={[
           { label: "Manual Entry", icon: "create-outline", onPress: () => navigation.navigate("EntryForm") },
           { label: "AI Assist", icon: "sparkles-outline", onPress: () => navigation.navigate("AiAssist") },
+          { label: "Quick Add", icon: "star-outline", onPress: () => navigation.navigate("QuickAdd") },
         ]}
       />
     </View>

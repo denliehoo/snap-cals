@@ -10,6 +10,9 @@ import {
   AiChatRequest,
   AiChatResponse,
   ImageData,
+  FavoriteFoodItem,
+  CreateFavoriteFoodRequest,
+  RecentFoodItem,
 } from "@snap-cals/shared";
 
 import { Platform } from "react-native";
@@ -91,4 +94,16 @@ export const api = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+
+  getFavorites: () =>
+    request<ApiResponse<FavoriteFoodItem[]>>("/favorites"),
+  createFavorite: (data: CreateFavoriteFoodRequest) =>
+    request<ApiResponse<FavoriteFoodItem>>("/favorites", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  deleteFavorite: (id: string) =>
+    request<ApiResponse<void>>(`/favorites/${id}`, { method: "DELETE" }),
+  getRecentFoods: () =>
+    request<ApiResponse<RecentFoodItem[]>>("/entries/recent"),
 };
