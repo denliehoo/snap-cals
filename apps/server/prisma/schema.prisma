@@ -16,12 +16,13 @@ enum MealType {
 }
 
 model User {
-  id           String      @id @default(cuid())
-  email        String      @unique
+  id           String         @id @default(cuid())
+  email        String         @unique
   passwordHash String
-  createdAt    DateTime    @default(now())
+  createdAt    DateTime       @default(now())
   entries      FoodEntry[]
   goal         Goal?
+  favorites    FavoriteFood[]
 }
 
 model FoodEntry {
@@ -50,4 +51,20 @@ model Goal {
   dailyCarbs    Float
   dailyFat      Float
   user         User   @relation(fields: [userId], references: [id])
+}
+
+model FavoriteFood {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  servingSize String
+  mealType    MealType
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, name])
 }

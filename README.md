@@ -81,11 +81,11 @@ Get a free Postgres database at [neon.tech](https://neon.tech) — copy the conn
 
 ```bash
 cd apps/server
-npx prisma migrate dev
+npx prisma migrate deploy
 npx ts-node -r tsconfig-paths/register prisma/seed.ts
 ```
 
-The seed creates a test account you can use:
+This applies all migrations to your database and seeds it with a test account:
 
 - Email: `test@example.com`
 - Password: `password123`
@@ -96,7 +96,21 @@ To explore the database visually:
 npx prisma studio
 ```
 
-### 4. Run the backend
+### 4. Schema changes (for contributors)
+
+When you change `prisma/schema.prisma`, generate a migration and apply it:
+
+```bash
+cd apps/server
+npx prisma migrate dev --create-only --name describe-your-change
+# Review the generated SQL in prisma/migrations/
+npx prisma migrate deploy
+pnpm migrate:test
+```
+
+**Important:** Never run `prisma migrate dev` without `--create-only` — it can wipe your database if it detects drift.
+
+### 5. Run the backend
 
 ```bash
 pnpm dev:server
@@ -108,7 +122,7 @@ The API will be available at `http://localhost:3000`. Test it with:
 curl http://localhost:3000/api/health
 ```
 
-### 5. Run the mobile app
+### 6. Run the mobile app
 
 In a separate terminal:
 
@@ -121,7 +135,7 @@ This starts the Expo dev server. Then either:
 - Press `i` for iOS Simulator
 - Press `a` for Android Emulator
 
-### 6. Run tests
+### 7. Run tests
 
 Tests run against a separate Neon database branch (`unit-test`) to avoid touching your dev data.
 
@@ -132,13 +146,20 @@ Tests run against a separate Neon database branch (`unit-test`) to avoid touchin
 DATABASE_URL_TEST="your-neon-unit-test-branch-connection-string"
 ```
 
-3. Run tests:
+3. Apply migrations to the test branch:
+
+```bash
+cd apps/server
+pnpm migrate:test
+```
+
+4. Run tests:
 
 ```bash
 pnpm test
 ```
 
-Tests will refuse to run if `DATABASE_URL_TEST` is not set.
+Tests will refuse to run if `DATABASE_URL_TEST` is not set. After pulling new migrations, re-run `pnpm migrate:test` in `apps/server` to keep the test branch in sync.
 
 ## Phase Roadmap
 

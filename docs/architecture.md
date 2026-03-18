@@ -81,7 +81,7 @@ snap-cals/
 ### API Design
 - Base path: `/api`
 - Auth routes: `/api/auth/signup`, `/api/auth/login`
-- Resource routes: `/api/entries`, `/api/goals`
+- Resource routes: `/api/entries`, `/api/goals`, `/api/favorites`
 - AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API
 - AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`), optional `forceEstimate` flag, and optional image, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
 - All non-auth routes protected via Passport.js JWT middleware
@@ -106,9 +106,10 @@ snap-cals/
 ### Database
 - Postgres on Neon (free tier)
 - Prisma ORM for schema definition, migrations, and type-safe queries
-- Models: User, FoodEntry, Goal
+- Models: User, FoodEntry, Goal, FavoriteFood
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
 - Neon branching: `main` branch for dev data, `unit-test` branch for automated tests
+- Migration workflow: always use `prisma migrate dev --create-only` to generate migrations, then `prisma migrate deploy` to apply — never run `prisma migrate dev` without `--create-only` against a database with data you want to keep
 - Tests require `DATABASE_URL_TEST` env var pointing to the test branch — they refuse to run without it
 
 ## Mobile Conventions
@@ -143,6 +144,7 @@ snap-cals/
 - Jest + Supertest for API endpoint tests
 - Tests run against a separate Neon branch (`unit-test`) via `DATABASE_URL_TEST`
 - Tests refuse to run if `DATABASE_URL_TEST` is not set
+- Run `pnpm migrate:test` (in `apps/server`) after new migrations to apply them to the test branch — Prisma's `.env` loading ignores env overrides, so this script temporarily hides `.env` to force the correct URL
 
 ### Frontend (Mobile)
 - Jest + React Native Testing Library with `jest-expo` preset

@@ -58,7 +58,7 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 
 ### Task 1: FavoriteFood schema + migration + server endpoints
 
-- [ ] **Objective:** Add the `FavoriteFood` model and CRUD API endpoints
+- [x] **Objective:** Add the `FavoriteFood` model and CRUD API endpoints
 - **Implementation:**
   - Add `FavoriteFood` model to `prisma/schema.prisma` with `@@unique([userId, name])`
   - Add `favorites FavoriteFood[]` relation to `User` model

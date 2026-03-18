@@ -13,6 +13,7 @@ export async function createTestUser(email = "test@test.com", password = "passwo
 
 export async function cleanDb() {
   await prisma.foodEntry.deleteMany();
+  await prisma.favoriteFood.deleteMany();
   await prisma.goal.deleteMany();
   await prisma.user.deleteMany();
 }

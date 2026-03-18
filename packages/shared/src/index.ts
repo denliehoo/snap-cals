@@ -84,6 +84,29 @@ export interface ApiError {
   errors?: Record<string, string[]>;
 }
 
+// Favorites
+export interface FavoriteFoodItem {
+  id: string;
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  servingSize: string;
+  mealType: MealType;
+  createdAt: string;
+}
+
+export interface CreateFavoriteFoodRequest {
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  servingSize: string;
+  mealType: MealType;
+}
+
 // AI Chat limits
 export const AI_DESCRIPTION_MAX_LENGTH = 200;
 export const AI_CHAT_REPLY_MAX_LENGTH = 300;
