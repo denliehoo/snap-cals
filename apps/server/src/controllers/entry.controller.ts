@@ -123,6 +123,27 @@ export const update = async (req: Request<{ id: string }, {}, UpdateFoodEntryReq
   }
 };
 
+export const getRecent = async (req: Request, res: Response) => {
+  try {
+    const entries = await prisma.foodEntry.findMany({
+      where: { userId: userId(req) },
+      orderBy: { createdAt: "desc" },
+      select: { name: true, calories: true, protein: true, carbs: true, fat: true, servingSize: true, mealType: true, createdAt: true },
+    });
+
+    const seen = new Set<string>();
+    const recent = entries.filter((e) => {
+      if (seen.has(e.name)) return false;
+      seen.add(e.name);
+      return true;
+    }).slice(0, 20).map(({ createdAt, ...rest }) => rest);
+
+    res.json({ data: recent });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const remove = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.params;

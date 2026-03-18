@@ -194,3 +194,55 @@ describe("DELETE /api/entries/:id", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe("GET /api/entries/recent", () => {
+  it("returns deduplicated recent foods ordered by most recent", async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+
+    // Create entries with some duplicate names
+    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Oats", date: "2026-03-10" });
+    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Chicken Breast", date: "2026-03-11" });
+    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Oats", date: "2026-03-12" }); // duplicate
+    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Rice", date: "2026-03-13" });
+
+    const res = await request(app).get("/api/entries/recent").set(auth);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(3); // Oats, Rice, Chicken Breast (deduplicated)
+    // Most recent first: Rice (Mar 13 created last), Oats (Mar 12 duplicate), Chicken Breast (Mar 11)
+    expect(res.body.data[0].name).toBe("Rice");
+    expect(res.body.data[1].name).toBe("Oats");
+    expect(res.body.data[2].name).toBe("Chicken Breast");
+  });
+
+  it("returns max 20 items", async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+
+    for (let i = 0; i < 25; i++) {
+      await request(app).post("/api/entries").set(auth).send({ ...entryData, name: `Food ${i}`, date: "2026-03-15" });
+    }
+
+    const res = await request(app).get("/api/entries/recent").set(auth);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBeLessThanOrEqual(20);
+  });
+
+  it("does not return other users entries", async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    await request(app).post("/api/entries").set(auth).send(entryData);
+
+    const other = await createTestUser("other@test.com");
+    const otherToken = signToken(other.id);
+
+    const res = await request(app).get("/api/entries/recent").set({ Authorization: `Bearer ${otherToken}` });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(0);
+  });
+
+  it("returns 401 without auth", async () => {
+    const res = await request(app).get("/api/entries/recent");
+    expect(res.status).toBe(401);
+  });
+});

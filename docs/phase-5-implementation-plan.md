@@ -72,7 +72,7 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 
 ### Task 2: Recents server endpoint
 
-- [ ] **Objective:** Add an endpoint that returns the last 20 unique foods logged by the user
+- [x] **Objective:** Add an endpoint that returns the last 20 unique foods logged by the user
 - **Implementation:**
   - Add `getRecent` to `src/controllers/entry.controller.ts` — query `FoodEntry` for the user, ordered by `createdAt desc`, deduplicate by `name` (take the most recent entry per unique name), limit 20
   - Add `GET /recent` route to `entry.routes.ts`
