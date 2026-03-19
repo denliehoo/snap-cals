@@ -4,6 +4,7 @@ import { MealType as PrismaMealType, User } from "@prisma/client";
 import { CreateFavoriteFoodRequest } from "@snap-cals/shared";
 
 const userId = (req: Request) => (req.user as User).id;
+const MAX_FAVORITES = 25;
 
 export const create = async (req: Request<{}, {}, CreateFavoriteFoodRequest>, res: Response) => {
   try {
@@ -21,7 +22,12 @@ export const create = async (req: Request<{}, {}, CreateFavoriteFoodRequest>, re
       where: { userId_name: { userId: userId(req), name } },
     });
     if (existing) {
-      return res.status(409).json({ message: "Favorite with this name already exists" });
+      return res.status(409).json({ message: `A favorite named "${name}" already exists` });
+    }
+
+    const count = await prisma.favoriteFood.count({ where: { userId: userId(req) } });
+    if (count >= MAX_FAVORITES) {
+      return res.status(409).json({ message: "Favorites full — remove one to add another" });
     }
 
     const favorite = await prisma.favoriteFood.create({

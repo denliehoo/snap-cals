@@ -37,7 +37,7 @@ export default function EntryFormScreen({ navigation, route }: Props) {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-      <Text style={styles.title}>{isPrefill ? "Review AI Estimate" : isEdit ? "Edit Entry" : "Add Entry"}</Text>
+      <Text style={styles.title}>{isEdit ? "Edit Entry" : "Add Entry"}</Text>
 
       <FormField label="Food Name *" value={fields.name} onChangeText={(v) => { setters.setName(v); clearFieldError("name"); }} placeholder="e.g. Chicken Breast" error={fieldErrors.name} />
       <FormField label="Calories *" value={fields.calories} onChangeText={(v) => { setters.setCalories(v); clearFieldError("calories"); }} placeholder="0" keyboardType="numeric" error={fieldErrors.calories} />

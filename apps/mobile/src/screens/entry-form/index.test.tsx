@@ -130,11 +130,11 @@ describe("EntryFormScreen — prefill mode", () => {
   };
   const mockRoute = { params: { prefill }, key: "EntryForm", name: "EntryForm" as const };
 
-  it("renders with AI estimate title and pre-filled values", async () => {
-    const { getByText, getByDisplayValue } = await render(
+  it("renders with pre-filled values from AI estimate", async () => {
+    const { getAllByText, getByDisplayValue } = await render(
       <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
     );
-    expect(getByText("Review AI Estimate")).toBeTruthy();
+    expect(getAllByText("Add Entry").length).toBeGreaterThan(0);
     expect(getByDisplayValue("Big Mac")).toBeTruthy();
     expect(getByDisplayValue("550")).toBeTruthy();
     expect(getByDisplayValue("25")).toBeTruthy();
@@ -144,10 +144,10 @@ describe("EntryFormScreen — prefill mode", () => {
   });
 
   it("submits prefilled entry", async () => {
-    const { getByText } = await render(
+    const { getAllByText } = await render(
       <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
     );
-    fireEvent.press(getByText("Add Entry"));
+    fireEvent.press(getAllByText("Add Entry")[1]); // button is second
     await waitFor(() => {
       expect(api.createEntry).toHaveBeenCalledWith(
         expect.objectContaining({ name: "Big Mac", calories: 550 })

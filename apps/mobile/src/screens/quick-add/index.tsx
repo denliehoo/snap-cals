@@ -1,5 +1,6 @@
-import React, { useMemo } from "react";
-import { View, Text, SectionList, TouchableOpacity, ActivityIndicator, Alert, StyleSheet } from "react-native";
+import React, { useMemo, useRef } from "react";
+import { View, Text, SectionList, ActivityIndicator, Alert, Animated, StyleSheet } from "react-native";
+import { Swipeable, RectButton } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
@@ -15,13 +16,14 @@ type QuickAddItem = FavoriteFoodItem | RecentFoodItem;
 export default function QuickAddScreen({ navigation }: Props) {
   const colors = useColors();
   const { show } = useSnackbar();
-  const { favorites, recents, loading, removeFavorite } = useQuickAdd((msg) => show(msg, "error"));
+  const { favorites, recents, loading, removeFavorite, addFavorite } = useQuickAdd((msg) => show(msg, "error"));
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const swipeableRefs = useRef<Map<string, Swipeable>>(new Map());
 
   const sections = [
     { title: "Favorites", data: favorites, emptyText: "No favorites yet" },
     { title: "Recents", data: recents, emptyText: "No recent foods" },
-  ].filter((s) => s.data.length > 0 || true); // always show sections
+  ];
 
   const handlePress = (item: QuickAddItem) => {
     const { name, calories, protein, carbs, fat, servingSize, mealType } = item;
@@ -29,29 +31,71 @@ export default function QuickAddScreen({ navigation }: Props) {
     navigation.navigate("EntryForm", { prefill });
   };
 
-  const renderItem = ({ item, section }: { item: QuickAddItem; section: { title: string } }) => (
-    <TouchableOpacity
-      style={[styles.card, { backgroundColor: colors.surface }]}
-      onPress={() => handlePress(item)}
-      onLongPress={section.title === "Favorites" ? () => {
-        Alert.alert("Remove Favorite", `Remove "${item.name}" from favorites?`, [
-          { text: "Cancel", style: "cancel" },
-          { text: "Remove", style: "destructive", onPress: async () => { await removeFavorite((item as FavoriteFoodItem).id); show("Removed from favorites"); } },
-        ]);
-      } : undefined}
-      activeOpacity={0.7}
-    >
-      <View style={styles.top}>
-        <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
-        <Text style={[styles.cals, { color: colors.calorieColor }]}>{item.calories} kcal</Text>
-      </View>
-      <View style={styles.macroRow}>
-        <Text style={[styles.macro, { color: colors.proteinColor }]}>P {item.protein}g</Text>
-        <Text style={[styles.macro, { color: colors.carbsColor }]}>C {item.carbs}g</Text>
-        <Text style={[styles.macro, { color: colors.fatColor }]}>F {item.fat}g</Text>
-      </View>
-    </TouchableOpacity>
+  const renderLeftActions = (_progress: Animated.AnimatedInterpolation<number>, _drag: Animated.AnimatedInterpolation<number>) => (
+    <View style={[styles.swipeAction, { backgroundColor: colors.success }]}>
+      <Ionicons name="heart" size={24} color={colors.textOnPrimary} />
+    </View>
   );
+
+  const renderRightActions = (_progress: Animated.AnimatedInterpolation<number>, _drag: Animated.AnimatedInterpolation<number>) => (
+    <View style={[styles.swipeAction, styles.swipeRight, { backgroundColor: colors.error }]}>
+      <Ionicons name="trash" size={24} color={colors.textOnPrimary} />
+    </View>
+  );
+
+  const closeSwipeable = (key: string) => {
+    swipeableRefs.current.get(key)?.close();
+  };
+
+  const handleSwipeLeft = (item: FavoriteFoodItem, key: string) => {
+    Alert.alert("Remove Favorite", `Remove "${item.name}" from favorites?`, [
+      { text: "Cancel", style: "cancel", onPress: () => closeSwipeable(key) },
+      { text: "Remove", style: "destructive", onPress: async () => { await removeFavorite(item.id); show("Removed from favorites"); } },
+    ]);
+  };
+
+  const handleSwipeRight = async (item: RecentFoodItem, key: string) => {
+    try {
+      await addFavorite(item);
+      show("Added to favorites");
+    } catch {
+      show("Already in favorites", "error");
+    }
+    closeSwipeable(key);
+  };
+
+  const renderItem = ({ item, section, index }: { item: QuickAddItem; section: { title: string }; index: number }) => {
+    const key = "id" in item ? (item as FavoriteFoodItem).id : `${item.name}-${index}`;
+    const isFavorite = section.title === "Favorites";
+
+    const card = (
+      <RectButton style={[styles.card, { backgroundColor: colors.surface }]} onPress={() => handlePress(item)}>
+        <View style={styles.top}>
+          <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+          <Text style={[styles.cals, { color: colors.calorieColor }]}>{item.calories} kcal</Text>
+        </View>
+        <View style={styles.macroRow}>
+          <Text style={[styles.macro, { color: colors.proteinColor }]}>P {item.protein}g</Text>
+          <Text style={[styles.macro, { color: colors.carbsColor }]}>C {item.carbs}g</Text>
+          <Text style={[styles.macro, { color: colors.fatColor }]}>F {item.fat}g</Text>
+        </View>
+      </RectButton>
+    );
+
+    return (
+      <Swipeable
+        ref={(ref) => { if (ref) swipeableRefs.current.set(key, ref); }}
+        renderLeftActions={isFavorite ? undefined : renderLeftActions}
+        renderRightActions={isFavorite ? renderRightActions : undefined}
+        onSwipeableOpen={(direction) => {
+          if (direction === "left" && !isFavorite) handleSwipeRight(item as RecentFoodItem, key);
+          if (direction === "right" && isFavorite) handleSwipeLeft(item as FavoriteFoodItem, key);
+        }}
+      >
+        {card}
+      </Swipeable>
+    );
+  };
 
   if (loading) {
     return (
@@ -66,7 +110,7 @@ export default function QuickAddScreen({ navigation }: Props) {
       <SectionList
         sections={sections}
         keyExtractor={(item, index) => ("id" in item ? (item as FavoriteFoodItem).id : `${item.name}-${index}`)}
-        renderItem={({ item, section }) => section.data.length > 0 ? renderItem({ item, section }) : null}
+        renderItem={({ item, section, index }) => section.data.length > 0 ? renderItem({ item, section, index }) : null}
         renderSectionHeader={({ section }) => (
           <Text style={styles.sectionTitle}>{section.title}</Text>
         )}
@@ -114,4 +158,12 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
     macro: { fontSize: fontSize.xs, fontWeight: fontWeight.medium },
     emptySection: { alignItems: "center", paddingVertical: spacing.lg },
     emptyText: { fontSize: fontSize.sm, marginTop: spacing.sm },
+    swipeAction: {
+      justifyContent: "center",
+      alignItems: "flex-end",
+      paddingHorizontal: spacing.lg,
+      marginVertical: spacing.xs,
+      borderRadius: borderRadius.lg,
+    },
+    swipeRight: { alignItems: "flex-start" },
   });

@@ -93,32 +93,28 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 - **Test:** Write test for Quick Add screen — renders favorites and recents sections, tapping an item navigates to EntryForm
 - **Demo:** Open app → tap FAB → "Quick Add" → see favorites and recents → tap one → lands on EntryForm pre-filled.
 
-### Task 4: Favorite toggle from Entry Row
+### Task 4: ~~Favorite toggle from Entry Row~~ (Removed)
 
-- [x] **Objective:** Let users favorite/unfavorite foods directly from the daily view
+- [x] **Objective:** ~~Let users favorite/unfavorite foods directly from the daily view~~
+- **Outcome:** Heart icon on entry rows was implemented then removed — name-based matching caused confusing UX when multiple entries shared the same name (all showed filled hearts). Favorites are now managed exclusively from the Quick Add screen via swipe gestures.
+
+### Task 5: Simplify favorites and recents with swipe gestures
+
+- [x] **Objective:** Remove `favoriteId` linking, simplify recents to last 20 entries (no dedup), add guardrails to favorites, implement swipe-based favorite management
 - **Implementation:**
-  - Add a heart icon to `EntryRow` component — filled heart if the food name matches a favorite, outline if not
-  - Tapping the heart calls `createFavorite` or `deleteFavorite` via the API
-  - In `use-daily-entries.ts`, fetch the user's favorites list alongside daily entries so we can check which names are favorited
-  - Show a snackbar on favorite/unfavorite ("Added to favorites" / "Removed from favorites")
-  - In Quick Add screen, long-press a favorite to remove it (with confirmation alert), consistent with daily view's long-press-to-delete pattern
-- **Test:** Test that heart icon renders, toggles state on press
-- **Demo:** On daily view, tap heart on an entry → snackbar "Added to favorites" → go to Quick Add → see it in Favorites section. Long-press a favorite in Quick Add → confirm → removed.
-
-### Task 5: Link favorites to entries via favoriteId
-
-- [ ] **Objective:** Replace name-based favorite matching with ID-based linking to avoid ambiguity when entries share the same name
-- **Implementation:**
-  - Add nullable `favoriteId` column to `FoodEntry` in Prisma schema, referencing `FavoriteFood.id` (set null on delete)
-  - Generate and apply migration
-  - Update `FoodEntry` shared type to include `favoriteId: string | null`
-  - Update server `createFavorite` to accept an optional `entryId`, and when provided, set `favoriteId` on that entry
-  - Update server `deleteFavorite` to clear `favoriteId` on any entries that referenced it
-  - On the frontend, `EntryRow` checks `entry.favoriteId != null` instead of name matching
-  - `use-daily-entries.ts` removes the parallel favorites fetch and `favoriteNames` set; `toggleFavorite` uses `entry.favoriteId` directly
-  - Add unique constraint on `(userId, name)` for `FavoriteFood` to prevent duplicates
-- **Test:** Test that favoriting an entry sets `favoriteId`, unfavoriting clears it, deleting a favorite nulls the link on entries
-- **Demo:** Favorite an entry → heart fills → delete the favorite from Quick Add → heart clears on the entry.
+  - Remove `favoriteId` column from `FoodEntry` schema and shared type
+  - Remove heart icon and all favorites logic from `EntryRow` and `use-daily-entries.ts`
+  - Revert `createFavorite` to reject 409 on duplicate name (shows "Already in favorites" error)
+  - Add a max of 25 favorites — server rejects with 409 if limit reached
+  - Simplify server `getRecent` to return last 20 entries as-is (no deduplication)
+  - Install `react-native-gesture-handler`, wrap app with `GestureHandlerRootView`
+  - Quick Add screen swipe gestures using `Swipeable` and `RectButton`:
+    - Recents: swipe right → green background + heart icon → adds to favorites
+    - Favorites: swipe left → red background + trash icon → confirmation alert → removes
+    - Tap: navigates to entry form with prefill
+  - Entry form title simplified to "Add Entry" for all prefill cases (was "Review AI Estimate")
+- **Test:** Update favorites test for 409 on duplicate, update recents test for no dedup
+- **Demo:** Quick Add → swipe right on a recent to favorite → swipe left on a favorite to remove → tap to log entry.
 
 ### Task 6: Picture Preview & Crop screen
 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { api } from "@/services/api";
-import { FoodEntry, MealType, Goal, FavoriteFoodItem, CreateFavoriteFoodRequest } from "@snap-cals/shared";
+import { FoodEntry, MealType, Goal } from "@snap-cals/shared";
 import { toLocalDateString, parseLocalDate } from "@/utils/date";
 
 export interface MealSection {
@@ -31,7 +31,6 @@ export function useDailyEntries(initialDate?: string, onError?: (msg: string) =>
   const [date, setDate] = useState(() => initialDate || toLocalDateString(new Date()));
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<Goal | null>(null);
-  const [favorites, setFavorites] = useState<FavoriteFoodItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,10 +41,9 @@ export function useDailyEntries(initialDate?: string, onError?: (msg: string) =>
   const fetchEntries = useCallback(async (showLoader = true) => {
     if (showLoader) setLoading(true);
     try {
-      const [entriesRes, goalsRes, favoritesRes] = await Promise.all([api.getEntries(date), api.getGoals(), api.getFavorites()]);
+      const [entriesRes, goalsRes] = await Promise.all([api.getEntries(date), api.getGoals()]);
       setEntries(entriesRes.data);
       setGoals(goalsRes.data);
-      setFavorites(favoritesRes.data);
     } catch (e: any) {
       setEntries([]);
       onError?.(e.message || "Failed to load entries");
@@ -121,24 +119,5 @@ export function useDailyEntries(initialDate?: string, onError?: (msg: string) =>
     }
   };
 
-  const favoriteNames = useMemo(() => new Set(favorites.map((f) => f.name)), [favorites]);
-
-  const toggleFavorite = async (entry: FoodEntry) => {
-    const existing = favorites.find((f) => f.name === entry.name);
-    try {
-      if (existing) {
-        await api.deleteFavorite(existing.id);
-        setFavorites((prev) => prev.filter((f) => f.id !== existing.id));
-      } else {
-        const { name, calories, protein, carbs, fat, servingSize, mealType } = entry;
-        const res = await api.createFavorite({ name, calories, protein, carbs, fat, servingSize, mealType });
-        setFavorites((prev) => [...prev, res.data]);
-      }
-    } catch (e: any) {
-      onError?.(e.message || "Failed to update favorite");
-    }
-    return !existing;
-  };
-
-  return { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry, favoriteNames, toggleFavorite };
+  return { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry };
 }

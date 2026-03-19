@@ -26,5 +26,10 @@ export function useQuickAdd(onError?: (msg: string) => void) {
     setFavorites((prev) => prev.filter((f) => f.id !== id));
   };
 
-  return { favorites, recents, loading, removeFavorite };
+  const addFavorite = async (item: RecentFoodItem) => {
+    const res = await api.createFavorite(item);
+    setFavorites((prev) => [res.data, ...prev]);
+  };
+
+  return { favorites, recents, loading, removeFavorite, addFavorite };
 }

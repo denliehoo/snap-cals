@@ -27,7 +27,7 @@ type Props = CompositeScreenProps<
 export default function DailyViewScreen({ navigation, route }: Props) {
   const colors = useColors();
   const { show } = useSnackbar();
-  const { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry, favoriteNames, toggleFavorite } =
+  const { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry } =
     useDailyEntries(route.params?.date, (msg) => show(msg, "error"));
   const [showPicker, setShowPicker] = useState(false);
   const [showActions, setShowActions] = useState(false);
@@ -68,11 +68,6 @@ export default function DailyViewScreen({ navigation, route }: Props) {
               entry={item}
               onPress={() => navigation.navigate("EntryForm", { entry: item })}
               onLongPress={() => handleDelete(item)}
-              isFavorite={favoriteNames.has(item.name)}
-              onToggleFavorite={async () => {
-                const added = await toggleFavorite(item);
-                show(added ? "Added to favorites" : "Removed from favorites");
-              }}
             />
           )}
           renderSectionHeader={({ section }) => (

@@ -128,17 +128,11 @@ export const getRecent = async (req: Request, res: Response) => {
     const entries = await prisma.foodEntry.findMany({
       where: { userId: userId(req) },
       orderBy: { createdAt: "desc" },
-      select: { name: true, calories: true, protein: true, carbs: true, fat: true, servingSize: true, mealType: true, createdAt: true },
+      take: 20,
+      select: { name: true, calories: true, protein: true, carbs: true, fat: true, servingSize: true, mealType: true },
     });
 
-    const seen = new Set<string>();
-    const recent = entries.filter((e) => {
-      if (seen.has(e.name)) return false;
-      seen.add(e.name);
-      return true;
-    }).slice(0, 20).map(({ createdAt, ...rest }) => rest);
-
-    res.json({ data: recent });
+    res.json({ data: entries });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
