@@ -1,13 +1,14 @@
-import React, {
+import type React from "react";
+import {
   createContext,
-  useContext,
-  useState,
   useCallback,
+  useContext,
   useRef,
+  useState,
 } from "react";
-import { Text, Animated, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
+import { Animated, StyleSheet, Text } from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
 
 type SnackbarType = "success" | "error";
 

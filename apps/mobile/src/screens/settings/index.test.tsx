@@ -1,6 +1,5 @@
-import React from "react";
-import SettingsScreen from "./";
 import { render } from "@/__tests__/helpers";
+import SettingsScreen from "./";
 
 const mockLogout = jest.fn();
 const mockToggleTheme = jest.fn();
@@ -11,7 +10,10 @@ jest.mock("@/stores/auth.store", () => ({
 }));
 
 jest.mock("@/stores/settings.store", () => ({
-  useSettingsStore: () => ({ discussionMode: false, toggleDiscussionMode: mockToggleDiscussion }),
+  useSettingsStore: () => ({
+    discussionMode: false,
+    toggleDiscussionMode: mockToggleDiscussion,
+  }),
 }));
 
 jest.mock("@/contexts/theme-context", () => {

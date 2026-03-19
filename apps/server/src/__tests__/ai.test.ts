@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../app";
-import { createTestUser, signToken, cleanDb, prisma } from "./helpers";
 import * as geminiService from "../services/gemini.service";
+import { cleanDb, createTestUser, prisma, signToken } from "./helpers";
 
 jest.spyOn(geminiService, "estimateNutrition");
 
@@ -64,7 +64,10 @@ describe("POST /api/ai/estimate", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.data).toEqual(MOCK_RESULT);
-    expect(geminiService.estimateNutrition).toHaveBeenCalledWith("big mac", undefined);
+    expect(geminiService.estimateNutrition).toHaveBeenCalledWith(
+      "big mac",
+      undefined,
+    );
   });
 
   it("returns 429 on rate limit", async () => {
@@ -82,7 +85,9 @@ describe("POST /api/ai/estimate", () => {
   });
 
   it("returns 500 on generic error", async () => {
-    (geminiService.estimateNutrition as jest.Mock).mockRejectedValue(new Error("fail"));
+    (geminiService.estimateNutrition as jest.Mock).mockRejectedValue(
+      new Error("fail"),
+    );
 
     const res = await request(app)
       .post("/api/ai/estimate")
@@ -102,7 +107,10 @@ describe("POST /api/ai/estimate", () => {
       .send({ description: "chicken rice", image });
 
     expect(res.status).toBe(200);
-    expect(geminiService.estimateNutrition).toHaveBeenCalledWith("chicken rice", image);
+    expect(geminiService.estimateNutrition).toHaveBeenCalledWith(
+      "chicken rice",
+      image,
+    );
   });
 
   it("returns 200 with image only (no description)", async () => {
@@ -123,7 +131,10 @@ describe("POST /api/ai/estimate", () => {
     const res = await request(app)
       .post("/api/ai/estimate")
       .set("Authorization", `Bearer ${token}`)
-      .send({ description: "food", image: { base64: "abc", mimeType: "image/gif" } });
+      .send({
+        description: "food",
+        image: { base64: "abc", mimeType: "image/gif" },
+      });
 
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch(/mimeType/i);
@@ -133,7 +144,13 @@ describe("POST /api/ai/estimate", () => {
     const res = await request(app)
       .post("/api/ai/estimate")
       .set("Authorization", `Bearer ${token}`)
-      .send({ description: "food", image: { base64: "a".repeat(5 * 1024 * 1024 + 1), mimeType: "image/jpeg" } });
+      .send({
+        description: "food",
+        image: {
+          base64: "a".repeat(5 * 1024 * 1024 + 1),
+          mimeType: "image/jpeg",
+        },
+      });
 
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch(/too large/i);

@@ -1,5 +1,4 @@
-import React from "react";
-import { Switch, SwitchProps } from "react-native";
+import { Switch, type SwitchProps } from "react-native";
 import { useColors } from "@/contexts/theme-context";
 
 export default function ThemedSwitch(props: SwitchProps) {

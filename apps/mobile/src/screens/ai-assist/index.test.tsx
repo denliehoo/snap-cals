@@ -1,6 +1,5 @@
-import React from "react";
+import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import AiAssistScreen from "./";
-import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 
 const mockPickFromCamera = jest.fn();
 const mockPickFromGallery = jest.fn();
@@ -44,7 +43,9 @@ beforeEach(() => {
 
 describe("AiAssistScreen", () => {
   it("renders input, button, and disclaimer", async () => {
-    const { getByPlaceholderText, getByText } = await render(<AiAssistScreen />);
+    const { getByPlaceholderText, getByText } = await render(
+      <AiAssistScreen />,
+    );
     expect(getByPlaceholderText(/grande oat milk latte/)).toBeTruthy();
     expect(getByText("Estimate")).toBeTruthy();
     expect(getByText(/AI estimates may not be exact/)).toBeTruthy();
@@ -63,24 +64,43 @@ describe("AiAssistScreen", () => {
   });
 
   it("calls API and navigates on success (one-shot)", async () => {
-    const mockData = { name: "Latte", calories: 190, protein: 10, carbs: 25, fat: 6, servingSize: "16oz" };
+    const mockData = {
+      name: "Latte",
+      calories: 190,
+      protein: 10,
+      carbs: 25,
+      fat: 6,
+      servingSize: "16oz",
+    };
     api.estimateNutrition.mockResolvedValue({ data: mockData });
 
-    const { getByPlaceholderText, getByText } = await render(<AiAssistScreen />);
-    fireEvent.changeText(getByPlaceholderText(/grande oat milk latte/), "latte");
+    const { getByPlaceholderText, getByText } = await render(
+      <AiAssistScreen />,
+    );
+    fireEvent.changeText(
+      getByPlaceholderText(/grande oat milk latte/),
+      "latte",
+    );
     fireEvent.press(getByText("Estimate"));
 
     await waitFor(() => {
       expect(api.estimateNutrition).toHaveBeenCalledWith("latte", undefined);
-      expect(mockNavigate).toHaveBeenCalledWith("EntryForm", { prefill: mockData });
+      expect(mockNavigate).toHaveBeenCalledWith("EntryForm", {
+        prefill: mockData,
+      });
     });
   });
 
   it("shows error on API failure", async () => {
     api.estimateNutrition.mockRejectedValue({ message: "Network error" });
 
-    const { getByPlaceholderText, getByText } = await render(<AiAssistScreen />);
-    fireEvent.changeText(getByPlaceholderText(/grande oat milk latte/), "pizza");
+    const { getByPlaceholderText, getByText } = await render(
+      <AiAssistScreen />,
+    );
+    fireEvent.changeText(
+      getByPlaceholderText(/grande oat milk latte/),
+      "pizza",
+    );
     fireEvent.press(getByText("Estimate"));
 
     await waitFor(() => {
@@ -89,8 +109,13 @@ describe("AiAssistScreen", () => {
   });
 
   it("shows character counter near limit", async () => {
-    const { getByPlaceholderText, getByText } = await render(<AiAssistScreen />);
-    fireEvent.changeText(getByPlaceholderText(/grande oat milk latte/), "a".repeat(170));
+    const { getByPlaceholderText, getByText } = await render(
+      <AiAssistScreen />,
+    );
+    fireEvent.changeText(
+      getByPlaceholderText(/grande oat milk latte/),
+      "a".repeat(170),
+    );
 
     await waitFor(() => {
       expect(getByText("170/200")).toBeTruthy();
@@ -105,21 +130,41 @@ describe("AiAssistScreen", () => {
   });
 
   it("shows image preview when image is selected", async () => {
-    mockImage = { uri: "file://photo.jpg", base64: "abc", mimeType: "image/jpeg" };
+    mockImage = {
+      uri: "file://photo.jpg",
+      base64: "abc",
+      mimeType: "image/jpeg",
+    };
     const { getByTestId } = await render(<AiAssistScreen />);
     // The close-circle icon button is rendered next to the thumbnail
     expect(getByTestId("camera-button")).toBeTruthy();
   });
 
   it("enables Estimate button with image only (no text)", async () => {
-    mockImage = { uri: "file://photo.jpg", base64: "abc", mimeType: "image/jpeg" };
-    api.estimateNutrition.mockResolvedValue({ data: { name: "Food", calories: 100, protein: 5, carbs: 10, fat: 3, servingSize: "1 serving" } });
+    mockImage = {
+      uri: "file://photo.jpg",
+      base64: "abc",
+      mimeType: "image/jpeg",
+    };
+    api.estimateNutrition.mockResolvedValue({
+      data: {
+        name: "Food",
+        calories: 100,
+        protein: 5,
+        carbs: 10,
+        fat: 3,
+        servingSize: "1 serving",
+      },
+    });
 
     const { getByText } = await render(<AiAssistScreen />);
     fireEvent.press(getByText("Estimate"));
 
     await waitFor(() => {
-      expect(api.estimateNutrition).toHaveBeenCalledWith("", { base64: "abc", mimeType: "image/jpeg" });
+      expect(api.estimateNutrition).toHaveBeenCalledWith("", {
+        base64: "abc",
+        mimeType: "image/jpeg",
+      });
     });
   });
 });

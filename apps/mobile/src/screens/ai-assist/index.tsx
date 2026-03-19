@@ -1,27 +1,41 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { View, TextInput, Text, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, fontSize, borderRadius } from "@/theme";
-import { useColors } from "@/contexts/theme-context";
-import Button from "@/components/button";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  AI_CHAT_REPLY_MAX_LENGTH,
+  AI_DESCRIPTION_MAX_LENGTH,
+  MAX_IMAGE_SIZE,
+} from "@snap-cals/shared";
+import { useCallback, useMemo, useState } from "react";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ActionSheet from "@/components/action-sheet";
+import Button from "@/components/button";
 import { useSnackbar } from "@/components/snackbar";
+import ThemedSwitch from "@/components/themed-switch";
+import { useColors } from "@/contexts/theme-context";
+import { useSettingsStore } from "@/stores/settings.store";
+import { borderRadius, fontSize, spacing } from "@/theme";
+import ChatView from "./chat-view";
 import { useAiAssist } from "./use-ai-assist";
 import { useChat } from "./use-chat";
 import { useImagePicker } from "./use-image-picker";
-import { useSettingsStore } from "@/stores/settings.store";
-import ThemedSwitch from "@/components/themed-switch";
-import ChatView from "./chat-view";
-import { AI_DESCRIPTION_MAX_LENGTH, AI_CHAT_REPLY_MAX_LENGTH, MAX_IMAGE_SIZE } from "@snap-cals/shared";
 
 export default function AiAssistScreen() {
   const colors = useColors();
   const { show } = useSnackbar();
   const assist = useAiAssist((msg) => show(msg, "error"));
   const chat = useChat();
-  const { image, pickFromCamera, pickFromGallery, clearImage } = useImagePicker();
+  const { image, pickFromCamera, pickFromGallery, clearImage } =
+    useImagePicker();
   const globalDefault = useSettingsStore((s) => s.discussionMode);
   const [discussionMode, setDiscussionMode] = useState(globalDefault);
   const [chatStarted, setChatStarted] = useState(false);
@@ -29,7 +43,9 @@ export default function AiAssistScreen() {
   const [sheetVisible, setSheetVisible] = useState(false);
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
-  const imageData = image ? { base64: image.base64, mimeType: image.mimeType } : undefined;
+  const imageData = image
+    ? { base64: image.base64, mimeType: image.mimeType }
+    : undefined;
 
   // Reset ephemeral state when returning to this screen (e.g. after confirming an entry)
   useFocusEffect(
@@ -41,7 +57,7 @@ export default function AiAssistScreen() {
         setReply("");
         chat.reset();
       };
-    }, [])
+    }, []),
   );
 
   // Delay picker launch so the ActionSheet modal fully dismisses first —
@@ -51,8 +67,16 @@ export default function AiAssistScreen() {
   };
 
   const sheetOptions = [
-    { label: "Take Photo", icon: "camera-outline" as const, onPress: handlePickImage(pickFromCamera) },
-    { label: "Choose from Library", icon: "images-outline" as const, onPress: handlePickImage(pickFromGallery) },
+    {
+      label: "Take Photo",
+      icon: "camera-outline" as const,
+      onPress: handlePickImage(pickFromCamera),
+    },
+    {
+      label: "Choose from Library",
+      icon: "images-outline" as const,
+      onPress: handlePickImage(pickFromGallery),
+    },
   ];
 
   const canEstimate = !!(assist.description.trim() || image);
@@ -64,7 +88,12 @@ export default function AiAssistScreen() {
     }
     if (discussionMode) {
       setChatStarted(true);
-      chat.sendMessage(assist.description.trim() || "Estimate the nutrition of this food", false, imageData, image?.uri);
+      chat.sendMessage(
+        assist.description.trim() || "Estimate the nutrition of this food",
+        false,
+        imageData,
+        image?.uri,
+      );
       clearImage();
     } else {
       assist.estimate(imageData).then(clearImage);
@@ -93,13 +122,24 @@ export default function AiAssistScreen() {
             />
             <Button
               title="Send"
-              onPress={() => { const text = reply.trim(); if (!text) return; setReply(""); chat.sendMessage(text); }}
+              onPress={() => {
+                const text = reply.trim();
+                if (!text) return;
+                setReply("");
+                chat.sendMessage(text);
+              }}
               disabled={!reply.trim()}
               loading={chat.loading}
             />
           </View>
           {reply.length >= AI_CHAT_REPLY_MAX_LENGTH * 0.8 && (
-            <Text style={[styles.charCount, reply.length >= AI_CHAT_REPLY_MAX_LENGTH && styles.charCountLimit]}>
+            <Text
+              style={[
+                styles.charCount,
+                reply.length >= AI_CHAT_REPLY_MAX_LENGTH &&
+                  styles.charCountLimit,
+              ]}
+            >
               {reply.length}/{AI_CHAT_REPLY_MAX_LENGTH}
             </Text>
           )}
@@ -145,7 +185,13 @@ export default function AiAssistScreen() {
         </TouchableOpacity>
       </View>
       {assist.description.length >= AI_DESCRIPTION_MAX_LENGTH * 0.8 && (
-        <Text style={[styles.charCount, assist.description.length >= AI_DESCRIPTION_MAX_LENGTH && styles.charCountLimit]}>
+        <Text
+          style={[
+            styles.charCount,
+            assist.description.length >= AI_DESCRIPTION_MAX_LENGTH &&
+              styles.charCountLimit,
+          ]}
+        >
           {assist.description.length}/{AI_DESCRIPTION_MAX_LENGTH}
         </Text>
       )}
@@ -164,24 +210,42 @@ export default function AiAssistScreen() {
           onValueChange={setDiscussionMode}
         />
       </View>
-      <Text style={styles.toggleHint}>AI will ask clarifying questions before estimating</Text>
+      <Text style={styles.toggleHint}>
+        AI will ask clarifying questions before estimating
+      </Text>
       <Button
         title="Estimate"
         onPress={handleEstimate}
         disabled={!canEstimate}
         loading={assist.loading}
       />
-      <Text style={styles.disclaimer}>AI estimates may not be exact — review before saving</Text>
-      <ActionSheet visible={sheetVisible} onClose={() => setSheetVisible(false)} options={sheetOptions} />
+      <Text style={styles.disclaimer}>
+        AI estimates may not be exact — review before saving
+      </Text>
+      <ActionSheet
+        visible={sheetVisible}
+        onClose={() => setSheetVisible(false)}
+        options={sheetOptions}
+      />
     </View>
   );
 }
 
 const makeStyles = (colors: ReturnType<typeof useColors>) =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg, paddingBottom: spacing.xl },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: spacing.lg,
+      paddingBottom: spacing.xl,
+    },
     flex: { flex: 1 },
-    inputRow: { flexDirection: "row", alignItems: "flex-start", gap: spacing.sm, marginBottom: spacing.md },
+    inputRow: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: spacing.sm,
+      marginBottom: spacing.md,
+    },
     input: {
       flex: 1,
       backgroundColor: colors.surface,
@@ -201,7 +265,11 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       justifyContent: "center",
       alignItems: "center",
     },
-    previewRow: { flexDirection: "row", alignItems: "center", marginBottom: spacing.md },
+    previewRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: spacing.md,
+    },
     thumbnail: { width: 80, height: 80, borderRadius: borderRadius.md },
     removeButton: { marginLeft: spacing.xs },
     toggleRow: {
@@ -210,10 +278,23 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       justifyContent: "space-between",
     },
     toggleLabel: { color: colors.text, fontSize: fontSize.md },
-    toggleHint: { color: colors.textSecondary, fontSize: fontSize.sm, marginBottom: spacing.md },
-    charCount: { color: colors.textSecondary, fontSize: fontSize.xs, marginBottom: spacing.xs },
+    toggleHint: {
+      color: colors.textSecondary,
+      fontSize: fontSize.sm,
+      marginBottom: spacing.md,
+    },
+    charCount: {
+      color: colors.textSecondary,
+      fontSize: fontSize.xs,
+      marginBottom: spacing.xs,
+    },
     charCountLimit: { color: colors.error },
-    chatInputRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginTop: spacing.md },
+    chatInputRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.sm,
+      marginTop: spacing.md,
+    },
     confirmRow: { paddingVertical: spacing.md },
     chatInput: {
       flex: 1,
@@ -225,5 +306,10 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       borderWidth: 1,
       borderColor: colors.border,
     },
-    disclaimer: { color: colors.textSecondary, fontSize: fontSize.xs, textAlign: "center", marginTop: spacing.lg },
+    disclaimer: {
+      color: colors.textSecondary,
+      fontSize: fontSize.xs,
+      textAlign: "center",
+      marginTop: spacing.lg,
+    },
   });

@@ -4,7 +4,14 @@ const QUESTION_RESPONSE = { type: "question", content: "What size was it?" };
 const ESTIMATE_RESPONSE = {
   type: "estimate",
   content: "Here's your estimate",
-  estimate: { name: "Big Mac", calories: 550, protein: 25, carbs: 45, fat: 30, servingSize: "1 burger" },
+  estimate: {
+    name: "Big Mac",
+    calories: 550,
+    protein: 25,
+    carbs: 45,
+    fat: 30,
+    servingSize: "1 burger",
+  },
 };
 
 function mockClient(text: string | undefined) {
@@ -18,21 +25,42 @@ function mockClient(text: string | undefined) {
 describe("chat.service", () => {
   it("returns a question response", async () => {
     const client = mockClient(JSON.stringify(QUESTION_RESPONSE));
-    const result = await chat([{ role: "user", content: "big mac" }], false, undefined, client);
+    const result = await chat(
+      [{ role: "user", content: "big mac" }],
+      false,
+      undefined,
+      client,
+    );
 
     expect(result).toEqual({ message: "What size was it?" });
   });
 
   it("returns an estimate response", async () => {
     const client = mockClient(JSON.stringify(ESTIMATE_RESPONSE));
-    const result = await chat([{ role: "user", content: "big mac" }], false, undefined, client);
+    const result = await chat(
+      [{ role: "user", content: "big mac" }],
+      false,
+      undefined,
+      client,
+    );
 
-    expect(result).toEqual({ message: "Here's your estimate", estimate: ESTIMATE_RESPONSE.estimate });
+    expect(result).toEqual({
+      message: "Here's your estimate",
+      estimate: ESTIMATE_RESPONSE.estimate,
+    });
   });
 
   it("maps assistant role to model for Gemini", async () => {
     const client = mockClient(JSON.stringify(QUESTION_RESPONSE));
-    await chat([{ role: "user", content: "hi" }, { role: "assistant", content: "hello" }], false, undefined, client);
+    await chat(
+      [
+        { role: "user", content: "hi" },
+        { role: "assistant", content: "hello" },
+      ],
+      false,
+      undefined,
+      client,
+    );
 
     const contents = client.models.generateContent.mock.calls[0][0].contents;
     expect(contents[0].role).toBe("user");
@@ -51,19 +79,28 @@ describe("chat.service", () => {
 
   it("throws on empty response", async () => {
     const client = mockClient(undefined);
-    await expect(chat([{ role: "user", content: "pizza" }], false, undefined, client)).rejects.toThrow("Empty response");
+    await expect(
+      chat([{ role: "user", content: "pizza" }], false, undefined, client),
+    ).rejects.toThrow("Empty response");
   });
 
   it("throws on invalid JSON shape", async () => {
     const client = mockClient(JSON.stringify({ foo: "bar" }));
-    await expect(chat([{ role: "user", content: "pizza" }], false, undefined, client)).rejects.toThrow();
+    await expect(
+      chat([{ role: "user", content: "pizza" }], false, undefined, client),
+    ).rejects.toThrow();
   });
 
   it("includes inlineData in first user message when image provided", async () => {
     const client = mockClient(JSON.stringify(QUESTION_RESPONSE));
     const image = { base64: "img123", mimeType: "image/png" };
 
-    await chat([{ role: "user", content: "what is this" }], false, image, client);
+    await chat(
+      [{ role: "user", content: "what is this" }],
+      false,
+      image,
+      client,
+    );
 
     const contents = client.models.generateContent.mock.calls[0][0].contents;
     expect(contents[0].parts).toEqual([

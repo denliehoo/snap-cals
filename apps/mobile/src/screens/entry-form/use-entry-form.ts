@@ -1,9 +1,9 @@
+import { type FoodEntry, MealType } from "@snap-cals/shared";
 import { useState } from "react";
 import { Alert } from "react-native";
-import { MealType, FoodEntry, AiEstimateResponse } from "@snap-cals/shared";
+import type { EntryFormPrefill } from "@/navigation";
 import { api } from "@/services/api";
 import { toLocalDateString } from "@/utils/date";
-import type { EntryFormPrefill } from "@/navigation";
 
 function guessMealType(): MealType {
   const hour = new Date().getHours();
@@ -13,21 +13,35 @@ function guessMealType(): MealType {
   return MealType.SNACK;
 }
 
-export function useEntryForm(entry?: FoodEntry, prefill?: EntryFormPrefill, onError?: (msg: string) => void) {
+export function useEntryForm(
+  entry?: FoodEntry,
+  prefill?: EntryFormPrefill,
+  onError?: (msg: string) => void,
+) {
   const isEdit = !!entry;
   const isPrefill = !isEdit && !!prefill;
 
   const [name, setName] = useState(entry?.name || prefill?.name || "");
-  const [calories, setCalories] = useState(entry ? String(entry.calories) : prefill ? String(prefill.calories) : "");
-  const [protein, setProtein] = useState(entry ? String(entry.protein) : prefill ? String(prefill.protein) : "");
-  const [carbs, setCarbs] = useState(entry ? String(entry.carbs) : prefill ? String(prefill.carbs) : "");
-  const [fat, setFat] = useState(entry ? String(entry.fat) : prefill ? String(prefill.fat) : "");
-  const [servingSize, setServingSize] = useState(entry?.servingSize || prefill?.servingSize || "");
+  const [calories, setCalories] = useState(
+    entry ? String(entry.calories) : prefill ? String(prefill.calories) : "",
+  );
+  const [protein, setProtein] = useState(
+    entry ? String(entry.protein) : prefill ? String(prefill.protein) : "",
+  );
+  const [carbs, setCarbs] = useState(
+    entry ? String(entry.carbs) : prefill ? String(prefill.carbs) : "",
+  );
+  const [fat, setFat] = useState(
+    entry ? String(entry.fat) : prefill ? String(prefill.fat) : "",
+  );
+  const [servingSize, setServingSize] = useState(
+    entry?.servingSize || prefill?.servingSize || "",
+  );
   const [mealType, setMealType] = useState<MealType>(
-    (entry?.mealType as MealType) || prefill?.mealType || guessMealType()
+    (entry?.mealType as MealType) || prefill?.mealType || guessMealType(),
   );
   const [date, setDate] = useState(
-    entry?.date?.split("T")[0] || toLocalDateString()
+    entry?.date?.split("T")[0] || toLocalDateString(),
   );
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -97,8 +111,26 @@ export function useEntryForm(entry?: FoodEntry, prefill?: EntryFormPrefill, onEr
   return {
     isEdit,
     isPrefill,
-    fields: { name, calories, protein, carbs, fat, servingSize, mealType, date },
-    setters: { setName, setCalories, setProtein, setCarbs, setFat, setServingSize, setMealType, setDate },
+    fields: {
+      name,
+      calories,
+      protein,
+      carbs,
+      fat,
+      servingSize,
+      mealType,
+      date,
+    },
+    setters: {
+      setName,
+      setCalories,
+      setProtein,
+      setCarbs,
+      setFat,
+      setServingSize,
+      setMealType,
+      setDate,
+    },
     loading,
     fieldErrors,
     clearFieldError,

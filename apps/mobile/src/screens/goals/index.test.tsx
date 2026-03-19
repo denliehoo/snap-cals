@@ -1,6 +1,5 @@
-import React from "react";
+import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import GoalsScreen from "./";
-import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 
 jest.mock("@/services/api", () => ({
   api: {
@@ -18,7 +17,12 @@ beforeEach(() => jest.clearAllMocks());
 describe("GoalsScreen", () => {
   it("renders form with fetched goals", async () => {
     api.getGoals.mockResolvedValue({
-      data: { dailyCalories: 2000, dailyProtein: 150, dailyCarbs: 250, dailyFat: 65 },
+      data: {
+        dailyCalories: 2000,
+        dailyProtein: 150,
+        dailyCarbs: 250,
+        dailyFat: 65,
+      },
     });
     const { getByText, getByDisplayValue } = await render(<GoalsScreen />);
     await waitFor(() => {
@@ -43,7 +47,12 @@ describe("GoalsScreen", () => {
 
   it("calls upsertGoals on save", async () => {
     api.getGoals.mockResolvedValue({
-      data: { dailyCalories: 2000, dailyProtein: 150, dailyCarbs: 250, dailyFat: 65 },
+      data: {
+        dailyCalories: 2000,
+        dailyProtein: 150,
+        dailyCarbs: 250,
+        dailyFat: 65,
+      },
     });
     const { getByText, getByDisplayValue } = await render(<GoalsScreen />);
     await waitFor(() => expect(getByDisplayValue("2000")).toBeTruthy());
@@ -63,7 +72,12 @@ describe("GoalsScreen", () => {
 
   it("shows validation error for negative values", async () => {
     api.getGoals.mockResolvedValue({
-      data: { dailyCalories: 2000, dailyProtein: 150, dailyCarbs: 250, dailyFat: 65 },
+      data: {
+        dailyCalories: 2000,
+        dailyProtein: 150,
+        dailyCarbs: 250,
+        dailyFat: 65,
+      },
     });
     const { getByText, getByDisplayValue } = await render(<GoalsScreen />);
     await waitFor(() => expect(getByDisplayValue("2000")).toBeTruthy());
@@ -72,7 +86,9 @@ describe("GoalsScreen", () => {
     fireEvent.press(getByText("Save Goals"));
 
     await waitFor(() => {
-      expect(getByText("Calories (kcal) must be a valid number >= 0")).toBeTruthy();
+      expect(
+        getByText("Calories (kcal) must be a valid number >= 0"),
+      ).toBeTruthy();
     });
     expect(api.upsertGoals).not.toHaveBeenCalled();
   });

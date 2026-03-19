@@ -1,6 +1,6 @@
-import { GoogleGenAI, Part } from "@google/genai";
-import { z, toJSONSchema } from "zod";
-import { ImageData } from "@snap-cals/shared";
+import { GoogleGenAI, type Part } from "@google/genai";
+import type { ImageData } from "@snap-cals/shared";
+import { toJSONSchema, z } from "zod";
 
 const nutritionSchema = z.object({
   name: z.string(),
@@ -29,7 +29,9 @@ export async function estimateNutrition(
 ): Promise<NutritionEstimate> {
   const parts: Part[] = [];
   if (image) {
-    parts.push({ inlineData: { mimeType: image.mimeType, data: image.base64 } });
+    parts.push({
+      inlineData: { mimeType: image.mimeType, data: image.base64 },
+    });
   }
   parts.push({ text: description });
 

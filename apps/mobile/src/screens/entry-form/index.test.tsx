@@ -1,7 +1,6 @@
-import React from "react";
-import EntryFormScreen from "./";
-import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 import { MealType } from "@snap-cals/shared";
+import { fireEvent, render, waitFor } from "@/__tests__/helpers";
+import EntryFormScreen from "./";
 
 jest.mock("@/services/api", () => ({
   api: {
@@ -21,11 +20,15 @@ const mockNavigation = { goBack: mockGoBack } as any;
 beforeEach(() => jest.clearAllMocks());
 
 describe("EntryFormScreen — create mode", () => {
-  const mockRoute = { params: undefined, key: "EntryForm", name: "EntryForm" as const };
+  const mockRoute = {
+    params: undefined,
+    key: "EntryForm",
+    name: "EntryForm" as const,
+  };
 
   it("renders add entry form", async () => {
     const { getAllByText, getByPlaceholderText } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     expect(getAllByText("Add Entry").length).toBeGreaterThanOrEqual(1);
     expect(getByPlaceholderText("e.g. Chicken Breast")).toBeTruthy();
@@ -33,7 +36,7 @@ describe("EntryFormScreen — create mode", () => {
 
   it("shows field-level validation errors when name and calories are empty", async () => {
     const { getByText, getAllByText } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     const buttons = getAllByText("Add Entry");
     fireEvent.press(buttons[buttons.length - 1]);
@@ -45,24 +48,28 @@ describe("EntryFormScreen — create mode", () => {
   });
 
   it("submits valid entry", async () => {
-    const { getByPlaceholderText, getAllByText, getAllByPlaceholderText } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+    const { getByPlaceholderText, getAllByText, getAllByPlaceholderText } =
+      await render(
+        <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
+      );
+    fireEvent.changeText(
+      getByPlaceholderText("e.g. Chicken Breast"),
+      "Oatmeal",
     );
-    fireEvent.changeText(getByPlaceholderText("e.g. Chicken Breast"), "Oatmeal");
     const calField = getAllByPlaceholderText("0")[0];
     fireEvent.changeText(calField, "350");
     const buttons = getAllByText("Add Entry");
     fireEvent.press(buttons[buttons.length - 1]);
     await waitFor(() => {
       expect(api.createEntry).toHaveBeenCalledWith(
-        expect.objectContaining({ name: "Oatmeal", calories: 350 })
+        expect.objectContaining({ name: "Oatmeal", calories: 350 }),
       );
     });
   });
 
   it("renders all meal type chips", async () => {
     const { getByText } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     expect(getByText("Breakfast")).toBeTruthy();
     expect(getByText("Lunch")).toBeTruthy();
@@ -86,11 +93,15 @@ describe("EntryFormScreen — edit mode", () => {
     createdAt: "2026-03-16T00:00:00.000Z",
     updatedAt: "2026-03-16T00:00:00.000Z",
   };
-  const mockRoute = { params: { entry: existingEntry }, key: "EntryForm", name: "EntryForm" as const };
+  const mockRoute = {
+    params: { entry: existingEntry },
+    key: "EntryForm",
+    name: "EntryForm" as const,
+  };
 
   it("renders edit form with pre-filled values", async () => {
     const { getByText, getByDisplayValue } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     expect(getByText("Edit Entry")).toBeTruthy();
     expect(getByDisplayValue("Chicken Breast")).toBeTruthy();
@@ -100,20 +111,20 @@ describe("EntryFormScreen — edit mode", () => {
 
   it("shows delete button in edit mode", async () => {
     const { getByText } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     expect(getByText("Delete Entry")).toBeTruthy();
   });
 
   it("calls updateEntry on submit", async () => {
     const { getByText } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     fireEvent.press(getByText("Update"));
     await waitFor(() => {
       expect(api.updateEntry).toHaveBeenCalledWith(
         "entry-1",
-        expect.objectContaining({ name: "Chicken Breast", calories: 250 })
+        expect.objectContaining({ name: "Chicken Breast", calories: 250 }),
       );
     });
   });
@@ -128,11 +139,15 @@ describe("EntryFormScreen — prefill mode", () => {
     fat: 30,
     servingSize: "1 burger",
   };
-  const mockRoute = { params: { prefill }, key: "EntryForm", name: "EntryForm" as const };
+  const mockRoute = {
+    params: { prefill },
+    key: "EntryForm",
+    name: "EntryForm" as const,
+  };
 
   it("renders with pre-filled values from AI estimate", async () => {
     const { getAllByText, getByDisplayValue } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     expect(getAllByText("Add Entry").length).toBeGreaterThan(0);
     expect(getByDisplayValue("Big Mac")).toBeTruthy();
@@ -145,12 +160,12 @@ describe("EntryFormScreen — prefill mode", () => {
 
   it("submits prefilled entry", async () => {
     const { getAllByText } = await render(
-      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />
+      <EntryFormScreen navigation={mockNavigation} route={mockRoute} />,
     );
     fireEvent.press(getAllByText("Add Entry")[1]); // button is second
     await waitFor(() => {
       expect(api.createEntry).toHaveBeenCalledWith(
-        expect.objectContaining({ name: "Big Mac", calories: 550 })
+        expect.objectContaining({ name: "Big Mac", calories: 550 }),
       );
     });
   });

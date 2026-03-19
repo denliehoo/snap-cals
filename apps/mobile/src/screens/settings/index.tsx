@@ -1,11 +1,12 @@
-import React, { useMemo } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import type React from "react";
+import { useMemo } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import ThemedSwitch from "@/components/themed-switch";
+import { useColors, useTheme } from "@/contexts/theme-context";
 import { useAuthStore } from "@/stores/auth.store";
 import { useSettingsStore } from "@/stores/settings.store";
-import { useTheme, useColors } from "@/contexts/theme-context";
-import { spacing, fontSize, fontWeight } from "@/theme";
-import ThemedSwitch from "@/components/themed-switch";
+import { fontSize, fontWeight, spacing } from "@/theme";
 
 type RowProps = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -51,12 +52,7 @@ export default function SettingsScreen() {
         <SettingsRow
           icon={isDark ? "moon" : "sunny-outline"}
           label="Dark Mode"
-          right={
-            <ThemedSwitch
-              value={isDark}
-              onValueChange={toggle}
-            />
-          }
+          right={<ThemedSwitch value={isDark} onValueChange={toggle} />}
         />
       </View>
 

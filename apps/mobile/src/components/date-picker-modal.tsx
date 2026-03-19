@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { View, StyleSheet } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { spacing } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
+import { spacing } from "@/theme";
 import { toLocalDateString } from "@/utils/date";
 import AppModal from "./app-modal";
 import Button from "./button";
@@ -75,7 +75,7 @@ export default function DatePickerModal({
   );
 }
 
-const makeStyles = (colors: ReturnType<typeof useColors>) =>
+const makeStyles = (_colors: ReturnType<typeof useColors>) =>
   StyleSheet.create({
     toolbar: {
       flexDirection: "row",

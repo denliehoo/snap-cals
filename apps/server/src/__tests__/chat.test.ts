@@ -1,14 +1,21 @@
 import request from "supertest";
 import app from "../app";
-import { createTestUser, signToken, cleanDb, prisma } from "./helpers";
 import * as chatService from "../services/chat.service";
+import { cleanDb, createTestUser, prisma, signToken } from "./helpers";
 
 jest.spyOn(chatService, "chat");
 
 const MOCK_QUESTION = { message: "What size?" };
 const MOCK_ESTIMATE = {
   message: "Here's your estimate",
-  estimate: { name: "Big Mac", calories: 550, protein: 25, carbs: 45, fat: 30, servingSize: "1 burger" },
+  estimate: {
+    name: "Big Mac",
+    calories: 550,
+    protein: 25,
+    carbs: 45,
+    fat: 30,
+    servingSize: "1 burger",
+  },
 };
 
 let token: string;
@@ -97,7 +104,10 @@ describe("POST /api/ai/chat", () => {
     await request(app)
       .post("/api/ai/chat")
       .set("Authorization", `Bearer ${token}`)
-      .send({ messages: [{ role: "user", content: "big mac" }], forceEstimate: true });
+      .send({
+        messages: [{ role: "user", content: "big mac" }],
+        forceEstimate: true,
+      });
 
     expect(chatService.chat).toHaveBeenCalledWith(
       [{ role: "user", content: "big mac" }],
@@ -152,7 +162,10 @@ describe("POST /api/ai/chat", () => {
     const res = await request(app)
       .post("/api/ai/chat")
       .set("Authorization", `Bearer ${token}`)
-      .send({ messages: [{ role: "user", content: "food" }], image: { base64: "abc", mimeType: "image/gif" } });
+      .send({
+        messages: [{ role: "user", content: "food" }],
+        image: { base64: "abc", mimeType: "image/gif" },
+      });
 
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch(/mimeType/i);
@@ -164,7 +177,10 @@ describe("POST /api/ai/chat", () => {
       .set("Authorization", `Bearer ${token}`)
       .send({
         messages: [{ role: "user", content: "food" }],
-        image: { base64: "a".repeat(5 * 1024 * 1024 + 1), mimeType: "image/jpeg" },
+        image: {
+          base64: "a".repeat(5 * 1024 * 1024 + 1),
+          mimeType: "image/jpeg",
+        },
       });
 
     expect(res.status).toBe(400);

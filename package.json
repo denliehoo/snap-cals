@@ -6,6 +6,12 @@
     "dev:mobile": "pnpm --filter @snap-cals/mobile start",
     "test": "pnpm --filter @snap-cals/server test && pnpm --filter @snap-cals/mobile test",
     "test:server": "pnpm --filter @snap-cals/server test",
-    "test:mobile": "pnpm --filter @snap-cals/mobile test"
+    "test:mobile": "pnpm --filter @snap-cals/mobile test",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.8"
   }
 }

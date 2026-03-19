@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { type FoodEntry, type Goal, MealType } from "@snap-cals/shared";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/services/api";
-import { FoodEntry, MealType, Goal } from "@snap-cals/shared";
-import { toLocalDateString, parseLocalDate } from "@/utils/date";
+import { parseLocalDate, toLocalDateString } from "@/utils/date";
 
 export interface MealSection {
   title: string;
@@ -18,7 +18,12 @@ export interface DailyTotals {
   fat: number;
 }
 
-const MEAL_ORDER: MealType[] = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER, MealType.SNACK];
+const MEAL_ORDER: MealType[] = [
+  MealType.BREAKFAST,
+  MealType.LUNCH,
+  MealType.DINNER,
+  MealType.SNACK,
+];
 const MEAL_LABELS: Record<MealType, string> = {
   [MealType.BREAKFAST]: "Breakfast",
   [MealType.LUNCH]: "Lunch",
@@ -26,9 +31,14 @@ const MEAL_LABELS: Record<MealType, string> = {
   [MealType.SNACK]: "Snack",
 };
 
-export function useDailyEntries(initialDate?: string, onError?: (msg: string) => void) {
+export function useDailyEntries(
+  initialDate?: string,
+  onError?: (msg: string) => void,
+) {
   const navigation = useNavigation();
-  const [date, setDate] = useState(() => initialDate || toLocalDateString(new Date()));
+  const [date, setDate] = useState(
+    () => initialDate || toLocalDateString(new Date()),
+  );
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,20 +48,26 @@ export function useDailyEntries(initialDate?: string, onError?: (msg: string) =>
   }, [initialDate]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchEntries = useCallback(async (showLoader = true) => {
-    if (showLoader) setLoading(true);
-    try {
-      const [entriesRes, goalsRes] = await Promise.all([api.getEntries(date), api.getGoals()]);
-      setEntries(entriesRes.data);
-      setGoals(goalsRes.data);
-    } catch (e: any) {
-      setEntries([]);
-      onError?.(e.message || "Failed to load entries");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [date]);
+  const fetchEntries = useCallback(
+    async (showLoader = true) => {
+      if (showLoader) setLoading(true);
+      try {
+        const [entriesRes, goalsRes] = await Promise.all([
+          api.getEntries(date),
+          api.getGoals(),
+        ]);
+        setEntries(entriesRes.data);
+        setGoals(goalsRes.data);
+      } catch (e: any) {
+        setEntries([]);
+        onError?.(e.message || "Failed to load entries");
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    [date],
+  );
 
   useEffect(() => {
     fetchEntries();
@@ -76,14 +92,12 @@ export function useDailyEntries(initialDate?: string, onError?: (msg: string) =>
       list.push(e);
       grouped.set(e.mealType, list);
     }
-    return MEAL_ORDER
-      .filter((m) => grouped.has(m))
-      .map((m) => ({
-        title: MEAL_LABELS[m],
-        mealType: m,
-        data: grouped.get(m)!,
-        calories: grouped.get(m)!.reduce((s, e) => s + e.calories, 0),
-      }));
+    return MEAL_ORDER.filter((m) => grouped.has(m)).map((m) => ({
+      title: MEAL_LABELS[m],
+      mealType: m,
+      data: grouped.get(m)!,
+      calories: grouped.get(m)!.reduce((s, e) => s + e.calories, 0),
+    }));
   }, [entries]);
 
   const totals = useMemo<DailyTotals>(() => {
@@ -94,7 +108,7 @@ export function useDailyEntries(initialDate?: string, onError?: (msg: string) =>
         carbs: t.carbs + e.carbs,
         fat: t.fat + e.fat,
       }),
-      { calories: 0, protein: 0, carbs: 0, fat: 0 }
+      { calories: 0, protein: 0, carbs: 0, fat: 0 },
     );
   }, [entries]);
 
@@ -119,5 +133,17 @@ export function useDailyEntries(initialDate?: string, onError?: (msg: string) =>
     }
   };
 
-  return { date, setDate, sections, totals, goals, loading, refreshing, onRefresh, goToPreviousDay, goToNextDay, deleteEntry };
+  return {
+    date,
+    setDate,
+    sections,
+    totals,
+    goals,
+    loading,
+    refreshing,
+    onRefresh,
+    goToPreviousDay,
+    goToNextDay,
+    deleteEntry,
+  };
 }

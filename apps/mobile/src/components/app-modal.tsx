@@ -1,7 +1,7 @@
-import React from "react";
-import { Modal, TouchableOpacity, View, StyleSheet } from "react-native";
-import { spacing } from "@/theme";
+import type React from "react";
+import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { spacing } from "@/theme";
 
 interface Props {
   visible: boolean;
@@ -14,8 +14,15 @@ export default function AppModal({ visible, onClose, children }: Props) {
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
-        <View style={[styles.content, { backgroundColor: colors.surface }]} onStartShouldSetResponder={() => true}>
+      <TouchableOpacity
+        style={styles.overlay}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <View
+          style={[styles.content, { backgroundColor: colors.surface }]}
+          onStartShouldSetResponder={() => true}
+        >
           {children}
         </View>
       </TouchableOpacity>
@@ -24,6 +31,11 @@ export default function AppModal({ visible, onClose, children }: Props) {
 }
 
 const styles = StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   content: { borderRadius: 16, padding: spacing.sm, width: 340 },
 });

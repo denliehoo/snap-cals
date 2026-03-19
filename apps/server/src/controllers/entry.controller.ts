@@ -1,11 +1,17 @@
-import { Request, Response } from "express";
+import { MealType as PrismaMealType, type User } from "@prisma/client";
+import type {
+  CreateFoodEntryRequest,
+  UpdateFoodEntryRequest,
+} from "@snap-cals/shared";
+import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { MealType as PrismaMealType, User } from "@prisma/client";
-import { CreateFoodEntryRequest, UpdateFoodEntryRequest } from "@snap-cals/shared";
 
 const userId = (req: Request) => (req.user as User).id;
 
-export const create = async (req: Request<{}, {}, CreateFoodEntryRequest>, res: Response) => {
+export const create = async (
+  req: Request<{}, {}, CreateFoodEntryRequest>,
+  res: Response,
+) => {
   try {
     const { name, calories, protein, carbs, fat, servingSize, mealType, date } =
       req.body;
@@ -35,7 +41,7 @@ export const create = async (req: Request<{}, {}, CreateFoodEntryRequest>, res: 
     });
 
     res.status(201).json({ data: entry });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -58,7 +64,7 @@ export const getByDate = async (req: Request, res: Response) => {
     });
 
     res.json({ data: entries });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -82,12 +88,15 @@ export const getByWeek = async (req: Request, res: Response) => {
     });
 
     res.json({ data: entries });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-export const update = async (req: Request<{ id: string }, {}, UpdateFoodEntryRequest>, res: Response) => {
+export const update = async (
+  req: Request<{ id: string }, {}, UpdateFoodEntryRequest>,
+  res: Response,
+) => {
   try {
     const { id } = req.params;
 
@@ -96,7 +105,10 @@ export const update = async (req: Request<{ id: string }, {}, UpdateFoodEntryReq
     });
     if (!existing) return res.status(404).json({ message: "Entry not found" });
 
-    if (req.body.mealType && !Object.values(PrismaMealType).includes(req.body.mealType)) {
+    if (
+      req.body.mealType &&
+      !Object.values(PrismaMealType).includes(req.body.mealType)
+    ) {
       return res.status(400).json({ message: "Invalid meal type" });
     }
 
@@ -118,7 +130,7 @@ export const update = async (req: Request<{ id: string }, {}, UpdateFoodEntryReq
     });
 
     res.json({ data: entry });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -129,11 +141,19 @@ export const getRecent = async (req: Request, res: Response) => {
       where: { userId: userId(req) },
       orderBy: { createdAt: "desc" },
       take: 20,
-      select: { name: true, calories: true, protein: true, carbs: true, fat: true, servingSize: true, mealType: true },
+      select: {
+        name: true,
+        calories: true,
+        protein: true,
+        carbs: true,
+        fat: true,
+        servingSize: true,
+        mealType: true,
+      },
     });
 
     res.json({ data: entries });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -149,7 +169,7 @@ export const remove = async (req: Request<{ id: string }>, res: Response) => {
 
     await prisma.foodEntry.delete({ where: { id } });
     res.json({ message: "Entry deleted" });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };

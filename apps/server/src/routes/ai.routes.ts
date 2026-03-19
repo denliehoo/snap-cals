@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authenticate } from "../middleware/auth";
 import * as aiController from "../controllers/ai.controller";
 import * as chatController from "../controllers/chat.controller";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
 

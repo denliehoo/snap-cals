@@ -1,7 +1,13 @@
-import React from "react";
-import { View, Text, TextInput, StyleSheet, KeyboardTypeOptions, Pressable } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
+import {
+  type KeyboardTypeOptions,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
 
 interface FormFieldProps {
   label: string;
@@ -30,7 +36,14 @@ export default function FormField({
 
   const input = (
     <TextInput
-      style={[styles.input, { backgroundColor: colors.surface, borderColor: error ? colors.error : colors.border, color: colors.text }]}
+      style={[
+        styles.input,
+        {
+          backgroundColor: colors.surface,
+          borderColor: error ? colors.error : colors.border,
+          color: colors.text,
+        },
+      ]}
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
@@ -46,14 +59,20 @@ export default function FormField({
     <View style={styles.wrapper}>
       <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
       {onPress ? <Pressable onPress={onPress}>{input}</Pressable> : input}
-      {error ? <Text style={[styles.error, { color: colors.error }]}>{error}</Text> : null}
+      {error ? (
+        <Text style={[styles.error, { color: colors.error }]}>{error}</Text>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: { marginBottom: spacing.md },
-  label: { fontSize: fontSize.sm, fontWeight: fontWeight.medium, marginBottom: spacing.xs },
+  label: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    marginBottom: spacing.xs,
+  },
   input: {
     borderWidth: 1,
     borderRadius: borderRadius.lg,

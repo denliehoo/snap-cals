@@ -1,12 +1,12 @@
+import path from "node:path";
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 if (!process.env.DATABASE_URL_TEST) {
   throw new Error(
     "DATABASE_URL_TEST is not set. Tests require a separate test database.\n" +
-    "Add DATABASE_URL_TEST to apps/server/.env and re-run."
+      "Add DATABASE_URL_TEST to apps/server/.env and re-run.",
   );
 }
 

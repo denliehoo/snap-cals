@@ -1,6 +1,5 @@
-import React from "react";
+import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import LoginScreen from "./";
-import { render, fireEvent, waitFor } from "@/__tests__/helpers";
 
 const mockNavigate = jest.fn();
 const mockNavigation = { navigate: mockNavigate } as any;
@@ -30,7 +29,7 @@ beforeEach(() => jest.clearAllMocks());
 describe("LoginScreen", () => {
   it("renders login form", async () => {
     const { getByText, getByPlaceholderText } = await render(
-      <LoginScreen navigation={mockNavigation} route={mockRoute} />
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );
     expect(getByText("Log in to your account")).toBeTruthy();
     expect(getByPlaceholderText("Email")).toBeTruthy();
@@ -40,7 +39,7 @@ describe("LoginScreen", () => {
 
   it("shows error when fields are empty", async () => {
     const { getByText } = await render(
-      <LoginScreen navigation={mockNavigation} route={mockRoute} />
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );
     fireEvent.press(getByText("Log In"));
     await waitFor(() => {
@@ -53,7 +52,7 @@ describe("LoginScreen", () => {
   it("calls login on valid submit", async () => {
     mockLogin.mockResolvedValue(undefined);
     const { getByText, getByPlaceholderText } = await render(
-      <LoginScreen navigation={mockNavigation} route={mockRoute} />
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );
     fireEvent.changeText(getByPlaceholderText("Email"), "test@example.com");
     fireEvent.changeText(getByPlaceholderText("Password"), "password123");
@@ -66,7 +65,7 @@ describe("LoginScreen", () => {
   it("shows error on login failure", async () => {
     mockLogin.mockRejectedValue({ message: "Invalid credentials" });
     const { getByText, getByPlaceholderText } = await render(
-      <LoginScreen navigation={mockNavigation} route={mockRoute} />
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );
     fireEvent.changeText(getByPlaceholderText("Email"), "test@example.com");
     fireEvent.changeText(getByPlaceholderText("Password"), "wrong");
@@ -78,7 +77,7 @@ describe("LoginScreen", () => {
 
   it("navigates to signup", async () => {
     const { getByText } = await render(
-      <LoginScreen navigation={mockNavigation} route={mockRoute} />
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );
     fireEvent.press(getByText("Don't have an account? Sign up"));
     expect(mockNavigate).toHaveBeenCalledWith("Signup");

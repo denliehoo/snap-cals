@@ -1,17 +1,23 @@
-import { Request, Response } from "express";
+import { MealType as PrismaMealType, type User } from "@prisma/client";
+import type { CreateFavoriteFoodRequest } from "@snap-cals/shared";
+import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { MealType as PrismaMealType, User } from "@prisma/client";
-import { CreateFavoriteFoodRequest } from "@snap-cals/shared";
 
 const userId = (req: Request) => (req.user as User).id;
 const MAX_FAVORITES = 25;
 
-export const create = async (req: Request<{}, {}, CreateFavoriteFoodRequest>, res: Response) => {
+export const create = async (
+  req: Request<{}, {}, CreateFavoriteFoodRequest>,
+  res: Response,
+) => {
   try {
-    const { name, calories, protein, carbs, fat, servingSize, mealType } = req.body;
+    const { name, calories, protein, carbs, fat, servingSize, mealType } =
+      req.body;
 
     if (!name || calories == null || !mealType) {
-      return res.status(400).json({ message: "name, calories, and mealType are required" });
+      return res
+        .status(400)
+        .json({ message: "name, calories, and mealType are required" });
     }
 
     if (!Object.values(PrismaMealType).includes(mealType)) {
@@ -22,12 +28,18 @@ export const create = async (req: Request<{}, {}, CreateFavoriteFoodRequest>, re
       where: { userId_name: { userId: userId(req), name } },
     });
     if (existing) {
-      return res.status(409).json({ message: `A favorite named "${name}" already exists` });
+      return res
+        .status(409)
+        .json({ message: `A favorite named "${name}" already exists` });
     }
 
-    const count = await prisma.favoriteFood.count({ where: { userId: userId(req) } });
+    const count = await prisma.favoriteFood.count({
+      where: { userId: userId(req) },
+    });
     if (count >= MAX_FAVORITES) {
-      return res.status(409).json({ message: "Favorites full — remove one to add another" });
+      return res
+        .status(409)
+        .json({ message: "Favorites full — remove one to add another" });
     }
 
     const favorite = await prisma.favoriteFood.create({
@@ -44,7 +56,7 @@ export const create = async (req: Request<{}, {}, CreateFavoriteFoodRequest>, re
     });
 
     res.status(201).json({ data: favorite });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -57,7 +69,7 @@ export const list = async (req: Request, res: Response) => {
     });
 
     res.json({ data: favorites });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -69,11 +81,12 @@ export const remove = async (req: Request<{ id: string }>, res: Response) => {
     const existing = await prisma.favoriteFood.findFirst({
       where: { id, userId: userId(req) },
     });
-    if (!existing) return res.status(404).json({ message: "Favorite not found" });
+    if (!existing)
+      return res.status(404).json({ message: "Favorite not found" });
 
     await prisma.favoriteFood.delete({ where: { id } });
     res.json({ message: "Favorite deleted" });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Server error" });
   }
 };

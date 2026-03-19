@@ -8,5 +8,5 @@ export function toLocalDateString(d: Date = new Date()): string {
 
 /** Parses a YYYY-MM-DD string as local midnight (not UTC). */
 export function parseLocalDate(dateStr: string): Date {
-  return new Date(dateStr + "T00:00:00");
+  return new Date(`${dateStr}T00:00:00`);
 }

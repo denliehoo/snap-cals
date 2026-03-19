@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../app";
-import { createTestUser, cleanDb, prisma } from "./helpers";
+import { cleanDb, createTestUser, prisma } from "./helpers";
 
 beforeEach(() => cleanDb());
 afterAll(async () => {

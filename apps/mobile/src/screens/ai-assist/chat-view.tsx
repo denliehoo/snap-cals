@@ -1,8 +1,8 @@
-import React, { useRef, useMemo } from "react";
-import { View, Text, Image, FlatList, StyleSheet } from "react-native";
-import { ChatMessage } from "@snap-cals/shared";
-import { spacing, fontSize, borderRadius } from "@/theme";
+import type { ChatMessage } from "@snap-cals/shared";
+import { useMemo, useRef } from "react";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { borderRadius, fontSize, spacing } from "@/theme";
 
 interface ChatViewProps {
   messages: ChatMessage[];
@@ -26,16 +26,28 @@ export default function ChatView({ messages, imageUri }: ChatViewProps) {
       contentContainerStyle={{ paddingTop: spacing.md }}
       onContentSizeChange={scrollToBottom}
       onLayout={scrollToBottom}
-      ListHeaderComponent={imageUri ? (
-        <View style={styles.imageRow}>
-          <Image source={{ uri: imageUri }} style={styles.chatImage} />
-        </View>
-      ) : null}
+      ListHeaderComponent={
+        imageUri ? (
+          <View style={styles.imageRow}>
+            <Image source={{ uri: imageUri }} style={styles.chatImage} />
+          </View>
+        ) : null
+      }
       renderItem={({ item }) => {
         const isUser = item.role === "user";
         return (
-          <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
-            <Text style={[styles.bubbleText, isUser ? styles.userText : styles.aiText]}>
+          <View
+            style={[
+              styles.bubble,
+              isUser ? styles.userBubble : styles.aiBubble,
+            ]}
+          >
+            <Text
+              style={[
+                styles.bubbleText,
+                isUser ? styles.userText : styles.aiText,
+              ]}
+            >
               {item.content}
             </Text>
           </View>

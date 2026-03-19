@@ -1,6 +1,6 @@
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Alert, Linking } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 
 export interface PickedImage {
   uri: string;
@@ -26,7 +26,9 @@ function showPermissionAlert() {
   );
 }
 
-function extractImage(result: ImagePicker.ImagePickerResult): PickedImage | null {
+function extractImage(
+  result: ImagePicker.ImagePickerResult,
+): PickedImage | null {
   if (result.canceled || !result.assets?.[0]) return null;
   const asset = result.assets[0];
   if (!asset.base64) return null;

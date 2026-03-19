@@ -1,18 +1,18 @@
-import {
-  ApiResponse,
-  AuthResponse,
-  FoodEntry,
-  Goal,
-  CreateFoodEntryRequest,
-  UpdateFoodEntryRequest,
-  UpsertGoalRequest,
-  AiEstimateResponse,
+import type {
   AiChatRequest,
   AiChatResponse,
-  ImageData,
-  FavoriteFoodItem,
+  AiEstimateResponse,
+  ApiResponse,
+  AuthResponse,
   CreateFavoriteFoodRequest,
+  CreateFoodEntryRequest,
+  FavoriteFoodItem,
+  FoodEntry,
+  Goal,
+  ImageData,
   RecentFoodItem,
+  UpdateFoodEntryRequest,
+  UpsertGoalRequest,
 } from "@snap-cals/shared";
 
 import { Platform } from "react-native";
@@ -20,7 +20,9 @@ import { Platform } from "react-native";
 // Note: If want to test against local server in android app from a physical device using the Expo Go app, need to use the local network IP address instead. Can just use the address below for android:
 // const DEV_HOST = Platform.OS === "android" ? "192.168.1.43" : "localhost";
 const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
-const API_URL = __DEV__ ? `http://${DEV_HOST}:3000/api` : "http://localhost:3000/api";
+const API_URL = __DEV__
+  ? `http://${DEV_HOST}:3000/api`
+  : "http://localhost:3000/api";
 
 let authToken: string | null = null;
 let onUnauthorized: (() => void) | null = null;
@@ -38,7 +40,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     "Content-Type": "application/json",
     ...((options.headers as Record<string, string>) || {}),
   };
-  if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+  if (authToken) headers.Authorization = `Bearer ${authToken}`;
 
   const res = await fetch(`${API_URL}${path}`, { ...options, headers });
   const body = await res.json();
@@ -78,10 +80,12 @@ export const api = {
   deleteEntry: (id: string) =>
     request<ApiResponse<void>>(`/entries/${id}`, { method: "DELETE" }),
 
-  getGoals: () =>
-    request<ApiResponse<Goal>>("/goals"),
+  getGoals: () => request<ApiResponse<Goal>>("/goals"),
   upsertGoals: (data: UpsertGoalRequest) =>
-    request<ApiResponse<Goal>>("/goals", { method: "PUT", body: JSON.stringify(data) }),
+    request<ApiResponse<Goal>>("/goals", {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
 
   estimateNutrition: (description: string, image?: ImageData) =>
     request<ApiResponse<AiEstimateResponse>>("/ai/estimate", {
@@ -95,8 +99,7 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
-  getFavorites: () =>
-    request<ApiResponse<FavoriteFoodItem[]>>("/favorites"),
+  getFavorites: () => request<ApiResponse<FavoriteFoodItem[]>>("/favorites"),
   createFavorite: (data: CreateFavoriteFoodRequest) =>
     request<ApiResponse<FavoriteFoodItem>>("/favorites", {
       method: "POST",

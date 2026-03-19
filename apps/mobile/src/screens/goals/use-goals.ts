@@ -1,7 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 
-const DEFAULTS = { dailyCalories: 2000, dailyProtein: 150, dailyCarbs: 250, dailyFat: 65 };
+const DEFAULTS = {
+  dailyCalories: 2000,
+  dailyProtein: 150,
+  dailyCarbs: 250,
+  dailyFat: 65,
+};
 
 export function useGoals() {
   const [calories, setCalories] = useState("");
@@ -41,14 +46,26 @@ export function useGoals() {
     })();
   }, []);
 
-  const save = async (onSuccess?: () => void, onError?: (msg: string) => void) => {
+  const save = async (
+    onSuccess?: () => void,
+    onError?: (msg: string) => void,
+  ) => {
     const fields = { calories, protein, carbs, fat };
-    const labels: Record<string, string> = { calories: "Calories (kcal)", protein: "Protein (g)", carbs: "Carbs (g)", fat: "Fat (g)" };
+    const labels: Record<string, string> = {
+      calories: "Calories (kcal)",
+      protein: "Protein (g)",
+      carbs: "Carbs (g)",
+      fat: "Fat (g)",
+    };
     const errors: Record<string, string> = {};
     for (const [key, val] of Object.entries(fields)) {
-      if (!val.trim()) { errors[key] = `${labels[key]} is required`; continue; }
+      if (!val.trim()) {
+        errors[key] = `${labels[key]} is required`;
+        continue;
+      }
       const n = Number(val);
-      if (isNaN(n) || n < 0) errors[key] = `${labels[key]} must be a valid number >= 0`;
+      if (Number.isNaN(n) || n < 0)
+        errors[key] = `${labels[key]} must be a valid number >= 0`;
     }
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
@@ -69,5 +86,19 @@ export function useGoals() {
     }
   };
 
-  return { calories, setCalories, protein, setProtein, carbs, setCarbs, fat, setFat, loading, saving, fieldErrors, clearFieldError, save };
+  return {
+    calories,
+    setCalories,
+    protein,
+    setProtein,
+    carbs,
+    setCarbs,
+    fat,
+    setFat,
+    loading,
+    saving,
+    fieldErrors,
+    clearFieldError,
+    save,
+  };
 }

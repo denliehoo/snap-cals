@@ -1,8 +1,7 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
-import { useColors } from "@/contexts/theme-context";
 import type { FoodEntry } from "@snap-cals/shared";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useColors } from "@/contexts/theme-context";
+import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 
 interface Props {
   entry: FoodEntry;
@@ -24,14 +23,26 @@ export default function EntryRow({ entry, onPress, onLongPress }: Props) {
       <View style={styles.top}>
         <View style={styles.info}>
           <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
-          {servingSize ? <Text style={[styles.meta, { color: colors.textSecondary }]}>{servingSize}</Text> : null}
+          {servingSize ? (
+            <Text style={[styles.meta, { color: colors.textSecondary }]}>
+              {servingSize}
+            </Text>
+          ) : null}
         </View>
-        <Text style={[styles.cals, { color: colors.calorieColor }]}>{calories} kcal</Text>
+        <Text style={[styles.cals, { color: colors.calorieColor }]}>
+          {calories} kcal
+        </Text>
       </View>
       <View style={styles.macroRow}>
-        <Text style={[styles.macroPill, { color: colors.proteinColor }]}>P {protein}g</Text>
-        <Text style={[styles.macroPill, { color: colors.carbsColor }]}>C {carbs}g</Text>
-        <Text style={[styles.macroPill, { color: colors.fatColor }]}>F {fat}g</Text>
+        <Text style={[styles.macroPill, { color: colors.proteinColor }]}>
+          P {protein}g
+        </Text>
+        <Text style={[styles.macroPill, { color: colors.carbsColor }]}>
+          C {carbs}g
+        </Text>
+        <Text style={[styles.macroPill, { color: colors.fatColor }]}>
+          F {fat}g
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -45,7 +56,11 @@ const styles = StyleSheet.create({
     marginVertical: spacing.xs,
     ...shadow.sm,
   },
-  top: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
+  top: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
   info: { flex: 1, marginRight: spacing.sm },
   name: { fontSize: fontSize.md, fontWeight: fontWeight.semibold },
   meta: { fontSize: fontSize.xs, marginTop: 2 },

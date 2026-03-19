@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import * as SecureStore from "expo-secure-store";
+import type React from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { colors, darkColors } from "@/theme";
 
 interface ThemeContextValue {
@@ -48,4 +55,3 @@ export function useColors() {
   const { isDark } = useContext(ThemeContext);
   return isDark ? darkColors : colors;
 }
-

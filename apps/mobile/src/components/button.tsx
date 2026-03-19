@@ -1,7 +1,11 @@
-import React from "react";
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from "react-native";
-import { spacing, fontSize, borderRadius, fontWeight } from "@/theme";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
 
 interface ButtonProps {
   title: string;
@@ -20,13 +24,33 @@ export default function Button({
 }: ButtonProps) {
   const colors = useColors();
 
-  const bgMap = { primary: colors.primary, danger: colors.error, text: "transparent", "text-secondary": "transparent", "text-danger": "transparent" };
-  const textMap = { primary: colors.textOnPrimary, danger: colors.textOnPrimary, text: colors.primary, "text-secondary": colors.textSecondary, "text-danger": colors.error };
-  const isText = variant === "text" || variant === "text-secondary" || variant === "text-danger";
+  const bgMap = {
+    primary: colors.primary,
+    danger: colors.error,
+    text: "transparent",
+    "text-secondary": "transparent",
+    "text-danger": "transparent",
+  };
+  const textMap = {
+    primary: colors.textOnPrimary,
+    danger: colors.textOnPrimary,
+    text: colors.primary,
+    "text-secondary": colors.textSecondary,
+    "text-danger": colors.error,
+  };
+  const isText =
+    variant === "text" ||
+    variant === "text-secondary" ||
+    variant === "text-danger";
 
   return (
     <TouchableOpacity
-      style={[styles.base, { backgroundColor: bgMap[variant] }, isText && styles.textVariant, disabled && styles.disabled]}
+      style={[
+        styles.base,
+        { backgroundColor: bgMap[variant] },
+        isText && styles.textVariant,
+        disabled && styles.disabled,
+      ]}
       onPress={onPress}
       disabled={loading || disabled}
       activeOpacity={0.8}

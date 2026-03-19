@@ -1,5 +1,5 @@
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import passport from "passport";
+import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import prisma from "../lib/prisma";
 
 const opts = {
@@ -17,7 +17,7 @@ passport.use(
     } catch (err) {
       return done(err, false);
     }
-  })
+  }),
 );
 
 export default passport;

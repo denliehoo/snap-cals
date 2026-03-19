@@ -1,7 +1,7 @@
-import { z, toJSONSchema } from "zod";
-import { createGeminiClient, NutritionEstimate } from "./gemini.service";
-import { ChatMessage, ImageData } from "@snap-cals/shared";
-import { Part } from "@google/genai";
+import type { Part } from "@google/genai";
+import type { ChatMessage, ImageData } from "@snap-cals/shared";
+import { toJSONSchema, z } from "zod";
+import { createGeminiClient, type NutritionEstimate } from "./gemini.service";
 
 const chatResponseSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("question"), content: z.string() }),
@@ -37,7 +37,9 @@ export async function chat(
   const contents = messages.map((m, i) => {
     const parts: Part[] = [];
     if (i === 0 && m.role === "user" && image) {
-      parts.push({ inlineData: { mimeType: image.mimeType, data: image.base64 } });
+      parts.push({
+        inlineData: { mimeType: image.mimeType, data: image.base64 },
+      });
     }
     parts.push({ text: m.content });
     return {
@@ -49,7 +51,9 @@ export async function chat(
   if (forceEstimate) {
     contents.push({
       role: "user",
-      parts: [{ text: "Give me your best estimate now based on what you know." }],
+      parts: [
+        { text: "Give me your best estimate now based on what you know." },
+      ],
     });
   }
 

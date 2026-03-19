@@ -1,7 +1,6 @@
-import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius } from "@/theme";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
 
 interface Props {
   onPress: () => void;
@@ -12,8 +11,14 @@ export default function Fab({ onPress, label = "+" }: Props) {
   const colors = useColors();
 
   return (
-    <TouchableOpacity style={[styles.fab, { backgroundColor: colors.primary }]} onPress={onPress} activeOpacity={0.8}>
-      <Text style={[styles.text, { color: colors.textOnPrimary }]}>{label}</Text>
+    <TouchableOpacity
+      style={[styles.fab, { backgroundColor: colors.primary }]}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      <Text style={[styles.text, { color: colors.textOnPrimary }]}>
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }

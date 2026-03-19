@@ -130,15 +130,17 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 
 - [ ] **Objective:** Add Biome as the project-wide formatter and linter, replacing the need for ESLint/Prettier
 - **Implementation:**
-  - Install `@biomejs/biome` as a dev dependency at the workspace root
-  - Add `biome.json` at the repo root configured to cover `apps/mobile`, `apps/server`, `packages/shared`
-  - Add root `package.json` scripts: `lint` (`biome lint`), `format` (`biome format --write`), `check` (`biome check --write`)
-  - Only safe fixes — do not use `--unsafe` flag
-  - Run initial `biome check --write` pass to format and fix existing code
-  - Remove the "Add Biome" item from the Product Backlog in `docs/phase-roadmap.md`
-  - Create `.kiro/skills/biome-conventions.md` skill so Kiro-generated code follows Biome's formatting and lint rules (e.g., use `import type`, no unused imports, double quotes vs single quotes — whatever `biome.json` enforces)
-- **Test:** `pnpm check` exits 0 with no remaining lint/format issues
-- **Demo:** Run `pnpm check` — all files pass. Introduce a formatting violation, re-run — Biome catches it.
+  - [x] Install `@biomejs/biome` as a dev dependency at the workspace root
+  - [x] Add `biome.json` at the repo root configured to cover `apps/mobile`, `apps/server`, `packages/shared`
+  - [x] Add root `package.json` scripts: `lint` (`biome lint`), `format` (`biome format --write`), `check` (`biome check --write`)
+  - [x] Only safe fixes — do not use `--unsafe` flag
+  - [x] Run initial `biome check --write` pass to format and fix existing code
+  - [x] Remove the "Add Biome" item from the Product Backlog in `docs/phase-roadmap.md`
+  - [x] Create `.kiro/skills/biome-conventions.md` skill so Kiro-generated code follows Biome's formatting and lint rules (e.g., use `import type`, no unused imports, double quotes vs single quotes — whatever `biome.json` enforces)
+  - [ ] Fix all remaining warnings: replace `any` with proper types, remove non-null assertions, fix React hook dependency arrays — goal is zero warnings from `pnpm check`
+  - [ ] Promote `noExplicitAny`, `noNonNullAssertion`, and `useExhaustiveDependencies` back to `error` in `biome.json` once all warnings are resolved
+- **Test:** `pnpm check` exits 0 with no errors or warnings
+- **Demo:** Run `pnpm check` — all files pass with zero diagnostics. Introduce a formatting violation, re-run — Biome catches it.
 
 ### Task 8: Update docs + Kiro skills
 

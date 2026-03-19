@@ -1,11 +1,11 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import passport from "./middleware/passport";
+import aiRoutes from "./routes/ai.routes";
 import authRoutes from "./routes/auth.routes";
 import entryRoutes from "./routes/entry.routes";
-import goalRoutes from "./routes/goal.routes";
-import aiRoutes from "./routes/ai.routes";
 import favoriteRoutes from "./routes/favorite.routes";
+import goalRoutes from "./routes/goal.routes";
 
 const app = express();
 

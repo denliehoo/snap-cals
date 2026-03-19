@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ImageData } from "@snap-cals/shared";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { ImageData } from "@snap-cals/shared";
+import { useState } from "react";
+import type { MainStackParamList } from "@/navigation";
 import { api } from "@/services/api";
-import { MainStackParamList } from "@/navigation";
 
 export function useAiAssist(onError?: (msg: string) => void) {
-  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +17,8 @@ export function useAiAssist(onError?: (msg: string) => void) {
       const { data } = await api.estimateNutrition(description.trim(), image);
       navigation.navigate("EntryForm", { prefill: data });
     } catch (e: unknown) {
-      const msg = (e as { message?: string }).message || "Failed to estimate nutrition";
+      const msg =
+        (e as { message?: string }).message || "Failed to estimate nutrition";
       onError?.(msg);
     } finally {
       setLoading(false);

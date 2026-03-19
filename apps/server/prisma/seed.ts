@@ -1,4 +1,4 @@
-import { PrismaClient, MealType } from "@prisma/client";
+import { MealType, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -33,10 +33,42 @@ async function main() {
   today.setHours(0, 0, 0, 0);
 
   const entries = [
-    { name: "Oatmeal with Banana", calories: 350, protein: 12, carbs: 58, fat: 8, servingSize: "1 bowl", mealType: MealType.BREAKFAST },
-    { name: "Grilled Chicken Salad", calories: 450, protein: 40, carbs: 20, fat: 22, servingSize: "1 plate", mealType: MealType.LUNCH },
-    { name: "Protein Shake", calories: 200, protein: 30, carbs: 10, fat: 5, servingSize: "1 scoop", mealType: MealType.SNACK },
-    { name: "Salmon with Rice", calories: 600, protein: 42, carbs: 55, fat: 18, servingSize: "1 plate", mealType: MealType.DINNER },
+    {
+      name: "Oatmeal with Banana",
+      calories: 350,
+      protein: 12,
+      carbs: 58,
+      fat: 8,
+      servingSize: "1 bowl",
+      mealType: MealType.BREAKFAST,
+    },
+    {
+      name: "Grilled Chicken Salad",
+      calories: 450,
+      protein: 40,
+      carbs: 20,
+      fat: 22,
+      servingSize: "1 plate",
+      mealType: MealType.LUNCH,
+    },
+    {
+      name: "Protein Shake",
+      calories: 200,
+      protein: 30,
+      carbs: 10,
+      fat: 5,
+      servingSize: "1 scoop",
+      mealType: MealType.SNACK,
+    },
+    {
+      name: "Salmon with Rice",
+      calories: 600,
+      protein: 42,
+      carbs: 55,
+      fat: 18,
+      servingSize: "1 plate",
+      mealType: MealType.DINNER,
+    },
   ];
 
   for (const entry of entries) {

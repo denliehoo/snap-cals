@@ -1,21 +1,29 @@
-import React, { useMemo } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
-import { useColors } from "@/contexts/theme-context";
-import FormField from "@/components/form-field";
+import { useMemo } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
-import { useGoals } from "./use-goals";
+import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
+import { useColors } from "@/contexts/theme-context";
+import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
+import { useGoals } from "./use-goals";
 
 export default function GoalsScreen() {
   const colors = useColors();
   const {
-    calories, setCalories,
-    protein, setProtein,
-    carbs, setCarbs,
-    fat, setFat,
-    loading, saving, fieldErrors, clearFieldError, save,
+    calories,
+    setCalories,
+    protein,
+    setProtein,
+    carbs,
+    setCarbs,
+    fat,
+    setFat,
+    loading,
+    saving,
+    fieldErrors,
+    clearFieldError,
+    save,
   } = useGoals();
   const { show } = useSnackbar();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -36,13 +44,58 @@ export default function GoalsScreen() {
           <Text style={styles.title}>Daily Goals</Text>
         </View>
 
-        <FormField label="Calories (kcal)" value={calories} onChangeText={(v) => { setCalories(v); clearFieldError("calories"); }} keyboardType="numeric" error={fieldErrors.calories} />
-        <FormField label="Protein (g)" value={protein} onChangeText={(v) => { setProtein(v); clearFieldError("protein"); }} keyboardType="numeric" error={fieldErrors.protein} />
-        <FormField label="Carbs (g)" value={carbs} onChangeText={(v) => { setCarbs(v); clearFieldError("carbs"); }} keyboardType="numeric" error={fieldErrors.carbs} />
-        <FormField label="Fat (g)" value={fat} onChangeText={(v) => { setFat(v); clearFieldError("fat"); }} keyboardType="numeric" error={fieldErrors.fat} />
+        <FormField
+          label="Calories (kcal)"
+          value={calories}
+          onChangeText={(v) => {
+            setCalories(v);
+            clearFieldError("calories");
+          }}
+          keyboardType="numeric"
+          error={fieldErrors.calories}
+        />
+        <FormField
+          label="Protein (g)"
+          value={protein}
+          onChangeText={(v) => {
+            setProtein(v);
+            clearFieldError("protein");
+          }}
+          keyboardType="numeric"
+          error={fieldErrors.protein}
+        />
+        <FormField
+          label="Carbs (g)"
+          value={carbs}
+          onChangeText={(v) => {
+            setCarbs(v);
+            clearFieldError("carbs");
+          }}
+          keyboardType="numeric"
+          error={fieldErrors.carbs}
+        />
+        <FormField
+          label="Fat (g)"
+          value={fat}
+          onChangeText={(v) => {
+            setFat(v);
+            clearFieldError("fat");
+          }}
+          keyboardType="numeric"
+          error={fieldErrors.fat}
+        />
 
         <View style={styles.buttonWrapper}>
-          <Button title="Save Goals" onPress={() => save(() => show("Goals saved!"), (msg) => show(msg, "error"))} loading={saving} />
+          <Button
+            title="Save Goals"
+            onPress={() =>
+              save(
+                () => show("Goals saved!"),
+                (msg) => show(msg, "error"),
+              )
+            }
+            loading={saving}
+          />
         </View>
       </View>
     </View>
@@ -51,10 +104,33 @@ export default function GoalsScreen() {
 
 const makeStyles = (colors: ReturnType<typeof useColors>) =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
-    centered: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background },
-    card: { backgroundColor: colors.surface, borderRadius: borderRadius.lg, padding: spacing.lg, ...shadow.sm },
-    header: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.lg },
-    title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: spacing.md,
+    },
+    centered: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.background,
+    },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.lg,
+      ...shadow.sm,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.sm,
+      marginBottom: spacing.lg,
+    },
+    title: {
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.text,
+    },
     buttonWrapper: { marginTop: spacing.sm },
   });

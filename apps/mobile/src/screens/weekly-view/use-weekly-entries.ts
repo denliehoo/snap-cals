@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
+import type { FoodEntry, Goal } from "@snap-cals/shared";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/services/api";
-import { FoodEntry, Goal } from "@snap-cals/shared";
-import { toLocalDateString, parseLocalDate } from "@/utils/date";
+import { parseLocalDate, toLocalDateString } from "@/utils/date";
 
 function getMonday(d: Date) {
   const date = new Date(d);
@@ -24,55 +24,64 @@ export interface DaySummary {
 
 export function useWeeklyEntries(onError?: (msg: string) => void) {
   const navigation = useNavigation();
-  const [weekStart, setWeekStart] = useState(() => toLocalDateString(getMonday(new Date())));
+  const [weekStart, setWeekStart] = useState(() =>
+    toLocalDateString(getMonday(new Date())),
+  );
   const [days, setDays] = useState<DaySummary[]>([]);
   const [goals, setGoals] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchWeek = useCallback(async (showLoader = true) => {
-    if (showLoader) setLoading(true);
-    try {
-      const [entriesRes, goalsRes] = await Promise.all([
-        api.getWeekEntries(weekStart),
-        api.getGoals(),
-      ]);
-      setGoals(goalsRes.data);
+  const fetchWeek = useCallback(
+    async (showLoader = true) => {
+      if (showLoader) setLoading(true);
+      try {
+        const [entriesRes, goalsRes] = await Promise.all([
+          api.getWeekEntries(weekStart),
+          api.getGoals(),
+        ]);
+        setGoals(goalsRes.data);
 
-      const byDate = new Map<string, FoodEntry[]>();
-      for (const e of entriesRes.data) {
-        const d = e.date.split("T")[0];
-        const list = byDate.get(d) || [];
-        list.push(e);
-        byDate.set(d, list);
-      }
+        const byDate = new Map<string, FoodEntry[]>();
+        for (const e of entriesRes.data) {
+          const d = e.date.split("T")[0];
+          const list = byDate.get(d) || [];
+          list.push(e);
+          byDate.set(d, list);
+        }
 
-      const start = parseLocalDate(weekStart);
-      const summaries: DaySummary[] = [];
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(start);
-        d.setDate(d.getDate() + i);
-        const dateStr = toLocalDateString(d);
-        const entries = byDate.get(dateStr) || [];
-        summaries.push({
-          date: dateStr,
-          label: d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
-          calories: entries.reduce((s, e) => s + e.calories, 0),
-          protein: entries.reduce((s, e) => s + e.protein, 0),
-          carbs: entries.reduce((s, e) => s + e.carbs, 0),
-          fat: entries.reduce((s, e) => s + e.fat, 0),
-          entryCount: entries.length,
-        });
+        const start = parseLocalDate(weekStart);
+        const summaries: DaySummary[] = [];
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(start);
+          d.setDate(d.getDate() + i);
+          const dateStr = toLocalDateString(d);
+          const entries = byDate.get(dateStr) || [];
+          summaries.push({
+            date: dateStr,
+            label: d.toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            }),
+            calories: entries.reduce((s, e) => s + e.calories, 0),
+            protein: entries.reduce((s, e) => s + e.protein, 0),
+            carbs: entries.reduce((s, e) => s + e.carbs, 0),
+            fat: entries.reduce((s, e) => s + e.fat, 0),
+            entryCount: entries.length,
+          });
+        }
+        setDays(summaries);
+      } catch (e: any) {
+        setDays([]);
+        onError?.(e.message || "Failed to load weekly data");
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
       }
-      setDays(summaries);
-    } catch (e: any) {
-      setDays([]);
-      onError?.(e.message || "Failed to load weekly data");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [weekStart]);
+    },
+    [weekStart],
+  );
 
   useEffect(() => {
     fetchWeek();
@@ -104,9 +113,19 @@ export function useWeeklyEntries(onError?: (msg: string) => void) {
     const start = parseLocalDate(weekStart);
     const end = new Date(start);
     end.setDate(end.getDate() + 6);
-    const fmt = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const fmt = (d: Date) =>
+      d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
     return `${fmt(start)} – ${fmt(end)}`;
   }, [weekStart]);
 
-  return { days, goals, weekLabel, loading, refreshing, onRefresh, goToPreviousWeek, goToNextWeek };
+  return {
+    days,
+    goals,
+    weekLabel,
+    loading,
+    refreshing,
+    onRefresh,
+    goToPreviousWeek,
+    goToNextWeek,
+  };
 }

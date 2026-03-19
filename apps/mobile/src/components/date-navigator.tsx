@@ -1,8 +1,7 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, fontSize, fontWeight } from "@/theme";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { fontSize, fontWeight, spacing } from "@/theme";
 
 interface Props {
   label: string;
@@ -11,11 +10,21 @@ interface Props {
   onLabelPress?: () => void;
 }
 
-export default function DateNavigator({ label, onPrevious, onNext, onLabelPress }: Props) {
+export default function DateNavigator({
+  label,
+  onPrevious,
+  onNext,
+  onLabelPress,
+}: Props) {
   const colors = useColors();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.surface, borderBottomColor: colors.border },
+      ]}
+    >
       <TouchableOpacity onPress={onPrevious} style={styles.arrow} hitSlop={8}>
         <Ionicons name="chevron-back" size={22} color={colors.primary} />
       </TouchableOpacity>
@@ -38,5 +47,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   arrow: { paddingHorizontal: spacing.lg },
-  label: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, minWidth: 140, textAlign: "center" },
+  label: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    minWidth: 140,
+    textAlign: "center",
+  },
 });

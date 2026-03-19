@@ -1,7 +1,7 @@
-import { create } from "zustand";
+import type { User } from "@snap-cals/shared";
 import * as SecureStore from "expo-secure-store";
-import { User } from "@snap-cals/shared";
-import { api, setToken, setOnUnauthorized } from "@/services/api";
+import { create } from "zustand";
+import { api, setOnUnauthorized, setToken } from "@/services/api";
 
 interface AuthState {
   token: string | null;

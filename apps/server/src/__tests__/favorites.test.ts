@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../app";
-import { createTestUser, signToken, cleanDb, prisma } from "./helpers";
+import { cleanDb, createTestUser, prisma, signToken } from "./helpers";
 
 let token: string;
 let userId: string;

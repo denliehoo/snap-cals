@@ -1,6 +1,11 @@
-import { ImageData, MAX_IMAGE_SIZE } from "@snap-cals/shared";
+import { type ImageData, MAX_IMAGE_SIZE } from "@snap-cals/shared";
 
-const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"];
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+];
 
 export function validateImage(image?: ImageData): string | null {
   if (!image) return null;

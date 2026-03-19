@@ -1,16 +1,22 @@
-import React, { useMemo } from "react";
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
-import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
-import { useColors } from "@/contexts/theme-context";
-import DateNavigator from "@/components/date-navigator";
-import { toLocalDateString } from "@/utils/date";
-import { useSnackbar } from "@/components/snackbar";
-import { useWeeklyEntries, DaySummary } from "./use-weekly-entries";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { MainStackParamList } from "@/navigation";
-import type { CompositeScreenProps } from "@react-navigation/native";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { MainTabParamList } from "@/navigation";
+import type { CompositeScreenProps } from "@react-navigation/native";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useMemo } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import DateNavigator from "@/components/date-navigator";
+import { useSnackbar } from "@/components/snackbar";
+import { useColors } from "@/contexts/theme-context";
+import type { MainStackParamList, MainTabParamList } from "@/navigation";
+import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
+import { toLocalDateString } from "@/utils/date";
+import { type DaySummary, useWeeklyEntries } from "./use-weekly-entries";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, "WeeklyTab">,
@@ -20,8 +26,16 @@ type Props = CompositeScreenProps<
 export default function WeeklyViewScreen({ navigation }: Props) {
   const colors = useColors();
   const { show } = useSnackbar();
-  const { days, goals, weekLabel, loading, refreshing, onRefresh, goToPreviousWeek, goToNextWeek } =
-    useWeeklyEntries((msg) => show(msg, "error"));
+  const {
+    days,
+    goals,
+    weekLabel,
+    loading,
+    refreshing,
+    onRefresh,
+    goToPreviousWeek,
+    goToNextWeek,
+  } = useWeeklyEntries((msg) => show(msg, "error"));
 
   const goalCalories = goals?.dailyCalories ?? 2000;
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -39,14 +53,26 @@ export default function WeeklyViewScreen({ navigation }: Props) {
         activeOpacity={0.7}
       >
         <View style={styles.dayHeader}>
-          <Text style={[styles.dayLabel, isToday && styles.todayLabel]}>{label}</Text>
-          <Text style={styles.entryCount}>{entryCount} {entryCount === 1 ? "entry" : "entries"}</Text>
+          <Text style={[styles.dayLabel, isToday && styles.todayLabel]}>
+            {label}
+          </Text>
+          <Text style={styles.entryCount}>
+            {entryCount} {entryCount === 1 ? "entry" : "entries"}
+          </Text>
         </View>
         <Text style={[styles.dayCals, over && styles.overGoal]}>
           {calories} <Text style={styles.goalText}>/ {goalCalories} kcal</Text>
         </Text>
         <View style={styles.trackBg}>
-          <View style={[styles.trackFill, { width: `${pct * 100}%`, backgroundColor: over ? colors.error : colors.primary }]} />
+          <View
+            style={[
+              styles.trackFill,
+              {
+                width: `${pct * 100}%`,
+                backgroundColor: over ? colors.error : colors.primary,
+              },
+            ]}
+          />
         </View>
         <Text style={styles.dayMacros}>
           P {protein}g · C {carbs}g · F {fat}g
@@ -57,10 +83,18 @@ export default function WeeklyViewScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <DateNavigator label={weekLabel} onPrevious={goToPreviousWeek} onNext={goToNextWeek} />
+      <DateNavigator
+        label={weekLabel}
+        onPrevious={goToPreviousWeek}
+        onNext={goToNextWeek}
+      />
 
       {loading ? (
-        <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+        <ActivityIndicator
+          size="large"
+          color={colors.primary}
+          style={styles.loader}
+        />
       ) : (
         <FlatList
           data={days}
@@ -87,13 +121,29 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       ...shadow.sm,
     },
     todayCard: { borderColor: colors.primary, borderWidth: 2 },
-    dayHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: spacing.xs },
-    dayLabel: { fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.text },
+    dayHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: spacing.xs,
+    },
+    dayLabel: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.semibold,
+      color: colors.text,
+    },
     todayLabel: { color: colors.primary },
     entryCount: { fontSize: fontSize.xs, color: colors.textSecondary },
-    dayCals: { fontSize: fontSize.lg, fontWeight: fontWeight.bold, color: colors.calorieColor },
+    dayCals: {
+      fontSize: fontSize.lg,
+      fontWeight: fontWeight.bold,
+      color: colors.calorieColor,
+    },
     overGoal: { color: colors.error },
-    goalText: { fontSize: fontSize.sm, fontWeight: fontWeight.regular, color: colors.textSecondary },
+    goalText: {
+      fontSize: fontSize.sm,
+      fontWeight: fontWeight.regular,
+      color: colors.textSecondary,
+    },
     trackBg: {
       height: 4,
       backgroundColor: colors.border,
@@ -102,6 +152,10 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       overflow: "hidden",
     },
     trackFill: { height: "100%", borderRadius: borderRadius.full },
-    dayMacros: { fontSize: fontSize.sm, color: colors.textSecondary, marginTop: spacing.sm },
+    dayMacros: {
+      fontSize: fontSize.sm,
+      color: colors.textSecondary,
+      marginTop: spacing.sm,
+    },
     loader: { flex: 1, justifyContent: "center" },
   });

@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../app";
-import { createTestUser, signToken, cleanDb, prisma } from "./helpers";
+import { cleanDb, createTestUser, prisma, signToken } from "./helpers";
 
 let token: string;
 let userId: string;
@@ -200,10 +200,22 @@ describe("GET /api/entries/recent", () => {
     const auth = { Authorization: `Bearer ${token}` };
 
     // Create entries with some duplicate names
-    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Oats", date: "2026-03-10" });
-    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Chicken Breast", date: "2026-03-11" });
-    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Oats", date: "2026-03-12" }); // duplicate name
-    await request(app).post("/api/entries").set(auth).send({ ...entryData, name: "Rice", date: "2026-03-13" });
+    await request(app)
+      .post("/api/entries")
+      .set(auth)
+      .send({ ...entryData, name: "Oats", date: "2026-03-10" });
+    await request(app)
+      .post("/api/entries")
+      .set(auth)
+      .send({ ...entryData, name: "Chicken Breast", date: "2026-03-11" });
+    await request(app)
+      .post("/api/entries")
+      .set(auth)
+      .send({ ...entryData, name: "Oats", date: "2026-03-12" }); // duplicate name
+    await request(app)
+      .post("/api/entries")
+      .set(auth)
+      .send({ ...entryData, name: "Rice", date: "2026-03-13" });
 
     const res = await request(app).get("/api/entries/recent").set(auth);
 
@@ -216,7 +228,10 @@ describe("GET /api/entries/recent", () => {
     const auth = { Authorization: `Bearer ${token}` };
 
     for (let i = 0; i < 25; i++) {
-      await request(app).post("/api/entries").set(auth).send({ ...entryData, name: `Food ${i}`, date: "2026-03-15" });
+      await request(app)
+        .post("/api/entries")
+        .set(auth)
+        .send({ ...entryData, name: `Food ${i}`, date: "2026-03-15" });
     }
 
     const res = await request(app).get("/api/entries/recent").set(auth);
@@ -232,7 +247,9 @@ describe("GET /api/entries/recent", () => {
     const other = await createTestUser("other@test.com");
     const otherToken = signToken(other.id);
 
-    const res = await request(app).get("/api/entries/recent").set({ Authorization: `Bearer ${otherToken}` });
+    const res = await request(app)
+      .get("/api/entries/recent")
+      .set({ Authorization: `Bearer ${otherToken}` });
 
     expect(res.status).toBe(200);
     expect(res.body.data).toHaveLength(0);
