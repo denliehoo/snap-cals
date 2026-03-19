@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { View, Text, SectionList, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, SectionList, TouchableOpacity, ActivityIndicator, Alert, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { spacing, fontSize, fontWeight, borderRadius, shadow } from "@/theme";
 import { useColors } from "@/contexts/theme-context";
@@ -15,7 +15,7 @@ type QuickAddItem = FavoriteFoodItem | RecentFoodItem;
 export default function QuickAddScreen({ navigation }: Props) {
   const colors = useColors();
   const { show } = useSnackbar();
-  const { favorites, recents, loading } = useQuickAdd((msg) => show(msg, "error"));
+  const { favorites, recents, loading, removeFavorite } = useQuickAdd((msg) => show(msg, "error"));
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const sections = [
@@ -29,8 +29,18 @@ export default function QuickAddScreen({ navigation }: Props) {
     navigation.navigate("EntryForm", { prefill });
   };
 
-  const renderItem = ({ item }: { item: QuickAddItem }) => (
-    <TouchableOpacity style={[styles.card, { backgroundColor: colors.surface }]} onPress={() => handlePress(item)} activeOpacity={0.7}>
+  const renderItem = ({ item, section }: { item: QuickAddItem; section: { title: string } }) => (
+    <TouchableOpacity
+      style={[styles.card, { backgroundColor: colors.surface }]}
+      onPress={() => handlePress(item)}
+      onLongPress={section.title === "Favorites" ? () => {
+        Alert.alert("Remove Favorite", `Remove "${item.name}" from favorites?`, [
+          { text: "Cancel", style: "cancel" },
+          { text: "Remove", style: "destructive", onPress: async () => { await removeFavorite((item as FavoriteFoodItem).id); show("Removed from favorites"); } },
+        ]);
+      } : undefined}
+      activeOpacity={0.7}
+    >
       <View style={styles.top}>
         <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
         <Text style={[styles.cals, { color: colors.calorieColor }]}>{item.calories} kcal</Text>
@@ -56,7 +66,7 @@ export default function QuickAddScreen({ navigation }: Props) {
       <SectionList
         sections={sections}
         keyExtractor={(item, index) => ("id" in item ? (item as FavoriteFoodItem).id : `${item.name}-${index}`)}
-        renderItem={({ item, section }) => section.data.length > 0 ? renderItem({ item }) : null}
+        renderItem={({ item, section }) => section.data.length > 0 ? renderItem({ item, section }) : null}
         renderSectionHeader={({ section }) => (
           <Text style={styles.sectionTitle}>{section.title}</Text>
         )}

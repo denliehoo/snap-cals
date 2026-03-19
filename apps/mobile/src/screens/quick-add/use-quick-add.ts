@@ -21,5 +21,10 @@ export function useQuickAdd(onError?: (msg: string) => void) {
 
   useEffect(() => { fetch(); }, [fetch]);
 
-  return { favorites, recents, loading };
+  const removeFavorite = async (id: string) => {
+    await api.deleteFavorite(id);
+    setFavorites((prev) => prev.filter((f) => f.id !== id));
+  };
+
+  return { favorites, recents, loading, removeFavorite };
 }

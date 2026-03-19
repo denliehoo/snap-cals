@@ -95,16 +95,32 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 
 ### Task 4: Favorite toggle from Entry Row
 
-- [ ] **Objective:** Let users favorite/unfavorite foods directly from the daily view
+- [x] **Objective:** Let users favorite/unfavorite foods directly from the daily view
 - **Implementation:**
   - Add a heart icon to `EntryRow` component — filled heart if the food name matches a favorite, outline if not
   - Tapping the heart calls `createFavorite` or `deleteFavorite` via the API
   - In `use-daily-entries.ts`, fetch the user's favorites list alongside daily entries so we can check which names are favorited
   - Show a snackbar on favorite/unfavorite ("Added to favorites" / "Removed from favorites")
+  - In Quick Add screen, long-press a favorite to remove it (with confirmation alert), consistent with daily view's long-press-to-delete pattern
 - **Test:** Test that heart icon renders, toggles state on press
-- **Demo:** On daily view, tap heart on an entry → snackbar "Added to favorites" → go to Quick Add → see it in Favorites section.
+- **Demo:** On daily view, tap heart on an entry → snackbar "Added to favorites" → go to Quick Add → see it in Favorites section. Long-press a favorite in Quick Add → confirm → removed.
 
-### Task 5: Picture Preview & Crop screen
+### Task 5: Link favorites to entries via favoriteId
+
+- [ ] **Objective:** Replace name-based favorite matching with ID-based linking to avoid ambiguity when entries share the same name
+- **Implementation:**
+  - Add nullable `favoriteId` column to `FoodEntry` in Prisma schema, referencing `FavoriteFood.id` (set null on delete)
+  - Generate and apply migration
+  - Update `FoodEntry` shared type to include `favoriteId: string | null`
+  - Update server `createFavorite` to accept an optional `entryId`, and when provided, set `favoriteId` on that entry
+  - Update server `deleteFavorite` to clear `favoriteId` on any entries that referenced it
+  - On the frontend, `EntryRow` checks `entry.favoriteId != null` instead of name matching
+  - `use-daily-entries.ts` removes the parallel favorites fetch and `favoriteNames` set; `toggleFavorite` uses `entry.favoriteId` directly
+  - Add unique constraint on `(userId, name)` for `FavoriteFood` to prevent duplicates
+- **Test:** Test that favoriting an entry sets `favoriteId`, unfavoriting clears it, deleting a favorite nulls the link on entries
+- **Demo:** Favorite an entry → heart fills → delete the favorite from Quick Add → heart clears on the entry.
+
+### Task 6: Picture Preview & Crop screen
 
 - [ ] **Objective:** After taking/picking a photo, show a preview where the user can crop before proceeding
 - **Implementation:**
@@ -117,7 +133,7 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 - **Test:** Test that ImagePreview screen renders with the image, "Use Photo" and "Cancel" buttons work
 - **Demo:** On AI Assist → tap camera → take photo → see preview screen → crop → tap "Use Photo" → back on AI Assist with cropped image thumbnail.
 
-### Task 6: Update docs + Kiro skills
+### Task 7: Update docs + Kiro skills
 
 - [ ] **Objective:** Update architecture docs, phase roadmap, and Kiro skills to reflect Phase 5 changes
 - **Implementation:**
