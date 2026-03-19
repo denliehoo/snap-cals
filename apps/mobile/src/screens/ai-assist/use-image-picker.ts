@@ -12,6 +12,7 @@ const PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
   base64: true,
   quality: 0.7,
   mediaTypes: ["images"],
+  allowsEditing: true,
 };
 
 function showPermissionAlert() {
@@ -58,5 +59,5 @@ export function useImagePicker() {
 
   const clearImage = () => setImage(null);
 
-  return { image, pickFromCamera, pickFromGallery, clearImage };
+  return { image, setImage, pickFromCamera, pickFromGallery, clearImage };
 }

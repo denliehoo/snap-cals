@@ -118,16 +118,13 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 
 ### Task 6: Picture Preview & Crop screen
 
-- [ ] **Objective:** After taking/picking a photo, show a preview where the user can crop before proceeding
+- [x] **Objective:** After taking/picking a photo, allow the user to crop before proceeding
 - **Implementation:**
-  - Install `expo-image-manipulator` for crop operations
-  - Create `src/screens/image-preview/index.tsx` — shows the picked image full-width, with a crop overlay/gesture, and "Use Photo" / "Cancel" buttons
-  - Add `ImagePreview` to `MainStackParamList` with params `{ uri: string, base64: string, mimeType: string }`
-  - Modify `use-image-picker.ts` — instead of setting the image directly, navigate to the ImagePreview screen with the picked image data
-  - On "Use Photo" (after optional crop), navigate back to AiAssist with the final image data via route params or a shared state
-  - On "Cancel", navigate back without setting an image
-- **Test:** Test that ImagePreview screen renders with the image, "Use Photo" and "Cancel" buttons work
-- **Demo:** On AI Assist → tap camera → take photo → see preview screen → crop → tap "Use Photo" → back on AI Assist with cropped image thumbnail.
+  - Added `allowsEditing: true` to `PICKER_OPTIONS` in `use-image-picker.ts`
+  - This enables the native OS crop UI (iOS/Android) after taking or selecting a photo
+  - No custom screen needed — `expo-image-picker` handles the crop UI out of the box
+- **Test:** Manual — take/pick a photo, native crop UI appears, cropped image shows in AI Assist
+- **Demo:** On AI Assist → tap camera → take photo → native crop UI → adjust crop → confirm → back on AI Assist with cropped image thumbnail.
 
 ### Task 7: Update docs + Kiro skills
 
