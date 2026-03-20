@@ -39,7 +39,7 @@ export default function GoalsScreen() {
 
   useEffect(() => {
     if (prefill) show("AI recommendation applied — review and save");
-  }, [prefill]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [prefill, show]);
 
   if (loading) {
     return (

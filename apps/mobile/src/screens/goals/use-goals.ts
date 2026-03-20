@@ -53,7 +53,7 @@ export function useGoals(prefill?: GoalRecommendation) {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [prefill]);
 
   const save = async (
     onSuccess?: () => void,
