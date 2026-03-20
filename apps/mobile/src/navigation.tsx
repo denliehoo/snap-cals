@@ -123,7 +123,7 @@ export default function Navigation() {
   useEffect(() => {
     restore();
     restoreSettings();
-  }, []);
+  }, [restore, restoreSettings]);
 
   if (isLoading) {
     return (

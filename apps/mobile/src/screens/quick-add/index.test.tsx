@@ -37,7 +37,7 @@ jest.mock("@/services/api", () => ({
 }));
 
 const mockNavigate = jest.fn();
-const mockNavigation = { navigate: mockNavigate } as any;
+const mockNavigation = { navigate: mockNavigate } as unknown as never;
 const mockRoute = {
   params: undefined,
   key: "QuickAdd",

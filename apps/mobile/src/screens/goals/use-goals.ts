@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
+import { getErrorMessage } from "@/utils/error";
 
 const DEFAULTS = {
   dailyCalories: 2000,
@@ -79,8 +80,8 @@ export function useGoals() {
         dailyFat: Number(fat),
       });
       onSuccess?.();
-    } catch (e: any) {
-      onError?.(e.message || "Failed to save goals");
+    } catch (e: unknown) {
+      onError?.(getErrorMessage(e, "Failed to save goals"));
     } finally {
       setSaving(false);
     }

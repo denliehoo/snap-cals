@@ -14,7 +14,7 @@ function mockClient(text: string | undefined) {
     models: {
       generateContent: jest.fn().mockResolvedValue({ text }),
     },
-  } as any;
+  } as unknown as Parameters<typeof estimateNutrition>[2];
 }
 
 describe("gemini.service", () => {

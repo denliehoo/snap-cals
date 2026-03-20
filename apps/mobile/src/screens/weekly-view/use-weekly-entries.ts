@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import type { FoodEntry, Goal } from "@snap-cals/shared";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/services/api";
 import { parseLocalDate, toLocalDateString } from "@/utils/date";
+import { getErrorMessage } from "@/utils/error";
 
 function getMonday(d: Date) {
   const date = new Date(d);
@@ -24,6 +25,8 @@ export interface DaySummary {
 
 export function useWeeklyEntries(onError?: (msg: string) => void) {
   const navigation = useNavigation();
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
   const [weekStart, setWeekStart] = useState(() =>
     toLocalDateString(getMonday(new Date())),
   );
@@ -72,9 +75,9 @@ export function useWeeklyEntries(onError?: (msg: string) => void) {
           });
         }
         setDays(summaries);
-      } catch (e: any) {
+      } catch (e: unknown) {
         setDays([]);
-        onError?.(e.message || "Failed to load weekly data");
+        onErrorRef.current?.(getErrorMessage(e, "Failed to load weekly data"));
       } finally {
         setLoading(false);
         setRefreshing(false);

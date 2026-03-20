@@ -57,7 +57,7 @@ export default function AiAssistScreen() {
         setReply("");
         chat.reset();
       };
-    }, []),
+    }, [clearImage, assist.setDescription, chat.reset]),
   );
 
   // Delay picker launch so the ActionSheet modal fully dismisses first —

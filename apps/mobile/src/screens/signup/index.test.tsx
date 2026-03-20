@@ -2,8 +2,11 @@ import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import SignupScreen from "./";
 
 const mockNavigate = jest.fn();
-const mockNavigation = { navigate: mockNavigate } as any;
-const mockRoute = { key: "Signup", name: "Signup" as const } as any;
+const mockNavigation = { navigate: mockNavigate } as unknown as never;
+const mockRoute = {
+  key: "Signup",
+  name: "Signup" as const,
+} as unknown as never;
 
 jest.mock("@/services/api", () => ({
   api: { signup: jest.fn() },
@@ -14,7 +17,7 @@ jest.mock("@/services/api", () => ({
 jest.mock("@/stores/auth.store", () => {
   const mockSignup = jest.fn();
   return {
-    useAuthStore: (selector?: any) => {
+    useAuthStore: (selector?: (s: Record<string, unknown>) => unknown) => {
       const state = { login: jest.fn(), signup: mockSignup };
       return selector ? selector(state) : state;
     },

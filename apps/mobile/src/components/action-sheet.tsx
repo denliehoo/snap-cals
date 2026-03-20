@@ -31,7 +31,7 @@ export default function ActionSheet({ visible, onClose, options }: Props) {
       toValue: visible ? 0 : 300,
       useNativeDriver: true,
     }).start();
-  }, [visible]);
+  }, [visible, slide]);
 
   return (
     <Modal visible={visible} transparent animationType="fade">

@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { type FoodEntry, type Goal, MealType } from "@snap-cals/shared";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/services/api";
 import { parseLocalDate, toLocalDateString } from "@/utils/date";
+import { getErrorMessage } from "@/utils/error";
 
 export interface MealSection {
   title: string;
@@ -36,6 +37,8 @@ export function useDailyEntries(
   onError?: (msg: string) => void,
 ) {
   const navigation = useNavigation();
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
   const [date, setDate] = useState(
     () => initialDate || toLocalDateString(new Date()),
   );
@@ -58,9 +61,9 @@ export function useDailyEntries(
         ]);
         setEntries(entriesRes.data);
         setGoals(goalsRes.data);
-      } catch (e: any) {
+      } catch (e: unknown) {
         setEntries([]);
-        onError?.(e.message || "Failed to load entries");
+        onErrorRef.current?.(getErrorMessage(e, "Failed to load entries"));
       } finally {
         setLoading(false);
         setRefreshing(false);
@@ -95,8 +98,8 @@ export function useDailyEntries(
     return MEAL_ORDER.filter((m) => grouped.has(m)).map((m) => ({
       title: MEAL_LABELS[m],
       mealType: m,
-      data: grouped.get(m)!,
-      calories: grouped.get(m)!.reduce((s, e) => s + e.calories, 0),
+      data: grouped.get(m) ?? [],
+      calories: (grouped.get(m) ?? []).reduce((s, e) => s + e.calories, 0),
     }));
   }, [entries]);
 
@@ -128,8 +131,8 @@ export function useDailyEntries(
     try {
       await api.deleteEntry(id);
       setEntries((prev) => prev.filter((e) => e.id !== id));
-    } catch (e: any) {
-      onError?.(e.message || "Failed to delete entry");
+    } catch (e: unknown) {
+      onErrorRef.current?.(getErrorMessage(e, "Failed to delete entry"));
     }
   };
 

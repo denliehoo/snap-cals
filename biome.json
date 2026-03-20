@@ -23,13 +23,13 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "error"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "error"
       },
       "style": {
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "error"
       },
       "complexity": {
         "noBannedTypes": "off"

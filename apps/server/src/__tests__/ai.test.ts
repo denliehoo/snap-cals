@@ -71,8 +71,7 @@ describe("POST /api/ai/estimate", () => {
   });
 
   it("returns 429 on rate limit", async () => {
-    const err: any = new Error("rate limited");
-    err.status = 429;
+    const err = Object.assign(new Error("rate limited"), { status: 429 });
     (geminiService.estimateNutrition as jest.Mock).mockRejectedValue(err);
 
     const res = await request(app)

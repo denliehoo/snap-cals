@@ -4,7 +4,7 @@ import AiAssistScreen from "./";
 const mockPickFromCamera = jest.fn();
 const mockPickFromGallery = jest.fn();
 const mockClearImage = jest.fn();
-let mockImage: any = null;
+let mockImage: { base64: string; mimeType: string; uri: string } | null = null;
 
 jest.mock("./use-image-picker", () => ({
   useImagePicker: () => ({

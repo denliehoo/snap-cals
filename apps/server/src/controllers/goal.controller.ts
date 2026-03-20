@@ -2,6 +2,7 @@ import type { User } from "@prisma/client";
 import type { UpsertGoalRequest } from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
+import { getErrorMessage } from "../utils/error";
 
 const userId = (req: Request) => (req.user as User).id;
 
@@ -18,8 +19,8 @@ export const get = async (req: Request, res: Response) => {
       where: { userId: userId(req) },
     });
     res.json({ data: goal || { ...DEFAULT_GOALS, userId: userId(req) } });
-  } catch (e: any) {
-    res.status(500).json({ message: e.message });
+  } catch (e: unknown) {
+    res.status(500).json({ message: getErrorMessage(e, "Internal error") });
   }
 };
 
@@ -45,7 +46,7 @@ export const upsert = async (
       create: { ...data, userId: userId(req) },
     });
     res.json({ data: goal });
-  } catch (e: any) {
-    res.status(500).json({ message: e.message });
+  } catch (e: unknown) {
+    res.status(500).json({ message: getErrorMessage(e, "Internal error") });
   }
 };

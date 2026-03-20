@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "@/stores/auth.store";
+import { getErrorMessage } from "@/utils/error";
 
 export function useAuthForm(
   mode: "login" | "signup",
@@ -34,8 +35,10 @@ export function useAuthForm(
     setLoading(true);
     try {
       await authAction(email.trim().toLowerCase(), password);
-    } catch (e: any) {
-      onError(e.message || `${mode === "login" ? "Login" : "Signup"} failed`);
+    } catch (e: unknown) {
+      onError(
+        getErrorMessage(e, `${mode === "login" ? "Login" : "Signup"} failed`),
+      );
     } finally {
       setLoading(false);
     }

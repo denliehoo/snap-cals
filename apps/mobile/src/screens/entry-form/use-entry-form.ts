@@ -4,6 +4,7 @@ import { Alert } from "react-native";
 import type { EntryFormPrefill } from "@/navigation";
 import { api } from "@/services/api";
 import { toLocalDateString } from "@/utils/date";
+import { getErrorMessage } from "@/utils/error";
 
 function guessMealType(): MealType {
   const hour = new Date().getHours();
@@ -78,13 +79,13 @@ export function useEntryForm(
         date,
       };
       if (isEdit) {
-        await api.updateEntry(entry!.id, data);
+        await api.updateEntry(entry?.id, data);
       } else {
         await api.createEntry(data);
       }
       onSuccess();
-    } catch (e: any) {
-      onError?.(e.message || "Failed to save entry");
+    } catch (e: unknown) {
+      onError?.(getErrorMessage(e, "Failed to save entry"));
     } finally {
       setLoading(false);
     }
@@ -97,11 +98,14 @@ export function useEntryForm(
         text: "Delete",
         style: "destructive",
         onPress: async () => {
+          if (!entry?.id) {
+            return onError?.("Entry ID is missing");
+          }
           try {
-            await api.deleteEntry(entry!.id);
+            await api.deleteEntry(entry?.id);
             onSuccess();
-          } catch (e: any) {
-            onError?.(e.message || "Failed to delete");
+          } catch (e: unknown) {
+            onError?.(getErrorMessage(e, "Failed to delete"));
           }
         },
       },

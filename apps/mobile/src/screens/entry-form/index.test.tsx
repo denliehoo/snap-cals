@@ -15,7 +15,7 @@ jest.mock("@/services/api", () => ({
 const { api } = jest.requireMock("@/services/api");
 
 const mockGoBack = jest.fn();
-const mockNavigation = { goBack: mockGoBack } as any;
+const mockNavigation = { goBack: mockGoBack } as unknown as never;
 
 beforeEach(() => jest.clearAllMocks());
 

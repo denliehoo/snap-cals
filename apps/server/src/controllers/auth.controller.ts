@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 
 const signToken = (userId: string) =>
-  jwt.sign({ sub: userId }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+  jwt.sign({ sub: userId }, process.env.JWT_SECRET ?? "", { expiresIn: "7d" });
 
 export const signup = async (
   req: Request<{}, {}, SignupRequest>,

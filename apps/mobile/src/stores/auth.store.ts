@@ -2,6 +2,7 @@ import type { User } from "@snap-cals/shared";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { api, setOnUnauthorized, setToken } from "@/services/api";
+import { getErrorMessage } from "@/utils/error";
 
 interface AuthState {
   token: string | null;
@@ -44,8 +45,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await SecureStore.setItemAsync("token", data.token);
       await SecureStore.setItemAsync("user", JSON.stringify(data.user));
       set({ token: data.token, user: data.user });
-    } catch (e: any) {
-      set({ error: e.message || "Login failed" });
+    } catch (e: unknown) {
+      set({ error: getErrorMessage(e, "Login failed") });
       throw e;
     }
   },
@@ -58,8 +59,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await SecureStore.setItemAsync("token", data.token);
       await SecureStore.setItemAsync("user", JSON.stringify(data.user));
       set({ token: data.token, user: data.user });
-    } catch (e: any) {
-      set({ error: e.message || "Signup failed" });
+    } catch (e: unknown) {
+      set({ error: getErrorMessage(e, "Signup failed") });
       throw e;
     }
   },

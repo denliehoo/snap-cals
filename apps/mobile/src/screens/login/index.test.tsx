@@ -2,8 +2,11 @@ import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import LoginScreen from "./";
 
 const mockNavigate = jest.fn();
-const mockNavigation = { navigate: mockNavigate } as any;
-const mockRoute = { key: "Login", name: "Login" as const } as any;
+const mockNavigation = { navigate: mockNavigate } as unknown as never;
+const mockRoute = {
+  key: "Login",
+  name: "Login" as const,
+} as unknown as never;
 
 jest.mock("@/services/api", () => ({
   api: { login: jest.fn() },
@@ -14,7 +17,7 @@ jest.mock("@/services/api", () => ({
 jest.mock("@/stores/auth.store", () => {
   const mockLogin = jest.fn();
   return {
-    useAuthStore: (selector?: any) => {
+    useAuthStore: (selector?: (s: Record<string, unknown>) => unknown) => {
       const state = { login: mockLogin, signup: jest.fn() };
       return selector ? selector(state) : state;
     },
@@ -63,7 +66,7 @@ describe("LoginScreen", () => {
   });
 
   it("shows error on login failure", async () => {
-    mockLogin.mockRejectedValue({ message: "Invalid credentials" });
+    mockLogin.mockRejectedValue(new Error("Invalid credentials"));
     const { getByText, getByPlaceholderText } = await render(
       <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );

@@ -19,7 +19,7 @@ function mockClient(text: string | undefined) {
     models: {
       generateContent: jest.fn().mockResolvedValue({ text }),
     },
-  } as any;
+  } as unknown as Parameters<typeof chat>[3];
 }
 
 describe("chat.service", () => {

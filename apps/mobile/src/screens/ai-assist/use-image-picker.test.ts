@@ -10,7 +10,9 @@ jest.mock("expo-image-picker", () => ({
 }));
 
 jest.spyOn(Alert, "alert");
-jest.spyOn(Linking, "openSettings").mockResolvedValue(undefined as any);
+jest
+  .spyOn(Linking, "openSettings")
+  .mockResolvedValue(undefined as unknown as never);
 
 const mockAsset = {
   uri: "file://photo.jpg",

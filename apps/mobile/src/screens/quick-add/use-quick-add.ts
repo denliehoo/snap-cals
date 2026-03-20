@@ -1,11 +1,13 @@
 import type { FavoriteFoodItem, RecentFoodItem } from "@snap-cals/shared";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/services/api";
 
 export function useQuickAdd(onError?: (msg: string) => void) {
   const [favorites, setFavorites] = useState<FavoriteFoodItem[]>([]);
   const [recents, setRecents] = useState<RecentFoodItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
 
   const fetch = useCallback(async () => {
     try {
@@ -16,7 +18,7 @@ export function useQuickAdd(onError?: (msg: string) => void) {
       setFavorites(favRes.data);
       setRecents(recRes.data);
     } catch {
-      onError?.("Failed to load foods");
+      onErrorRef.current?.("Failed to load foods");
     } finally {
       setLoading(false);
     }

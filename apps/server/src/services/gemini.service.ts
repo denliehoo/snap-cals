@@ -18,7 +18,7 @@ const SYSTEM_PROMPT =
   "If no quantity is specified, assume a standard serving. " +
   "Return calories (kcal), protein (g), carbs (g), fat (g), a cleaned-up food name, and serving size.";
 
-export function createGeminiClient(apiKey = process.env.GEMINI_API_KEY!) {
+export function createGeminiClient(apiKey = process.env.GEMINI_API_KEY ?? "") {
   return new GoogleGenAI({ apiKey });
 }
 
