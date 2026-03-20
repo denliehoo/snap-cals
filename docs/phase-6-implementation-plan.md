@@ -212,7 +212,7 @@ apps/mobile/src/navigation.tsx                   # Add GoalCoach route to MainSt
 - **Test:** Full end-to-end flow works. Error states display correctly. Back navigation correct. Manual goal entry unaffected.
 - **Demo:** Complete walkthrough: Goals → Goal Coach → full conversation → recommendation → pre-fill → save. Also: error handling when API fails, back navigation without saving.
 
-### Task 6: Comprehensive test coverage
+### Task 6: Comprehensive test coverage ✅
 
 - **Objective:** Add tests for all Phase 6 features (backend + frontend).
 - **Guidance:**

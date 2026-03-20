@@ -4,7 +4,7 @@
   "scripts": {
     "dev:server": "pnpm --filter @snap-cals/server dev",
     "dev:mobile": "pnpm --filter @snap-cals/mobile start",
-    "test": "pnpm --filter @snap-cals/server test && pnpm --filter @snap-cals/mobile test",
+    "test": "pnpm --filter @snap-cals/server --filter @snap-cals/mobile --parallel test",
     "test:server": "pnpm --filter @snap-cals/server test",
     "test:mobile": "pnpm --filter @snap-cals/mobile test",
     "lint": "biome lint .",

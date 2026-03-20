@@ -19,7 +19,7 @@ function mockClient(text: string | undefined) {
     models: {
       generateContent: jest.fn().mockResolvedValue({ text }),
     },
-  } as unknown as Parameters<typeof chat>[3];
+  } as unknown as NonNullable<Parameters<typeof chat>[3]>;
 }
 
 describe("chat.service", () => {
@@ -62,7 +62,7 @@ describe("chat.service", () => {
       client,
     );
 
-    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    const contents = (client.models.generateContent as jest.Mock).mock.calls[0][0].contents;
     expect(contents[0].role).toBe("user");
     expect(contents[1].role).toBe("model");
   });
@@ -71,7 +71,7 @@ describe("chat.service", () => {
     const client = mockClient(JSON.stringify(ESTIMATE_RESPONSE));
     await chat([{ role: "user", content: "big mac" }], true, undefined, client);
 
-    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    const contents = (client.models.generateContent as jest.Mock).mock.calls[0][0].contents;
     expect(contents).toHaveLength(2);
     expect(contents[1].role).toBe("user");
     expect(contents[1].parts[0].text).toMatch(/best estimate/i);
@@ -102,7 +102,7 @@ describe("chat.service", () => {
       client,
     );
 
-    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    const contents = (client.models.generateContent as jest.Mock).mock.calls[0][0].contents;
     expect(contents[0].parts).toEqual([
       { inlineData: { mimeType: "image/png", data: "img123" } },
       { text: "what is this" },
@@ -124,7 +124,7 @@ describe("chat.service", () => {
       client,
     );
 
-    const contents = client.models.generateContent.mock.calls[0][0].contents;
+    const contents = (client.models.generateContent as jest.Mock).mock.calls[0][0].contents;
     // First message has image
     expect(contents[0].parts).toHaveLength(2);
     // Third message (second user message) has text only

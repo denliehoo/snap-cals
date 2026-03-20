@@ -56,6 +56,13 @@ description: React Native coding conventions for the Snap Cals mobile app
 - Snackbar is provided by `components/snackbar.tsx` (`SnackbarProvider` wraps the app in `App.tsx`)
 
 ## Date Handling
+
+## Side Effect Cleanup
+- Always return a cleanup function from `useEffect` when using `setTimeout`, `setInterval`, event listeners, or subscriptions
+- Clear timers on unmount to prevent state updates after the component is destroyed
+- This avoids memory leaks and prevents errors in tests where components are torn down quickly
+
+## Date Handling
 - Always use `toLocalDateString()` from `@/utils/date` to get a `YYYY-MM-DD` string from a `Date` object
 - Always use `parseLocalDate()` from `@/utils/date` to convert a `YYYY-MM-DD` string back to a `Date` object
 - Never use `new Date().toISOString().split("T")[0]` — this converts to UTC first
