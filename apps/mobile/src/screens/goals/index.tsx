@@ -1,15 +1,24 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useMemo } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useEffect, useMemo } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
 import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
+import type { MainStackParamList, MainTabParamList } from "@/navigation";
 import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 import { useGoals } from "./use-goals";
 
 export default function GoalsScreen() {
   const colors = useColors();
+  const route =
+    useRoute<BottomTabScreenProps<MainTabParamList, "GoalsTab">["route"]>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+  const prefill = route.params?.prefill;
   const {
     calories,
     setCalories,
@@ -24,9 +33,13 @@ export default function GoalsScreen() {
     fieldErrors,
     clearFieldError,
     save,
-  } = useGoals();
+  } = useGoals(prefill);
   const { show } = useSnackbar();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  useEffect(() => {
+    if (prefill) show("AI recommendation applied — review and save");
+  }, [prefill]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (
@@ -95,6 +108,13 @@ export default function GoalsScreen() {
               )
             }
             loading={saving}
+          />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Button
+            title="Let AI set my goals ✨"
+            variant="text"
+            onPress={() => navigation.navigate("GoalCoach")}
           />
         </View>
       </View>

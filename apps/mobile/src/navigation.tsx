@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type {
   AiEstimateResponse,
   FoodEntry,
+  GoalRecommendation,
   MealType,
 } from "@snap-cals/shared";
 import { useEffect } from "react";
@@ -18,6 +19,7 @@ import AiAssistScreen from "./screens/ai-assist";
 import DailyViewScreen from "./screens/daily-view";
 import EntryFormScreen from "./screens/entry-form";
 import GoalsScreen from "./screens/goals";
+import GoalCoachScreen from "./screens/goal-coach";
 import LoginScreen from "./screens/login";
 import QuickAddScreen from "./screens/quick-add";
 import SettingsScreen from "./screens/settings";
@@ -34,7 +36,7 @@ export type AuthStackParamList = {
 export type MainTabParamList = {
   DailyTab: { date?: string } | undefined;
   WeeklyTab: undefined;
-  GoalsTab: undefined;
+  GoalsTab: { prefill?: GoalRecommendation } | undefined;
   SettingsTab: undefined;
 };
 
@@ -45,6 +47,7 @@ export type MainStackParamList = {
   EntryForm: { entry?: FoodEntry; prefill?: EntryFormPrefill } | undefined;
   AiAssist: undefined;
   QuickAdd: undefined;
+  GoalCoach: undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -192,6 +195,11 @@ export default function Navigation() {
             name="QuickAdd"
             component={QuickAddScreen}
             options={{ title: "Quick Add", headerBackTitle: "Back" }}
+          />
+          <MainStack.Screen
+            name="GoalCoach"
+            component={GoalCoachScreen}
+            options={{ title: "AI Goal Coach", headerBackTitle: "Back" }}
           />
         </MainStack.Navigator>
       ) : (

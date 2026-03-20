@@ -147,7 +147,7 @@ apps/mobile/src/navigation.tsx                   # Add GoalCoach route to MainSt
 
 ## Task Breakdown
 
-### Task 1: Shared types and goal coach Gemini service
+### Task 1: Shared types and goal coach Gemini service ✅
 
 - **Objective:** Add goal-coach shared types and create the server-side service that manages the multi-turn goal-coaching conversation with Gemini.
 - **Guidance:**
@@ -161,7 +161,7 @@ apps/mobile/src/navigation.tsx                   # Add GoalCoach route to MainSt
 - **Test:** Unit test with mocked Gemini client — verify it sends correct multi-turn format, handles question responses, handles recommendation responses, and validates with Zod.
 - **Demo:** Call the service directly with a sample conversation and see it return a question or recommendation.
 
-### Task 2: Goal coach API endpoint
+### Task 2: Goal coach API endpoint ✅
 
 - **Objective:** Expose `POST /api/ai/goal-coach` that accepts a message history and returns the AI's next response.
 - **Guidance:**
@@ -172,7 +172,7 @@ apps/mobile/src/navigation.tsx                   # Add GoalCoach route to MainSt
 - **Test:** Integration test with Supertest — verify 401 without token, 400 with empty messages, 200 with valid messages (mock goal coach service to avoid real API calls). Verify response shape matches `ApiResponse<GoalCoachResponse>`.
 - **Demo:** Use curl to `POST /api/ai/goal-coach` with `{ "messages": [{ "role": "user", "content": "I want to lose weight" }] }` and see the AI's response.
 
-### Task 3: Goal Coach screen with chat UI
+### Task 3: Goal Coach screen with chat UI ✅
 
 - **Objective:** Build the Goal Coach screen with the chat bubble UI and wire up the multi-turn conversation flow.
 - **Guidance:**
@@ -187,7 +187,7 @@ apps/mobile/src/navigation.tsx                   # Add GoalCoach route to MainSt
 - **Test:** Verify screen renders chat UI. Verify sending a message appends it and shows AI response. Verify recommendation displays with confirm button. Verify confirm navigates to Goals screen with prefill.
 - **Demo:** Full chat flow — open Goal Coach → AI greets → user says "I want to lose weight, I'm a 28yo male, 80kg, 178cm" → AI asks about activity level → user replies → AI recommends goals → tap "Set as my goals" → Goals screen pre-filled.
 
-### Task 4: Goals screen pre-fill support and Goal Coach entry point
+### Task 4: Goals screen pre-fill support and Goal Coach entry point ✅
 
 - **Objective:** Add the "Let AI set my goals" button to the Goals screen and support pre-filling from the Goal Coach.
 - **Guidance:**
@@ -198,7 +198,7 @@ apps/mobile/src/navigation.tsx                   # Add GoalCoach route to MainSt
 - **Test:** Verify "Let AI set my goals" button renders and navigates to Goal Coach. Verify Goals screen fields populated from prefill. Verify user can edit pre-filled fields. Verify save works with pre-filled data. Verify normal flow (no prefill) still works.
 - **Demo:** Goals screen → tap "Let AI set my goals" → Goal Coach → conversation → recommendation → "Set as my goals" → Goals screen pre-filled with AI values → edit one number → save.
 
-### Task 5: Edge cases, polish, and documentation
+### Task 5: Edge cases, polish, and documentation ✅
 
 - **Objective:** Handle error cases, polish UX, and update documentation.
 - **Guidance:**

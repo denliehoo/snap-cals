@@ -49,7 +49,7 @@ Add favorites and recent foods for quick-add without re-entering details or burn
 
 A conversational AI flow (separate from food logging) that helps users set their daily calorie/macro goals. The AI asks about their objectives (lose weight, gain muscle, maintain), current weight, target weight, activity level, timeline, etc., then recommends daily calorie and macro targets and auto-sets them as the user's goals.
 
-**Status:** Not started
+**Status:** Completed — see [Phase 6 Implementation Plan](./phase-6-implementation-plan.md)
 
 ### Phase 7: Subscription & Usage Limits
 

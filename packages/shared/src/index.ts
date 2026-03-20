@@ -160,3 +160,21 @@ export interface AiChatResponse {
   message: string;
   estimate?: AiEstimateResponse;
 }
+
+// AI Goal Coach
+export interface GoalCoachRequest {
+  messages: ChatMessage[];
+}
+
+export interface GoalRecommendation {
+  dailyCalories: number;
+  dailyProtein: number;
+  dailyCarbs: number;
+  dailyFat: number;
+  explanation: string;
+}
+
+export interface GoalCoachResponse {
+  message: string;
+  recommendation?: GoalRecommendation;
+}

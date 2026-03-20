@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { GoalRecommendation } from "@snap-cals/shared";
 import { api } from "@/services/api";
 import { getErrorMessage } from "@/utils/error";
 
@@ -9,12 +10,12 @@ const DEFAULTS = {
   dailyFat: 65,
 };
 
-export function useGoals() {
+export function useGoals(prefill?: GoalRecommendation) {
   const [calories, setCalories] = useState("");
   const [protein, setProtein] = useState("");
   const [carbs, setCarbs] = useState("");
   const [fat, setFat] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!prefill);
   const [saving, setSaving] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -28,6 +29,13 @@ export function useGoals() {
   };
 
   useEffect(() => {
+    if (prefill) {
+      setCalories(String(prefill.dailyCalories));
+      setProtein(String(prefill.dailyProtein));
+      setCarbs(String(prefill.dailyCarbs));
+      setFat(String(prefill.dailyFat));
+      return;
+    }
     (async () => {
       try {
         const res = await api.getGoals();

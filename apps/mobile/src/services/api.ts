@@ -9,6 +9,8 @@ import type {
   FavoriteFoodItem,
   FoodEntry,
   Goal,
+  GoalCoachRequest,
+  GoalCoachResponse,
   ImageData,
   RecentFoodItem,
   UpdateFoodEntryRequest,
@@ -109,4 +111,10 @@ export const api = {
     request<ApiResponse<void>>(`/favorites/${id}`, { method: "DELETE" }),
   getRecentFoods: () =>
     request<ApiResponse<RecentFoodItem[]>>("/entries/recent"),
+
+  goalCoach: (data: GoalCoachRequest) =>
+    request<ApiResponse<GoalCoachResponse>>("/ai/goal-coach", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 };

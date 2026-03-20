@@ -73,6 +73,14 @@ snap-cals/
 - Image is ephemeral — not persisted to DB, cleared when navigating away from the screen
 - After taking/picking a photo, the native OS crop UI is shown via `allowsEditing: true` in `expo-image-picker` options
 
+### Goal Coach (Phase 6)
+- Conversational AI flow accessible from Goals screen via "Let AI set my goals" button
+- Uses same stateless multi-turn pattern as food chat — client sends full `ChatMessage[]` history each request
+- Server-side `goal-coach.service.ts` encodes Mifflin-St Jeor BMR, TDEE activity multipliers, and evidence-based macro splits
+- Safety guardrails: minimum calorie floors (1200/1500 kcal), no extreme deficits, healthcare disclaimer
+- When AI produces a recommendation, it appears with a "Set as my goals" button that navigates back to Goals screen with values pre-filled
+- Chat history is ephemeral (screen state only, not persisted to DB)
+
 ### Theme / Design System
 - Centralized in `apps/mobile/src/theme.ts`
 - Exports `colors`, `spacing`, `fontSize`, `borderRadius` objects
@@ -87,6 +95,7 @@ snap-cals/
 - Recents route: `GET /api/entries/recent` — returns last 20 food entries for the user (no deduplication)
 - AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API
 - AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`), optional `forceEstimate` flag, and optional image, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
+- AI routes: `/api/ai/goal-coach` — accepts conversation history (`ChatMessage[]`), returns AI's next response (clarifying question or goal recommendation with daily calories/macros) via multi-turn Gemini conversation for personalized nutrition goal setting
 - All non-auth routes protected via Passport.js JWT middleware
 - Request/response types defined in `@snap-cals/shared`
 - Standard response wrapper: `{ data: T, message?: string }`
@@ -167,3 +176,4 @@ snap-cals/
 - **Phase 3:** AI chat with clarifying questions (toggleable) — completed
 - **Phase 4:** Image-based food recognition — completed
 - **Phase 5:** Quick features (favorites, recents, image crop) & code quality (Biome) — completed
+- **Phase 6:** AI Goal Coach — completed
