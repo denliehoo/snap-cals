@@ -144,7 +144,7 @@ AI Assist → Camera/Gallery → Preview & Crop (NEW) → AI Assist (with croppe
 
 ### Task 8: Update docs + Kiro skills
 
-- [ ] **Objective:** Update architecture docs, phase roadmap, and Kiro skills to reflect Phase 5 changes
+- [x] **Objective:** Update architecture docs, phase roadmap, and Kiro skills to reflect Phase 5 changes
 - **Implementation:**
   - Update `docs/architecture.md` with FavoriteFood model, new API routes, Quick Add screen, image preview flow
   - Mark tasks in this file as completed

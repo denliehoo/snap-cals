@@ -43,7 +43,7 @@ Users can take a photo of their food and send it to the AI instead of typing. Th
 
 Add favorites and recent foods for quick-add without re-entering details or burning an AI lookup. Add a picture preview and cropping screen after taking a food photo so users can review and frame the image before sending it to the AI. Add Biome as the project-wide linter and formatter.
 
-**Status:** Not started
+**Status:** Completed — see [Phase 5 Implementation Plan](./phase-5-implementation-plan.md)
 
 ### Phase 6: AI Goal Coach
 

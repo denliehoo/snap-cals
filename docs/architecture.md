@@ -19,6 +19,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Backend Hosting | Render | Free tier, simple git-push deploys |
 | AI (Phase 2+) | Gemini API | Free tier, multimodal (text + image) |
 | Image Picker | expo-image-picker | Camera and gallery access, returns base64 for Gemini |
+| Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
 
 ## Monorepo Structure
 
@@ -70,6 +71,7 @@ snap-cals/
 - Image is validated client-side and server-side: allowed types (`image/jpeg`, `image/png`, `image/webp`, `image/heic`), max size `MAX_IMAGE_SIZE` (5MB base64 length)
 - In chat mode, the image is sent with the first message only; subsequent messages rely on Gemini's context
 - Image is ephemeral — not persisted to DB, cleared when navigating away from the screen
+- After taking/picking a photo, the native OS crop UI is shown via `allowsEditing: true` in `expo-image-picker` options
 
 ### Theme / Design System
 - Centralized in `apps/mobile/src/theme.ts`
@@ -82,6 +84,7 @@ snap-cals/
 - Base path: `/api`
 - Auth routes: `/api/auth/signup`, `/api/auth/login`
 - Resource routes: `/api/entries`, `/api/goals`, `/api/favorites`
+- Recents route: `GET /api/entries/recent` — returns last 20 food entries for the user (no deduplication)
 - AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API
 - AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`), optional `forceEstimate` flag, and optional image, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
 - All non-auth routes protected via Passport.js JWT middleware
@@ -102,11 +105,13 @@ snap-cals/
 - More/Settings tab houses logout, dark mode toggle, and future account-related features
 - Auth stack (Login, Signup) shown when unauthenticated; main stack with tabs shown when authenticated
 - `EntryForm` is a modal screen pushed on top of the tab navigator
+- `QuickAdd` screen accessible from the FAB action sheet on Daily View — shows Favorites and Recents sections with swipe gestures (swipe right to favorite a recent, swipe left to remove a favorite)
 
 ### Database
 - Postgres on Neon (free tier)
 - Prisma ORM for schema definition, migrations, and type-safe queries
 - Models: User, FoodEntry, Goal, FavoriteFood
+- FavoriteFood stores reusable food templates per user with `@@unique([userId, name])` and a max of 25 per user
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
 - Neon branching: `main` branch for dev data, `unit-test` branch for automated tests
 - Migration workflow: always use `prisma migrate dev --create-only` to generate migrations, then `prisma migrate deploy` to apply — never run `prisma migrate dev` without `--create-only` against a database with data you want to keep
@@ -136,6 +141,8 @@ snap-cals/
 ### Error & Success Feedback
 - Validation errors display inline below each field via the `FormField` `error` prop (per-field `fieldErrors` state, not a single error string)
 - API errors show as error snackbars via `useSnackbar().show(msg, "error")` — hooks accept an `onError` callback rather than managing error state
+- All catch blocks use `catch (e: unknown)` with `getErrorMessage(e, fallback)` from `utils/error.ts` — never use `catch (e: any)`
+- When `onError` callbacks are used inside `useCallback` dependency arrays, store them in a ref (`onErrorRef`) to avoid infinite re-render loops
 - API success shows as a success snackbar when the outcome isn't obvious from navigation (e.g. entry added/deleted, goals saved — but not login/signup)
 
 ## Testing
@@ -156,6 +163,7 @@ snap-cals/
 ## Phase Roadmap
 
 - **Phase 1:** CRUD calorie tracking (current)
-- **Phase 2:** AI autofill via Gemini API
+- **Phase 2:** AI autofill via Gemini API - completed
 - **Phase 3:** AI chat with clarifying questions (toggleable) — completed
 - **Phase 4:** Image-based food recognition — completed
+- **Phase 5:** Quick features (favorites, recents, image crop) & code quality (Biome) — completed

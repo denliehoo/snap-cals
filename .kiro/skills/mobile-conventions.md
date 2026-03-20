@@ -43,6 +43,13 @@ description: React Native coding conventions for the Snap Cals mobile app
 ## Error & Success Feedback
 - **Validation errors**: Always display inline, directly below the relevant field using the `FormField` `error` prop. Never show validation errors in a banner or snackbar. Use per-field `fieldErrors` state (not a single error string) so each field shows its own message.
 - **API errors**: Always show in an error snackbar via `useSnackbar().show(msg, "error")`. Never display API errors inline. Hooks should accept an `onError` callback instead of managing error state internally.
+- Use `getErrorMessage(e, fallback)` from `@/utils/error` in all catch blocks — never inline `e instanceof Error ? e.message : "..."` directly
+- When `onError` is used inside a `useCallback`, store it in a ref to avoid infinite re-renders:
+  ```typescript
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
+  // then use onErrorRef.current?.(...) inside the callback
+  ```
 - **API success**: Show a success snackbar when the result isn't obvious from navigation alone. Examples:
   - Show snackbar: entry added/updated/deleted, goals saved
   - Skip snackbar: login/signup success (navigation change makes it obvious)
