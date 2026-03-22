@@ -3,6 +3,7 @@ import type {
   AiChatResponse,
   AiEstimateResponse,
   ApiResponse,
+  AuthPendingResponse,
   AuthResponse,
   CreateFavoriteFoodRequest,
   CreateFoodEntryRequest,
@@ -55,14 +56,40 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 export const api = {
   signup: (email: string, password: string) =>
-    request<ApiResponse<AuthResponse>>("/auth/signup", {
+    request<ApiResponse<AuthPendingResponse>>("/auth/signup", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),
   login: (email: string, password: string) =>
-    request<ApiResponse<AuthResponse>>("/auth/login", {
+    request<ApiResponse<AuthResponse | AuthPendingResponse>>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
+    }),
+
+  verifyEmail: (userId: string, code: string) =>
+    request<ApiResponse<AuthResponse>>("/auth/verify-email", {
+      method: "POST",
+      body: JSON.stringify({ userId, code }),
+    }),
+  resendVerification: (userId: string) =>
+    request<{ message: string }>("/auth/resend-verification", {
+      method: "POST",
+      body: JSON.stringify({ userId }),
+    }),
+  forgotPassword: (email: string) =>
+    request<{ message: string }>("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+  resetPassword: (email: string, code: string, newPassword: string) =>
+    request<{ message: string }>("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({ email, code, newPassword }),
+    }),
+  googleAuth: (params: { code: string; clientId: string; redirectUri: string }) =>
+    request<ApiResponse<AuthResponse>>("/auth/google", {
+      method: "POST",
+      body: JSON.stringify(params),
     }),
 
   createEntry: (data: CreateFoodEntryRequest) =>

@@ -16,21 +16,22 @@ This project is built collaboratively with [Kiro CLI](https://kiro.dev), an agen
 This creates a feedback loop: the AI writes code, I shape the standards, and those standards feed back into how the AI writes the next piece of code. Over time the codebase stays consistent even though an AI is doing most of the typing.
 
 Key files that drive this:
+
 - `.kiro/skills/` — YAML-frontmatter skill files that guide Kiro's code generation (naming conventions, commit format, etc.)
 - `docs/architecture.md` — architectural decisions and patterns
 - `docs/phase-1-implementation-plan.md` — task-by-task plan that gets checked off as we go
 
 ## Tech Stack
 
-| Layer | Tech |
-|-------|------|
-| Frontend | React Native + Expo + TypeScript |
-| Backend | Node.js + Express + TypeScript |
-| Database | Postgres + Prisma ORM |
-| Auth | Passport.js + JWT |
-| State Management | Zustand |
-| Navigation | React Navigation |
-| Monorepo | pnpm workspaces |
+| Layer            | Tech                             |
+| ---------------- | -------------------------------- |
+| Frontend         | React Native + Expo + TypeScript |
+| Backend          | Node.js + Express + TypeScript   |
+| Database         | Postgres + Prisma ORM            |
+| Auth             | Passport.js + JWT                |
+| State Management | Zustand                          |
+| Navigation       | React Navigation                 |
+| Monorepo         | pnpm workspaces                  |
 
 ## Project Structure
 
@@ -73,9 +74,43 @@ DATABASE_URL="your-neon-postgres-connection-string"
 JWT_SECRET="pick-a-strong-secret"
 PORT=3000
 GEMINI_API_KEY="your-gemini-api-key"
+RESEND_API_KEY="your-resend-api-key"
+EMAIL_FROM="Snap Cals <noreply@yourdomain.com>"
+GOOGLE_IOS_CLIENT_ID="your-ios-client-id.apps.googleusercontent.com"
+GOOGLE_ANDROID_CLIENT_ID="your-android-client-id.apps.googleusercontent.com"
 ```
 
-Get a free Postgres database at [neon.tech](https://neon.tech) — copy the connection string from the Neon dashboard. Get a free Gemini API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). Required for AI food estimation features.
+Get a free Postgres database at [neon.tech](https://neon.tech) — copy the connection string from the Neon dashboard.
+
+Get a free Gemini API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). Required for AI food estimation features.
+
+Get a free Resend API key at [resend.com](https://resend.com) — required for email verification and password reset. For `EMAIL_FROM`, you can use `Snap Cals <onboarding@resend.dev>` immediately for testing (sends only to your Resend account email). To send to any address, add a custom domain in the Resend dashboard, configure the DNS records (TXT for SPF, CNAME for DKIM), and verify it. Then use `Snap Cals <noreply@yourdomain.com>`.
+
+Set up Google OAuth credentials at [console.cloud.google.com](https://console.cloud.google.com/apis/credentials) — required for Google sign-in:
+
+1. Create a project (or select existing)
+2. If prompted, configure the **OAuth consent screen** first (External, fill in app name and email)
+3. Go to **APIs & Services → Credentials → Create Credentials → OAuth client ID**
+4. Create an **iOS** client with Bundle ID `host.exp.Exponent` (for Expo Go dev) or your app's bundle ID (for production)
+5. Create an **Android** client with package name `host.exp.exponent` and SHA-1 `B5:E7:CF:2F:C1:C0:6B:6D:2E:7B:88:E2:8D:97:D2:3C:2C:AB:40:4E` (Expo Go). For production, use your app's package name and signing certificate SHA-1
+6. You don't need the client secret for either
+
+**Note:** While your OAuth consent screen is in **Testing** mode (the default), only accounts listed as test users can sign in. Add test users under **APIs & Services → OAuth consent screen → Test users** (up to 100). To allow any Google account, publish the app to Production mode (requires Google review).
+
+**Note:** Google OAuth requires a production build (`eas build`) to work on devices. It cannot be tested in Expo Go due to redirect URI limitations.
+
+Set up the mobile environment:
+
+```bash
+cp apps/mobile/.env.example apps/mobile/.env
+```
+
+Edit `apps/mobile/.env`:
+
+```
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID="your-ios-client-id.apps.googleusercontent.com"
+EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID="your-android-client-id.apps.googleusercontent.com"
+```
 
 ### 3. Run database migrations and seed
 
@@ -85,7 +120,7 @@ npx prisma migrate deploy
 npx ts-node -r tsconfig-paths/register prisma/seed.ts
 ```
 
-This applies all migrations to your database and seeds it with a test account:
+This applies all migrations to your database and seeds it with a test account (pre-verified):
 
 - Email: `test@example.com`
 - Password: `password123`
@@ -131,6 +166,7 @@ pnpm dev:mobile
 ```
 
 This starts the Expo dev server. Then either:
+
 - Scan the QR code with Expo Go on your phone
 - Press `i` for iOS Simulator
 - Press `a` for Android Emulator
@@ -165,7 +201,10 @@ Tests will refuse to run if `DATABASE_URL_TEST` is not set. After pulling new mi
 
 See [docs/phase-roadmap.md](./docs/phase-roadmap.md) for the full roadmap.
 
-- **Phase 1:** CRUD calorie tracking (current)
+- **Phase 1:** CRUD calorie tracking
 - **Phase 2:** AI autofill via Gemini API
 - **Phase 3:** AI chat for clarifying questions
 - **Phase 4:** Image-based food recognition
+- **Phase 5:** Code quality (Biome, testing)
+- **Phase 6:** Goal coaching
+- **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth)

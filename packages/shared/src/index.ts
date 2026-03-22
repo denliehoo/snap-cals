@@ -8,6 +8,7 @@ export enum MealType {
 export interface User {
   id: string;
   email: string;
+  emailVerified: boolean;
   createdAt: string;
 }
 
@@ -49,6 +50,37 @@ export interface LoginRequest {
 export interface AuthResponse {
   token: string;
   user: User;
+}
+
+export interface AuthPendingResponse {
+  userId: string;
+  emailVerified: false;
+}
+
+export interface VerifyEmailRequest {
+  userId: string;
+  code: string;
+}
+
+export interface ResendVerificationRequest {
+  userId: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface GoogleAuthRequest {
+  idToken?: string;
+  code?: string;
+  clientId?: string;
+  redirectUri?: string;
 }
 
 // Food Entries

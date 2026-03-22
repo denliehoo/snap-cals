@@ -24,6 +24,9 @@ import LoginScreen from "./screens/login";
 import QuickAddScreen from "./screens/quick-add";
 import SettingsScreen from "./screens/settings";
 import SignupScreen from "./screens/signup";
+import VerifyEmailScreen from "./screens/verify-email";
+import ForgotPasswordScreen from "./screens/forgot-password";
+import ResetPasswordScreen from "./screens/reset-password";
 import WeeklyViewScreen from "./screens/weekly-view";
 import { useAuthStore } from "./stores/auth.store";
 import { useSettingsStore } from "./stores/settings.store";
@@ -31,6 +34,9 @@ import { useSettingsStore } from "./stores/settings.store";
 export type AuthStackParamList = {
   Login: undefined;
   Signup: undefined;
+  VerifyEmail: { userId: string };
+  ForgotPassword: { email?: string };
+  ResetPassword: { email: string };
 };
 
 export type MainTabParamList = {
@@ -206,6 +212,9 @@ export default function Navigation() {
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>
           <AuthStack.Screen name="Login" component={LoginScreen} />
           <AuthStack.Screen name="Signup" component={SignupScreen} />
+          <AuthStack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
+          <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+          <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
         </AuthStack.Navigator>
       )}
     </NavigationContainer>

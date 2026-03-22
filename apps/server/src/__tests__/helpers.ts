@@ -13,10 +13,14 @@ export async function createTestUser(
   password = "password123",
 ) {
   const passwordHash = await bcrypt.hash(password, 10);
-  return prisma.user.create({ data: { email, passwordHash } });
+  return prisma.user.create({
+    data: { email, passwordHash, emailVerified: true },
+  });
 }
 
 export async function cleanDb() {
+  await prisma.otp.deleteMany();
+  await prisma.authProvider.deleteMany();
   await prisma.foodEntry.deleteMany();
   await prisma.favoriteFood.deleteMany();
   await prisma.goal.deleteMany();

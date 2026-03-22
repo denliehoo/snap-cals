@@ -8,6 +8,13 @@ const mockRoute = {
   name: "Login" as const,
 } as unknown as never;
 
+jest.mock("expo-auth-session", () => ({
+  useAutoDiscovery: jest.fn().mockReturnValue(null),
+  useAuthRequest: jest.fn().mockReturnValue([null, null, jest.fn()]),
+  makeRedirectUri: jest.fn().mockReturnValue("http://localhost:8081"),
+  ResponseType: { IdToken: "id_token" },
+}));
+
 jest.mock("@/services/api", () => ({
   api: { login: jest.fn() },
   setToken: jest.fn(),
@@ -18,7 +25,11 @@ jest.mock("@/stores/auth.store", () => {
   const mockLogin = jest.fn();
   return {
     useAuthStore: (selector?: (s: Record<string, unknown>) => unknown) => {
-      const state = { login: mockLogin, signup: jest.fn() };
+      const state = {
+        login: mockLogin,
+        signup: jest.fn(),
+        googleLogin: jest.fn(),
+      };
       return selector ? selector(state) : state;
     },
     __mockLogin: mockLogin,
@@ -40,6 +51,20 @@ describe("LoginScreen", () => {
     expect(getByText("Log In")).toBeTruthy();
   });
 
+  it("renders Google sign-in button", async () => {
+    const { getByText } = await render(
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
+    );
+    expect(getByText("Continue with Google")).toBeTruthy();
+  });
+
+  it("renders forgot password link", async () => {
+    const { getByText } = await render(
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
+    );
+    expect(getByText("Forgot password?")).toBeTruthy();
+  });
+
   it("shows error when fields are empty", async () => {
     const { getByText } = await render(
       <LoginScreen navigation={mockNavigation} route={mockRoute} />,
@@ -53,7 +78,7 @@ describe("LoginScreen", () => {
   });
 
   it("calls login on valid submit", async () => {
-    mockLogin.mockResolvedValue(undefined);
+    mockLogin.mockResolvedValue(null);
     const { getByText, getByPlaceholderText } = await render(
       <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );
@@ -62,6 +87,21 @@ describe("LoginScreen", () => {
     fireEvent.press(getByText("Log In"));
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith("test@example.com", "password123");
+    });
+  });
+
+  it("navigates to verify screen when login returns userId", async () => {
+    mockLogin.mockResolvedValue("user-123");
+    const { getByText, getByPlaceholderText } = await render(
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
+    );
+    fireEvent.changeText(getByPlaceholderText("Email"), "test@example.com");
+    fireEvent.changeText(getByPlaceholderText("Password"), "password123");
+    fireEvent.press(getByText("Log In"));
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("VerifyEmail", {
+        userId: "user-123",
+      });
     });
   });
 
@@ -84,5 +124,15 @@ describe("LoginScreen", () => {
     );
     fireEvent.press(getByText("Don't have an account? Sign up"));
     expect(mockNavigate).toHaveBeenCalledWith("Signup");
+  });
+
+  it("navigates to forgot password", async () => {
+    const { getByText } = await render(
+      <LoginScreen navigation={mockNavigation} route={mockRoute} />,
+    );
+    fireEvent.press(getByText("Forgot password?"));
+    expect(mockNavigate).toHaveBeenCalledWith("ForgotPassword", {
+      email: "",
+    });
   });
 });

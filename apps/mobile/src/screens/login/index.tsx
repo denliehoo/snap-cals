@@ -13,6 +13,7 @@ import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
 import { useAuthForm } from "@/hooks/use-auth-form";
+import { useGoogleAuth } from "@/hooks/use-google-auth";
 import type { AuthStackParamList } from "@/navigation";
 import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 
@@ -30,7 +31,12 @@ export default function LoginScreen({ navigation }: Props) {
     fieldErrors,
     clearFieldError,
     submit,
-  } = useAuthForm("login", (msg) => show(msg, "error"));
+  } = useAuthForm(
+    "login",
+    (msg) => show(msg, "error"),
+    (userId) => navigation.navigate("VerifyEmail", { userId }),
+  );
+  const google = useGoogleAuth((msg) => show(msg, "error"));
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
@@ -65,9 +71,29 @@ export default function LoginScreen({ navigation }: Props) {
           error={fieldErrors.password}
         />
 
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ForgotPassword", { email })}
+        >
+          <Text style={styles.forgotLink}>Forgot password?</Text>
+        </TouchableOpacity>
+
         <View style={styles.buttonWrapper}>
           <Button title="Log In" onPress={submit} loading={loading} />
         </View>
+
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>or</Text>
+          <View style={styles.dividerLine} />
+        </View>
+
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={google.trigger}
+          disabled={!google.ready || google.loading}
+        >
+          <Text style={styles.googleText}>Continue with Google</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
           <Text style={styles.link}>Don't have an account? Sign up</Text>
@@ -104,7 +130,42 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       textAlign: "center",
       marginBottom: spacing.xl,
     },
-    buttonWrapper: { marginTop: spacing.sm, marginBottom: spacing.lg },
+    forgotLink: {
+      color: colors.primary,
+      fontSize: fontSize.sm,
+      textAlign: "right",
+      marginTop: spacing.xs,
+    },
+    buttonWrapper: { marginTop: spacing.md, marginBottom: spacing.md },
+    divider: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: spacing.md,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      color: colors.textSecondary,
+      fontSize: fontSize.sm,
+      marginHorizontal: spacing.sm,
+    },
+    googleButton: {
+      backgroundColor: "#fff",
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: borderRadius.md,
+      paddingVertical: spacing.sm + 2,
+      alignItems: "center",
+      marginBottom: spacing.lg,
+    },
+    googleText: {
+      color: "#333",
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.medium,
+    },
     link: {
       color: colors.primary,
       fontSize: fontSize.sm,

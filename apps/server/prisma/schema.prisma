@@ -15,14 +15,47 @@ enum MealType {
   SNACK
 }
 
+enum OtpType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 model User {
-  id           String         @id @default(cuid())
-  email        String         @unique
-  passwordHash String
-  createdAt    DateTime       @default(now())
-  entries      FoodEntry[]
-  goal         Goal?
-  favorites    FavoriteFood[]
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String?
+  emailVerified Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  entries       FoodEntry[]
+  goal          Goal?
+  favorites     FavoriteFood[]
+  authProviders AuthProvider[]
+  otps          Otp[]
+}
+
+model AuthProvider {
+  id             String   @id @default(cuid())
+  userId         String
+  provider       String
+  providerUserId String
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  userId    String
+  codeHash  String
+  type      OtpType
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, type])
 }
 
 model FoodEntry {

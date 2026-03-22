@@ -5,14 +5,14 @@ import { getErrorMessage } from "@/utils/error";
 export function useAuthForm(
   mode: "login" | "signup",
   onError: (msg: string) => void,
+  onVerificationNeeded: (userId: string) => void,
 ) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const authAction = useAuthStore((s) =>
-    mode === "login" ? s.login : s.signup,
-  );
+  const login = useAuthStore((s) => s.login);
+  const signup = useAuthStore((s) => s.signup);
 
   const clearFieldError = (field: string) => {
     setFieldErrors((prev) => {
@@ -34,7 +34,14 @@ export function useAuthForm(
 
     setLoading(true);
     try {
-      await authAction(email.trim().toLowerCase(), password);
+      const trimmedEmail = email.trim().toLowerCase();
+      if (mode === "signup") {
+        const userId = await signup(trimmedEmail, password);
+        onVerificationNeeded(userId);
+      } else {
+        const userId = await login(trimmedEmail, password);
+        if (userId) onVerificationNeeded(userId);
+      }
     } catch (e: unknown) {
       onError(
         getErrorMessage(e, `${mode === "login" ? "Login" : "Signup"} failed`),

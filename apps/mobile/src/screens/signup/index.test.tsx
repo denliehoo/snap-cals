@@ -8,6 +8,13 @@ const mockRoute = {
   name: "Signup" as const,
 } as unknown as never;
 
+jest.mock("expo-auth-session", () => ({
+  useAutoDiscovery: jest.fn().mockReturnValue(null),
+  useAuthRequest: jest.fn().mockReturnValue([null, null, jest.fn()]),
+  makeRedirectUri: jest.fn().mockReturnValue("http://localhost:8081"),
+  ResponseType: { IdToken: "id_token" },
+}));
+
 jest.mock("@/services/api", () => ({
   api: { signup: jest.fn() },
   setToken: jest.fn(),
@@ -18,7 +25,11 @@ jest.mock("@/stores/auth.store", () => {
   const mockSignup = jest.fn();
   return {
     useAuthStore: (selector?: (s: Record<string, unknown>) => unknown) => {
-      const state = { login: jest.fn(), signup: mockSignup };
+      const state = {
+        login: jest.fn(),
+        signup: mockSignup,
+        googleLogin: jest.fn(),
+      };
       return selector ? selector(state) : state;
     },
     __mockSignup: mockSignup,
@@ -38,6 +49,13 @@ describe("SignupScreen", () => {
     expect(getByPlaceholderText("Email")).toBeTruthy();
     expect(getByPlaceholderText("Password")).toBeTruthy();
     expect(getByText("Sign Up")).toBeTruthy();
+  });
+
+  it("renders Google sign-in button", async () => {
+    const { getByText } = await render(
+      <SignupScreen navigation={mockNavigation} route={mockRoute} />,
+    );
+    expect(getByText("Continue with Google")).toBeTruthy();
   });
 
   it("shows error when fields are empty", async () => {
@@ -64,8 +82,8 @@ describe("SignupScreen", () => {
     expect(mockSignup).not.toHaveBeenCalled();
   });
 
-  it("calls signup on valid submit", async () => {
-    mockSignup.mockResolvedValue(undefined);
+  it("navigates to verify screen on valid submit", async () => {
+    mockSignup.mockResolvedValue("user-456");
     const { getByText, getByPlaceholderText } = await render(
       <SignupScreen navigation={mockNavigation} route={mockRoute} />,
     );
@@ -74,6 +92,9 @@ describe("SignupScreen", () => {
     fireEvent.press(getByText("Sign Up"));
     await waitFor(() => {
       expect(mockSignup).toHaveBeenCalledWith("new@example.com", "password123");
+      expect(mockNavigate).toHaveBeenCalledWith("VerifyEmail", {
+        userId: "user-456",
+      });
     });
   });
 

@@ -13,7 +13,10 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Navigation | React Navigation | Standard for React Native/Expo |
 | State Management | Zustand | Lightweight, minimal boilerplate, easy to learn |
 | Backend | Node.js + Express + TypeScript | Full control over API, unified language with frontend (TS) |
-| Auth | Passport.js + JWT | Abstracts auth strategy, JWT for stateless mobile auth |
+| Auth             | Passport.js + JWT                                        | Abstracts auth strategy, JWT for stateless mobile auth |
+| Email            | Resend                                                   | Transactional emails for OTP verification and password reset, generous free tier |
+| OAuth (Mobile)   | expo-auth-session                                        | Provider-agnostic OAuth for mobile, works in Expo Go |
+| OAuth (Server)   | google-auth-library                                      | Verifies Google id_tokens server-side |
 | Database | Postgres + Prisma ORM | Relational data (users, entries, goals), strong aggregation support, Prisma for type-safe queries |
 | DB Hosting | Neon | Free tier Postgres, no expiry, serverless |
 | Backend Hosting | Render | Free tier, simple git-push deploys |
@@ -90,7 +93,7 @@ snap-cals/
 
 ### API Design
 - Base path: `/api`
-- Auth routes: `/api/auth/signup`, `/api/auth/login`
+- Auth routes: `/api/auth/signup`, `/api/auth/login`, `/api/auth/verify-email`, `/api/auth/resend-verification`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/google`
 - Resource routes: `/api/entries`, `/api/goals`, `/api/favorites`
 - Recents route: `GET /api/entries/recent` — returns last 20 food entries for the user (no deduplication)
 - AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API
@@ -102,9 +105,17 @@ snap-cals/
 - Standard error shape: `{ message: string, errors?: Record<string, string[]> }`
 
 ### Auth Flow
-- Email/password signup and login
+- Email/password signup with OTP email verification (6-digit code via Resend, 10-min expiry, bcrypt-hashed)
+- Signup returns `{ userId, emailVerified: false }` — no JWT until verified
+- Login for unverified users returns the same pending response, redirecting to verification screen
+- OAuth users (Google) skip email verification — marked verified on creation
+- Password reset via OTP email: `POST /api/auth/forgot-password` → `POST /api/auth/reset-password`
+- Forgot-password always returns 200 regardless of email existence (prevents enumeration)
+- Google OAuth: mobile uses `expo-auth-session` to get `id_token`, sends to `POST /api/auth/google`, backend verifies with `google-auth-library`
+- Account linking: Google login with an existing email auto-links the accounts; `AuthProvider` table tracks provider relationships
+- Provider-extensible: adding Facebook/Apple is a new `AuthProvider` row, not a schema migration
 - Passwords hashed with bcrypt
-- JWT returned on signup/login, stored in `expo-secure-store` on mobile
+- JWT returned on successful verification/login/OAuth, stored in `expo-secure-store` on mobile
 - Passport.js JWT strategy validates tokens on protected routes
 - Zustand auth store manages token/user state on frontend
 - React Navigation switches between auth stack and main app stack based on auth state
@@ -112,14 +123,16 @@ snap-cals/
 ### Navigation
 - Bottom tabs: Daily, Weekly, Goals, More (settings)
 - More/Settings tab houses logout, dark mode toggle, and future account-related features
-- Auth stack (Login, Signup) shown when unauthenticated; main stack with tabs shown when authenticated
+- Auth stack (Login, Signup, VerifyEmail, ForgotPassword, ResetPassword) shown when unauthenticated; main stack with tabs shown when authenticated
 - `EntryForm` is a modal screen pushed on top of the tab navigator
 - `QuickAdd` screen accessible from the FAB action sheet on Daily View — shows Favorites and Recents sections with swipe gestures (swipe right to favorite a recent, swipe left to remove a favorite)
 
 ### Database
 - Postgres on Neon (free tier)
 - Prisma ORM for schema definition, migrations, and type-safe queries
-- Models: User, FoodEntry, Goal, FavoriteFood
+- Models: User, FoodEntry, Goal, FavoriteFood, AuthProvider, Otp
+- AuthProvider tracks OAuth providers per user with `@@unique([provider, providerUserId])` — extensible to Facebook/Apple/GitHub
+- Otp stores hashed 6-digit codes for email verification and password reset with 10-min expiry
 - FavoriteFood stores reusable food templates per user with `@@unique([userId, name])` and a max of 25 per user
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
 - Neon branching: `main` branch for dev data, `unit-test` branch for automated tests
@@ -177,3 +190,4 @@ snap-cals/
 - **Phase 4:** Image-based food recognition — completed
 - **Phase 5:** Quick features (favorites, recents, image crop) & code quality (Biome) — completed
 - **Phase 6:** AI Goal Coach — completed
+- **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth, account linking) — completed

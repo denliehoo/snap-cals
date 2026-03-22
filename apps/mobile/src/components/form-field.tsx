@@ -19,6 +19,7 @@ interface FormFieldProps {
   error?: string;
   editable?: boolean;
   onPress?: () => void;
+  maxLength?: number;
 }
 
 export default function FormField({
@@ -31,6 +32,7 @@ export default function FormField({
   error,
   editable = true,
   onPress,
+  maxLength,
 }: FormFieldProps) {
   const colors = useColors();
 
@@ -51,6 +53,7 @@ export default function FormField({
       keyboardType={keyboardType}
       secureTextEntry={secureTextEntry}
       editable={editable}
+      maxLength={maxLength}
       pointerEvents={onPress ? "none" : "auto"}
     />
   );

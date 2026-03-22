@@ -1,4 +1,4 @@
-import type { User } from "@snap-cals/shared";
+import type { AuthPendingResponse, AuthResponse, User } from "@snap-cals/shared";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { api, setOnUnauthorized, setToken } from "@/services/api";
@@ -9,10 +9,16 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<string | null>;
+  signup: (email: string, password: string) => Promise<string>;
   logout: () => Promise<void>;
   restore: () => Promise<void>;
+  setAuth: (token: string, user: User) => Promise<void>;
+  googleLogin: (params: { code: string; clientId: string; redirectUri: string }) => Promise<void>;
+}
+
+function isAuthResponse(data: AuthResponse | AuthPendingResponse): data is AuthResponse {
+  return "token" in data;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -37,14 +43,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     setOnUnauthorized(() => get().logout());
   },
 
+  setAuth: async (token: string, user: User) => {
+    setToken(token);
+    await SecureStore.setItemAsync("token", token);
+    await SecureStore.setItemAsync("user", JSON.stringify(user));
+    set({ token, user });
+  },
+
   login: async (email, password) => {
     set({ error: null });
     try {
       const { data } = await api.login(email, password);
-      setToken(data.token);
-      await SecureStore.setItemAsync("token", data.token);
-      await SecureStore.setItemAsync("user", JSON.stringify(data.user));
-      set({ token: data.token, user: data.user });
+      if (isAuthResponse(data)) {
+        await get().setAuth(data.token, data.user);
+        return null;
+      }
+      // Needs email verification
+      return data.userId;
     } catch (e: unknown) {
       set({ error: getErrorMessage(e, "Login failed") });
       throw e;
@@ -55,12 +70,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ error: null });
     try {
       const { data } = await api.signup(email, password);
-      setToken(data.token);
-      await SecureStore.setItemAsync("token", data.token);
-      await SecureStore.setItemAsync("user", JSON.stringify(data.user));
-      set({ token: data.token, user: data.user });
+      return data.userId;
     } catch (e: unknown) {
       set({ error: getErrorMessage(e, "Signup failed") });
+      throw e;
+    }
+  },
+
+  googleLogin: async (params) => {
+    set({ error: null });
+    try {
+      const { data } = await api.googleAuth(params);
+      await get().setAuth(data.token, data.user);
+    } catch (e: unknown) {
+      set({ error: getErrorMessage(e, "Google login failed") });
       throw e;
     }
   },
