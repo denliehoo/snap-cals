@@ -191,3 +191,4 @@ snap-cals/
 - **Phase 5:** Quick features (favorites, recents, image crop) & code quality (Biome) — completed
 - **Phase 6:** AI Goal Coach — completed
 - **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth, account linking) — completed
+- **Phase 8:** Subscription & Usage Limits — not started

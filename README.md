@@ -208,3 +208,5 @@ See [docs/phase-roadmap.md](./docs/phase-roadmap.md) for the full roadmap.
 - **Phase 5:** Code quality (Biome, testing)
 - **Phase 6:** Goal coaching
 - **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth)
+- **Phase 8:** Subscription & usage limits
+- **Phase 9:** RevenueCat SDK integration

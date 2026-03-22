@@ -61,7 +61,13 @@ A complete auth overhaul adding email verification via 6-digit OTP codes, passwo
 
 ### Phase 8: Subscription & Usage Limits
 
-Introduce a freemium model with monthly AI usage limits. Free users get a set number of AI lookups per month (estimate, chat, image); paid subscribers get unlimited access. Includes server-side usage tracking per user, limit enforcement middleware on AI endpoints, and frontend UI for displaying remaining usage and upgrade prompts.
+Introduce a freemium model with daily AI usage limits. Free users get a configurable number of AI lookups per day (resetting at UTC 00:00); Pro subscribers get unlimited access. Includes server-side usage tracking per user via an `AiUsage` table, limit enforcement middleware on AI endpoints, a RevenueCat webhook endpoint for subscription lifecycle events, and frontend UI for displaying remaining usage and upgrade prompts. The "Upgrade to Pro" button is a placeholder for now — RevenueCat SDK integration is deferred to Phase 9.
+
+**Status:** Not started — see [Phase 8 Implementation Plan](./phase-8-implementation-plan.md)
+
+### Phase 9: RevenueCat SDK Integration
+
+Wire up the RevenueCat SDK (`react-native-purchases`) on mobile to enable real in-app purchases. Includes configuring RevenueCat with App Store Connect / Google Play Console products, building a paywall screen, connecting the purchase flow to the existing subscription tier and webhook infrastructure from Phase 8. Requires production builds via `eas build`.
 
 **Status:** Not started
 
