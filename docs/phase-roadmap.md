@@ -69,7 +69,7 @@ Introduce a freemium model with daily AI usage limits. Free users get a configur
 
 Wire up the RevenueCat SDK (`react-native-purchases`) on mobile to enable real in-app purchases. Includes configuring RevenueCat with App Store Connect / Google Play Console products, building a paywall screen, connecting the purchase flow to the existing subscription tier and webhook infrastructure from Phase 8. Requires production builds via `eas build`.
 
-**Status:** Not started
+**Status:** Not started — see [Phase 9 Implementation Plan](./phase-9-implementation-plan.md)
 
 ---
 
