@@ -1,6 +1,7 @@
 import type { AuthPendingResponse, AuthResponse, User } from "@snap-cals/shared";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
+import { identifyUser, logoutPurchases } from "@/hooks/use-purchases";
 import { api, setOnUnauthorized, setToken } from "@/services/api";
 import { getErrorMessage } from "@/utils/error";
 
@@ -33,7 +34,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const userJson = await SecureStore.getItemAsync("user");
       if (token && userJson) {
         setToken(token);
-        set({ token, user: JSON.parse(userJson), isLoading: false });
+        const user = JSON.parse(userJson);
+        set({ token, user, isLoading: false });
+        identifyUser(user.id).catch(() => {});
       } else {
         set({ isLoading: false });
       }
@@ -48,6 +51,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     await SecureStore.setItemAsync("token", token);
     await SecureStore.setItemAsync("user", JSON.stringify(user));
     set({ token, user });
+    identifyUser(user.id).catch(() => {});
   },
 
   login: async (email, password) => {
@@ -92,6 +96,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     setToken(null);
     await SecureStore.deleteItemAsync("token");
     await SecureStore.deleteItemAsync("user");
+    logoutPurchases().catch(() => {});
     set({ token: null, user: null });
   },
 }));

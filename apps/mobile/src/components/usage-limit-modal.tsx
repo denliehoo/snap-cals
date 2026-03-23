@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { FREE_DAILY_AI_LIMIT } from "@snap-cals/shared";
 import { useMemo } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useColors } from "@/contexts/theme-context";
 import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
 import AppModal from "./app-modal";
@@ -11,9 +11,10 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   resetsAt: string;
+  onUpgrade: () => void;
 }
 
-export default function UsageLimitModal({ visible, onClose, resetsAt }: Props) {
+export default function UsageLimitModal({ visible, onClose, resetsAt, onUpgrade }: Props) {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
@@ -33,9 +34,10 @@ export default function UsageLimitModal({ visible, onClose, resetsAt }: Props) {
         <View style={styles.buttons}>
           <Button
             title="Upgrade to Pro"
-            onPress={() =>
-              Alert.alert("Coming Soon", "Pro subscriptions will be available soon.")
-            }
+            onPress={() => {
+              onClose();
+              onUpgrade();
+            }}
           />
           <Button title="Close" variant="text" onPress={onClose} />
         </View>

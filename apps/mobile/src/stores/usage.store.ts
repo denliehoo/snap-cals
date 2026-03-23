@@ -9,6 +9,7 @@ interface UsageState {
   tier: SubscriptionTier;
   fetch: () => Promise<void>;
   isAtLimit: () => boolean;
+  setTier: (tier: SubscriptionTier) => void;
 }
 
 export const useUsageStore = create<UsageState>((set, get) => ({
@@ -30,4 +31,6 @@ export const useUsageStore = create<UsageState>((set, get) => ({
     const { tier, used, limit } = get();
     return tier === SubscriptionTier.FREE && used >= limit;
   },
+
+  setTier: (tier) => set({ tier }),
 }));

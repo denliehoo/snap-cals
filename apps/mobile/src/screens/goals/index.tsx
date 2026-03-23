@@ -135,6 +135,7 @@ export default function GoalsScreen() {
           fetchUsage();
         }}
         resetsAt={resetsAt}
+        onUpgrade={() => navigation.navigate("Paywall")}
       />
     </View>
   );

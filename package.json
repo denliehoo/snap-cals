@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev:server": "pnpm --filter @snap-cals/server dev",
-    "dev:mobile": "pnpm --filter @snap-cals/mobile start",
+    "dev:mobile": "pnpm --filter @snap-cals/mobile start --go",
     "test": "pnpm --filter @snap-cals/server --filter @snap-cals/mobile --parallel test",
     "test:server": "pnpm --filter @snap-cals/server test",
     "test:mobile": "pnpm --filter @snap-cals/mobile test",

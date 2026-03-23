@@ -110,6 +110,8 @@ Edit `apps/mobile/.env`:
 ```
 EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID="your-ios-client-id.apps.googleusercontent.com"
 EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID="your-android-client-id.apps.googleusercontent.com"
+EXPO_PUBLIC_RC_IOS_API_KEY="your-revenuecat-ios-api-key"
+EXPO_PUBLIC_RC_ANDROID_API_KEY="your-revenuecat-android-api-key"
 ```
 
 ### 3. Run database migrations and seed
@@ -196,6 +198,47 @@ pnpm test
 ```
 
 Tests will refuse to run if `DATABASE_URL_TEST` is not set. After pulling new migrations, re-run `pnpm migrate:test` in `apps/server` to keep the test branch in sync.
+
+## In-App Purchases Setup
+
+RevenueCat powers the subscription flow. The SDK requires production builds via `eas build` — it cannot be fully tested in Expo Go.
+
+### Prerequisites
+
+- Apple Developer account ($99/year) for iOS
+- Google Play Console account ($25 one-time) for Android
+
+### Store Setup
+
+1. **App Store Connect:** Create your app, add a monthly auto-renewable subscription product (e.g., `snapcals_pro_monthly` at $4.99/month), configure a subscription group, and generate an in-app purchase key
+2. **Google Play Console:** Create your app, add a monthly subscription product with a base plan, set pricing, and create Play Service Credentials (service account JSON)
+
+### RevenueCat Dashboard
+
+1. Create a RevenueCat project at [rev.cat](https://www.revenuecat.com/)
+2. Add iOS app (with App Store Connect in-app purchase key) and Android app (with Play Service Credentials)
+3. Create products mirroring your store products
+4. Create an entitlement named `pro` and attach the subscription products
+5. Create an offering named `default` containing the monthly package
+6. Configure webhook URL: `https://your-server.com/api/webhooks/revenuecat` with the authorization header matching `REVENUECAT_WEBHOOK_SECRET`
+7. Copy the iOS and Android public API keys into `apps/mobile/.env`
+
+### EAS Build
+
+```bash
+npm install -g eas-cli
+eas login
+cd apps/mobile
+eas build --profile ios-simulator --platform ios   # iOS Simulator
+eas build --profile development --platform ios     # Physical iOS device
+eas build --profile development --platform android # Physical Android device
+```
+
+### Testing
+
+- **iOS:** Create a sandbox Apple ID in App Store Connect → Users and Access → Sandbox Testers
+- **Android:** Add license testers in Google Play Console → Settings → License testing
+- RevenueCat sandbox mode is enabled automatically in development builds
 
 ## Phase Roadmap
 

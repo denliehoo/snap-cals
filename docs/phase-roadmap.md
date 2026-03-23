@@ -2,18 +2,18 @@
 
 ## Tech Stack
 
-| Layer            | Tech                             | Hosting | Cost      |
-| ---------------- | -------------------------------- | ------- | --------- |
-| Monorepo         | pnpm workspaces                  | —       | Free      |
-| Frontend         | React Native + Expo + TypeScript | —       | Free      |
-| Navigation       | React Navigation                 | —       | Free      |
-| State Management | Zustand                          | —       | Free      |
-| Backend          | Node.js + Express + TypeScript   | Render  | Free      |
-| Auth             | Passport.js + JWT                | —       | Free      |
-| Email            | Resend                           | —       | Free tier |
-| OAuth            | expo-auth-session + google-auth-library | — | Free      |
-| Database         | Postgres + Prisma ORM            | Neon    | Free      |
-| AI (Phase 2+)    | Gemini API                       | —       | Free tier |
+| Layer            | Tech                                    | Hosting | Cost      |
+| ---------------- | --------------------------------------- | ------- | --------- |
+| Monorepo         | pnpm workspaces                         | —       | Free      |
+| Frontend         | React Native + Expo + TypeScript        | —       | Free      |
+| Navigation       | React Navigation                        | —       | Free      |
+| State Management | Zustand                                 | —       | Free      |
+| Backend          | Node.js + Express + TypeScript          | Render  | Free      |
+| Auth             | Passport.js + JWT                       | —       | Free      |
+| Email            | Resend                                  | —       | Free tier |
+| OAuth            | expo-auth-session + google-auth-library | —       | Free      |
+| Database         | Postgres + Prisma ORM                   | Neon    | Free      |
+| AI (Phase 2+)    | Gemini API                              | —       | Free tier |
 
 ## Phases
 
@@ -63,18 +63,19 @@ A complete auth overhaul adding email verification via 6-digit OTP codes, passwo
 
 Introduce a freemium model with daily AI usage limits. Free users get a configurable number of AI lookups per day (resetting at UTC 00:00); Pro subscribers get unlimited access. Includes server-side usage tracking per user via an `AiUsage` table, limit enforcement middleware on AI endpoints, a RevenueCat webhook endpoint for subscription lifecycle events, and frontend UI for displaying remaining usage and upgrade prompts. The "Upgrade to Pro" button is a placeholder for now — RevenueCat SDK integration is deferred to Phase 9.
 
-**Status:** Not started — see [Phase 8 Implementation Plan](./phase-8-implementation-plan.md)
+**Status:** Completed — see [Phase 8 Implementation Plan](./phase-8-implementation-plan.md)
 
 ### Phase 9: RevenueCat SDK Integration
 
 Wire up the RevenueCat SDK (`react-native-purchases`) on mobile to enable real in-app purchases. Includes configuring RevenueCat with App Store Connect / Google Play Console products, building a paywall screen, connecting the purchase flow to the existing subscription tier and webhook infrastructure from Phase 8. Requires production builds via `eas build`.
 
-**Status:** Not started — see [Phase 9 Implementation Plan](./phase-9-implementation-plan.md)
+**Status:** Completed — see [Phase 9 Implementation Plan](./phase-9-implementation-plan.md)
 
 ---
 
 ## Product Backlog
 
 Ideas for future phases, not yet prioritized or planned.
+
 - **BYOK (Bring Your Own Key):** Let power users enter their own Gemini API key in settings to get unlimited AI usage without a subscription. Useful as an alternative to paid plans for technical users. Key would be stored encrypted and sent server-side per request.
 - **Optimize Image Token Usage in AI Chat:** Currently the food photo is re-sent with every message in the AI chat flow, costing ~250 extra tokens per message. Investigate alternatives (e.g., send image only on first message, cache a text description of the image server-side, or let the user explicitly re-attach). Balance between cost savings and the ability for the AI to reference the photo when asked.

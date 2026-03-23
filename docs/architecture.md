@@ -22,6 +22,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Backend Hosting | Render | Free tier, simple git-push deploys |
 | AI (Phase 2+) | Gemini API | Free tier, multimodal (text + image) |
 | Image Picker | expo-image-picker | Camera and gallery access, returns base64 for Gemini |
+| In-App Purchases | RevenueCat (react-native-purchases) | Cross-platform subscription management, webhook-driven tier updates |
 | Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
 
 ## Monorepo Structure
@@ -83,6 +84,16 @@ snap-cals/
 - Safety guardrails: minimum calorie floors (1200/1500 kcal), no extreme deficits, healthcare disclaimer
 - When AI produces a recommendation, it appears with a "Set as my goals" button that navigates back to Goals screen with values pre-filled
 - Chat history is ephemeral (screen state only, not persisted to DB)
+
+### In-App Purchases (RevenueCat)
+- `react-native-purchases` SDK configured on app startup with platform-specific API keys from env vars
+- `Purchases.logIn(userId)` called after auth (login, signup verification, OAuth, restore) so webhook `app_user_id` maps to DB user ID
+- `Purchases.logOut()` called on app logout
+- `CustomerInfo` update listener keeps local `tier` in sync (handles renewals, cancellations, restores)
+- Custom Paywall screen fetches offerings from RevenueCat, displays monthly product with store price, handles purchase and restore flows
+- After successful purchase, optimistic local update (`setTier(PRO)`) — webhook handles server-side tier update
+- Requires `expo-dev-client` + EAS Build — native IAP modules don't work in Expo Go
+- EAS Build profiles configured in `apps/mobile/eas.json` (development, ios-simulator, preview, production)
 
 ### Theme / Design System
 - Centralized in `apps/mobile/src/theme.ts`
@@ -184,11 +195,12 @@ snap-cals/
 
 ## Phase Roadmap
 
-- **Phase 1:** CRUD calorie tracking (current)
-- **Phase 2:** AI autofill via Gemini API - completed
+- **Phase 1:** CRUD calorie tracking — completed
+- **Phase 2:** AI autofill via Gemini API — completed
 - **Phase 3:** AI chat with clarifying questions (toggleable) — completed
 - **Phase 4:** Image-based food recognition — completed
 - **Phase 5:** Quick features (favorites, recents, image crop) & code quality (Biome) — completed
 - **Phase 6:** AI Goal Coach — completed
 - **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth, account linking) — completed
-- **Phase 8:** Subscription & Usage Limits — not started
+- **Phase 8:** Subscription & Usage Limits — completed
+- **Phase 9:** RevenueCat SDK Integration — completed

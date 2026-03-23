@@ -1,10 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SubscriptionTier } from "@snap-cals/shared";
 import type React from "react";
 import { useMemo } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Purchases from "react-native-purchases";
 import ThemedSwitch from "@/components/themed-switch";
 import { useColors, useTheme } from "@/contexts/theme-context";
+import type { MainStackParamList } from "@/navigation";
 import { useAuthStore } from "@/stores/auth.store";
 import { useSettingsStore } from "@/stores/settings.store";
 import { useUsageStore } from "@/stores/usage.store";
@@ -46,6 +50,7 @@ export default function SettingsScreen() {
   const { discussionMode, toggleDiscussionMode } = useSettingsStore();
   const { used, limit, tier } = useUsageStore();
   const { isDark, toggle } = useTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const isPro = tier === SubscriptionTier.PRO;
 
@@ -81,7 +86,13 @@ export default function SettingsScreen() {
           label={isPro ? "Plan: Pro" : "Plan: Free"}
           right={null}
         />
-        {!isPro && (
+        {isPro ? (
+          <SettingsRow
+            icon="settings-outline"
+            label="Manage Subscription"
+            onPress={() => Purchases.showManageSubscriptions()}
+          />
+        ) : (
           <>
             <SettingsRow
               icon="sparkles-outline"
@@ -91,7 +102,7 @@ export default function SettingsScreen() {
             <SettingsRow
               icon="arrow-up-circle-outline"
               label="Upgrade to Pro"
-              onPress={() => Alert.alert("Coming Soon", "Pro subscriptions will be available soon.")}
+              onPress={() => navigation.navigate("Paywall")}
             />
           </>
         )}

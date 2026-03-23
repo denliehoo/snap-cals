@@ -171,6 +171,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
           fetchUsage();
         }}
         resetsAt={resetsAt}
+        onUpgrade={() => navigation.navigate("Paywall")}
       />
     </View>
   );

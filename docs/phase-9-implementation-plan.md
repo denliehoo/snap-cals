@@ -125,7 +125,7 @@ README.md                                             # Add RevenueCat setup pre
 
 ### Task 1: Install dependencies, EAS config, and env setup
 
-- [ ] **Objective:** Install `react-native-purchases` and `expo-dev-client`, configure EAS Build, and add RevenueCat API key env vars.
+- [x] **Objective:** Install `react-native-purchases` and `expo-dev-client`, configure EAS Build, and add RevenueCat API key env vars.
 - **Guidance:**
   - Run `npx expo install react-native-purchases expo-dev-client` in `apps/mobile`
   - Add `"expo-dev-client"` to the `plugins` array in `app.json`
@@ -146,7 +146,7 @@ README.md                                             # Add RevenueCat setup pre
 
 ### Task 2: RevenueCat SDK initialization hook + auth store integration
 
-- [ ] **Objective:** Create a hook that initializes RevenueCat, identifies users on login, and logs out on app logout. Listen for `CustomerInfo` updates to keep local subscription state in sync.
+- [x] **Objective:** Create a hook that initializes RevenueCat, identifies users on login, and logs out on app logout. Listen for `CustomerInfo` updates to keep local subscription state in sync.
 - **Guidance:**
   - Create `apps/mobile/src/hooks/use-purchases.ts`:
     - On mount, call `Purchases.configure({ apiKey })` with the platform-appropriate key from env vars
@@ -164,7 +164,7 @@ README.md                                             # Add RevenueCat setup pre
 
 ### Task 3: Custom paywall screen
 
-- [ ] **Objective:** Build a paywall screen that fetches the current offering from RevenueCat, displays the monthly product with its store price, and handles the purchase and restore flows.
+- [x] **Objective:** Build a paywall screen that fetches the current offering from RevenueCat, displays the monthly product with its store price, and handles the purchase and restore flows.
 - **Guidance:**
   - Create `apps/mobile/src/screens/paywall/index.tsx`:
     - On mount, call `Purchases.getOfferings()` to fetch the current offering
@@ -182,7 +182,7 @@ README.md                                             # Add RevenueCat setup pre
 
 ### Task 4: Wire up "Upgrade to Pro" buttons to Paywall
 
-- [ ] **Objective:** Replace all "Coming soon" alerts with navigation to the Paywall screen.
+- [x] **Objective:** Replace all "Coming soon" alerts with navigation to the Paywall screen.
 - **Guidance:**
   - Update `apps/mobile/src/screens/settings/index.tsx`:
     - "Upgrade to Pro" row: replace `Alert.alert("Coming Soon", ...)` with `navigation.navigate("Paywall")`
@@ -198,7 +198,7 @@ README.md                                             # Add RevenueCat setup pre
 
 ### Task 5: EAS Build setup and store prerequisites documentation
 
-- [ ] **Objective:** Document the complete store setup prerequisites and EAS Build workflow in README.
+- [x] **Objective:** Document the complete store setup prerequisites and EAS Build workflow in README.
 - **Guidance:**
   - Update `README.md` with a new "In-App Purchases Setup" section covering:
     - **Prerequisites:** Apple Developer account ($99/year), Google Play Console account ($25 one-time)
@@ -215,7 +215,7 @@ README.md                                             # Add RevenueCat setup pre
 
 ### Task 6: Edge cases, polish, and architecture docs
 
-- [ ] **Objective:** Handle edge cases, update architecture docs, and ensure everything works end-to-end.
+- [x] **Objective:** Handle edge cases, update architecture docs, and ensure everything works end-to-end.
 - **Guidance:**
   - Handle offline/network errors in paywall (show error state, allow retry)
   - Handle case where offerings are empty (RevenueCat not configured yet) — show "Subscriptions not available" message
@@ -233,7 +233,7 @@ README.md                                             # Add RevenueCat setup pre
 
 ### Task 7: Comprehensive test coverage
 
-- [ ] **Objective:** Add tests for all Phase 9 features (frontend).
+- [x] **Objective:** Add tests for all Phase 9 features (frontend).
 - **Guidance:**
   - Frontend:
     - `use-purchases` hook (configure called with correct key, logIn/logOut called at right times, CustomerInfo listener updates store)

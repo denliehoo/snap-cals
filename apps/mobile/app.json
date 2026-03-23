@@ -13,9 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.snapcals.app"
     },
     "android": {
+      "package": "com.snapcals.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -36,7 +38,8 @@
           "photosPermission": "Allow Snap Cals to select food photos for nutrition estimation"
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-dev-client"
     ]
   }
 }

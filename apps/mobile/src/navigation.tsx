@@ -15,12 +15,14 @@ import type {
 import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useColors, useTheme } from "./contexts/theme-context";
+import { initPurchases, usePurchasesListener } from "./hooks/use-purchases";
 import AiAssistScreen from "./screens/ai-assist";
 import DailyViewScreen from "./screens/daily-view";
 import EntryFormScreen from "./screens/entry-form";
 import GoalsScreen from "./screens/goals";
 import GoalCoachScreen from "./screens/goal-coach";
 import LoginScreen from "./screens/login";
+import PaywallScreen from "./screens/paywall";
 import QuickAddScreen from "./screens/quick-add";
 import SettingsScreen from "./screens/settings";
 import SignupScreen from "./screens/signup";
@@ -55,6 +57,7 @@ export type MainStackParamList = {
   AiAssist: undefined;
   QuickAdd: undefined;
   GoalCoach: undefined;
+  Paywall: undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -132,9 +135,12 @@ export default function Navigation() {
   const colors = useColors();
 
   useEffect(() => {
+    initPurchases();
     restore();
     restoreSettings();
   }, [restore, restoreSettings]);
+
+  usePurchasesListener();
 
   useEffect(() => {
     if (token) fetchUsage();
@@ -212,6 +218,11 @@ export default function Navigation() {
             name="GoalCoach"
             component={GoalCoachScreen}
             options={{ title: "AI Goal Coach", headerBackTitle: "Back" }}
+          />
+          <MainStack.Screen
+            name="Paywall"
+            component={PaywallScreen}
+            options={{ title: "Upgrade to Pro", headerBackTitle: "Back" }}
           />
         </MainStack.Navigator>
       ) : (
