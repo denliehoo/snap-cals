@@ -2,6 +2,7 @@ import type {
   AiChatRequest,
   AiChatResponse,
   AiEstimateResponse,
+  AiUsageResponse,
   ApiResponse,
   AuthPendingResponse,
   AuthResponse,
@@ -144,4 +145,6 @@ export const api = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+
+  getUsage: () => request<ApiResponse<AiUsageResponse>>("/usage"),
 };

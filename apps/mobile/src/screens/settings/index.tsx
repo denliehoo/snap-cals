@@ -1,11 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
+import { SubscriptionTier } from "@snap-cals/shared";
 import type React from "react";
 import { useMemo } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ThemedSwitch from "@/components/themed-switch";
 import { useColors, useTheme } from "@/contexts/theme-context";
 import { useAuthStore } from "@/stores/auth.store";
 import { useSettingsStore } from "@/stores/settings.store";
+import { useUsageStore } from "@/stores/usage.store";
 import { fontSize, fontWeight, spacing } from "@/theme";
 
 type RowProps = {
@@ -42,8 +44,10 @@ export default function SettingsScreen() {
   const colors = useColors();
   const { logout } = useAuthStore();
   const { discussionMode, toggleDiscussionMode } = useSettingsStore();
+  const { used, limit, tier } = useUsageStore();
   const { isDark, toggle } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const isPro = tier === SubscriptionTier.PRO;
 
   return (
     <View style={styles.container}>
@@ -68,6 +72,29 @@ export default function SettingsScreen() {
             />
           }
         />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Subscription</Text>
+        <SettingsRow
+          icon={isPro ? "trophy" : "person-outline"}
+          label={isPro ? "Plan: Pro" : "Plan: Free"}
+          right={null}
+        />
+        {!isPro && (
+          <>
+            <SettingsRow
+              icon="sparkles-outline"
+              label={`AI Lookups Today: ${used} / ${limit}`}
+              right={null}
+            />
+            <SettingsRow
+              icon="arrow-up-circle-outline"
+              label="Upgrade to Pro"
+              onPress={() => Alert.alert("Coming Soon", "Pro subscriptions will be available soon.")}
+            />
+          </>
+        )}
       </View>
 
       <View style={styles.section}>

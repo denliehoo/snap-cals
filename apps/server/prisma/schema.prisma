@@ -20,17 +20,24 @@ enum OtpType {
   PASSWORD_RESET
 }
 
+enum SubscriptionTier {
+  FREE
+  PRO
+}
+
 model User {
   id            String         @id @default(cuid())
   email         String         @unique
   passwordHash  String?
   emailVerified Boolean        @default(false)
   createdAt     DateTime       @default(now())
-  entries       FoodEntry[]
-  goal          Goal?
-  favorites     FavoriteFood[]
-  authProviders AuthProvider[]
-  otps          Otp[]
+  subscriptionTier SubscriptionTier @default(FREE)
+  entries          FoodEntry[]
+  goal             Goal?
+  favorites        FavoriteFood[]
+  authProviders    AuthProvider[]
+  otps             Otp[]
+  aiUsage          AiUsage[]
 }
 
 model AuthProvider {
@@ -100,4 +107,16 @@ model FavoriteFood {
   user        User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, name])
+}
+
+model AiUsage {
+  id        String   @id @default(cuid())
+  userId    String
+  period    String
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, period])
 }

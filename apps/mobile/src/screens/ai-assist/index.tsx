@@ -5,7 +5,7 @@ import {
   AI_DESCRIPTION_MAX_LENGTH,
   MAX_IMAGE_SIZE,
 } from "@snap-cals/shared";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -47,17 +47,24 @@ export default function AiAssistScreen() {
     ? { base64: image.base64, mimeType: image.mimeType }
     : undefined;
 
-  // Reset ephemeral state when returning to this screen (e.g. after confirming an entry)
+  // Keep stable refs so the focus-effect cleanup never re-fires mid-render
+  const clearImageRef = useRef(clearImage);
+  clearImageRef.current = clearImage;
+  const resetChatRef = useRef(chat.reset);
+  resetChatRef.current = chat.reset;
+
+  // Reset ephemeral state when leaving this screen (e.g. after confirming an entry)
   useFocusEffect(
-    useCallback(() => {
-      return () => {
-        clearImage();
+    useMemo(
+      () => () => {
+        clearImageRef.current();
         assist.setDescription("");
         setChatStarted(false);
         setReply("");
-        chat.reset();
-      };
-    }, [clearImage, assist.setDescription, chat.reset]),
+        resetChatRef.current();
+      },
+      [],
+    ),
   );
 
   // Delay picker launch so the ActionSheet modal fully dismisses first —

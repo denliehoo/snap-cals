@@ -30,6 +30,7 @@ import ResetPasswordScreen from "./screens/reset-password";
 import WeeklyViewScreen from "./screens/weekly-view";
 import { useAuthStore } from "./stores/auth.store";
 import { useSettingsStore } from "./stores/settings.store";
+import { useUsageStore } from "./stores/usage.store";
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -126,6 +127,7 @@ function MainTabs() {
 export default function Navigation() {
   const { token, isLoading, restore } = useAuthStore();
   const restoreSettings = useSettingsStore((s) => s.restore);
+  const fetchUsage = useUsageStore((s) => s.fetch);
   const { isDark } = useTheme();
   const colors = useColors();
 
@@ -133,6 +135,10 @@ export default function Navigation() {
     restore();
     restoreSettings();
   }, [restore, restoreSettings]);
+
+  useEffect(() => {
+    if (token) fetchUsage();
+  }, [token, fetchUsage]);
 
   if (isLoading) {
     return (

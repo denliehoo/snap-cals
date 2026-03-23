@@ -4,6 +4,7 @@ import type { ChatMessage, GoalRecommendation } from "@snap-cals/shared";
 import { useEffect, useState } from "react";
 import type { MainStackParamList } from "@/navigation";
 import { api } from "@/services/api";
+import { useUsageStore } from "@/stores/usage.store";
 
 const GREETING =
   "I'd love to help! To calculate your ideal daily targets, I need a few details. You can share as many as you'd like in one message:\n\n• What's your goal? (lose weight, gain muscle, maintain, or body recomp)\n• Sex (male/female)\n• Age\n• Current weight (kg)\n• Height (cm)\n• How active are you? (sedentary, light, moderate, very, or extreme)";
@@ -17,6 +18,7 @@ export function useGoalCoach() {
   const [loading, setLoading] = useState(true);
   const [recommendation, setRecommendation] =
     useState<GoalRecommendation | null>(null);
+  const fetchUsage = useUsageStore((s) => s.fetch);
 
   // Simulate AI typing delay for the fake greeting
   useEffect(() => {
@@ -39,6 +41,7 @@ export function useGoalCoach() {
     setLoading(true);
     try {
       const { data } = await api.goalCoach({ messages: updated });
+      fetchUsage();
       let content = data.message;
       if (data.recommendation) {
         const r = data.recommendation;
@@ -50,8 +53,9 @@ export function useGoalCoach() {
       const err = e as { status?: number; message?: string };
       const msg =
         err.status === 429
-          ? "AI is busy, try again in a moment"
+          ? err.message || "Daily AI limit reached"
           : err.message || "Failed to process chat";
+      if (err.status === 429) fetchUsage();
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: `⚠️ ${msg}` },

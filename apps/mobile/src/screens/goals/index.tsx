@@ -2,13 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
 import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
+import UsageLimitModal from "@/components/usage-limit-modal";
 import { useColors } from "@/contexts/theme-context";
 import type { MainStackParamList, MainTabParamList } from "@/navigation";
+import { useUsageStore } from "@/stores/usage.store";
 import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 import { useGoals } from "./use-goals";
 
@@ -36,6 +38,8 @@ export default function GoalsScreen() {
   } = useGoals(prefill);
   const { show } = useSnackbar();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const { isAtLimit, resetsAt, fetch: fetchUsage } = useUsageStore();
 
   useEffect(() => {
     if (prefill) show("AI recommendation applied — review and save");
@@ -114,10 +118,24 @@ export default function GoalsScreen() {
           <Button
             title="Let AI set my goals ✨"
             variant="text"
-            onPress={() => navigation.navigate("GoalCoach")}
+            onPress={() => {
+              if (isAtLimit()) {
+                setShowLimitModal(true);
+              } else {
+                navigation.navigate("GoalCoach");
+              }
+            }}
           />
         </View>
       </View>
+      <UsageLimitModal
+        visible={showLimitModal}
+        onClose={() => {
+          setShowLimitModal(false);
+          fetchUsage();
+        }}
+        resetsAt={resetsAt}
+      />
     </View>
   );
 }

@@ -19,8 +19,10 @@ import EntryRow from "@/components/entry-row";
 import Fab from "@/components/fab";
 import MacroSummary from "@/components/macro-summary";
 import { useSnackbar } from "@/components/snackbar";
+import UsageLimitModal from "@/components/usage-limit-modal";
 import { useColors } from "@/contexts/theme-context";
 import type { MainStackParamList, MainTabParamList } from "@/navigation";
+import { useUsageStore } from "@/stores/usage.store";
 import { fontSize, fontWeight, spacing } from "@/theme";
 import { parseLocalDate, toLocalDateString } from "@/utils/date";
 import { useDailyEntries } from "./use-daily-entries";
@@ -48,6 +50,8 @@ export default function DailyViewScreen({ navigation, route }: Props) {
   } = useDailyEntries(route.params?.date, (msg) => show(msg, "error"));
   const [showPicker, setShowPicker] = useState(false);
   const [showActions, setShowActions] = useState(false);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const { isAtLimit, resetsAt, fetch: fetchUsage } = useUsageStore();
 
   const isToday = date === toLocalDateString();
   const dateLabel = isToday
@@ -145,7 +149,13 @@ export default function DailyViewScreen({ navigation, route }: Props) {
           {
             label: "AI Assist",
             icon: "sparkles-outline",
-            onPress: () => navigation.navigate("AiAssist"),
+            onPress: () => {
+              if (isAtLimit()) {
+                setShowLimitModal(true);
+              } else {
+                navigation.navigate("AiAssist");
+              }
+            },
           },
           {
             label: "Quick Add",
@@ -153,6 +163,14 @@ export default function DailyViewScreen({ navigation, route }: Props) {
             onPress: () => navigation.navigate("QuickAdd"),
           },
         ]}
+      />
+      <UsageLimitModal
+        visible={showLimitModal}
+        onClose={() => {
+          setShowLimitModal(false);
+          fetchUsage();
+        }}
+        resetsAt={resetsAt}
       />
     </View>
   );

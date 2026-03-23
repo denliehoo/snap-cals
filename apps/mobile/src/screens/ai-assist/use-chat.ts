@@ -8,6 +8,7 @@ import type {
 import { useState } from "react";
 import type { MainStackParamList } from "@/navigation";
 import { api } from "@/services/api";
+import { useUsageStore } from "@/stores/usage.store";
 
 export function useChat() {
   const navigation =
@@ -17,6 +18,7 @@ export function useChat() {
   const [estimate, setEstimate] = useState<AiEstimateResponse | null>(null);
   const [storedImage, setStoredImage] = useState<ImageData | undefined>();
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const fetchUsage = useUsageStore((s) => s.fetch);
 
   const sendMessage = async (
     text: string,
@@ -40,6 +42,7 @@ export function useChat() {
         forceEstimate,
         image: imageToSend,
       });
+      fetchUsage();
       let content = data.message;
       if (data.estimate) {
         const e = data.estimate;
@@ -51,8 +54,9 @@ export function useChat() {
       const err = e as { status?: number; message?: string };
       const msg =
         err.status === 429
-          ? "AI is busy, try again in a moment"
+          ? err.message || "Daily AI limit reached"
           : err.message || "Failed to process chat";
+      if (err.status === 429) fetchUsage();
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: `⚠️ ${msg}` },

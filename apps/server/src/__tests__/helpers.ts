@@ -19,6 +19,7 @@ export async function createTestUser(
 }
 
 export async function cleanDb() {
+  await prisma.aiUsage.deleteMany();
   await prisma.otp.deleteMany();
   await prisma.authProvider.deleteMany();
   await prisma.foodEntry.deleteMany();

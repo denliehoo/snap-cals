@@ -5,11 +5,26 @@ export enum MealType {
   SNACK = "SNACK",
 }
 
+export enum SubscriptionTier {
+  FREE = "FREE",
+  PRO = "PRO",
+}
+
+export const FREE_DAILY_AI_LIMIT = 3;
+
 export interface User {
   id: string;
   email: string;
   emailVerified: boolean;
+  subscriptionTier: SubscriptionTier;
   createdAt: string;
+}
+
+export interface AiUsageResponse {
+  used: number;
+  limit: number;
+  resetsAt: string;
+  tier: SubscriptionTier;
 }
 
 export interface FoodEntry {

@@ -23,10 +23,11 @@ const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
 const signToken = (userId: string) =>
   jwt.sign({ sub: userId }, process.env.JWT_SECRET ?? "", { expiresIn: "7d" });
 
-const userResponse = (user: { id: string; email: string; emailVerified: boolean; createdAt: Date }) => ({
+const userResponse = (user: { id: string; email: string; emailVerified: boolean; subscriptionTier: string; createdAt: Date }) => ({
   id: user.id,
   email: user.email,
   emailVerified: user.emailVerified,
+  subscriptionTier: user.subscriptionTier,
   createdAt: user.createdAt,
 });
 
