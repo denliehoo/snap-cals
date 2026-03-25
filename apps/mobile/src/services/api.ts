@@ -24,9 +24,11 @@ import { Platform } from "react-native";
 // Note: If want to test against local server in android app from a physical device using the Expo Go app, need to use the local network IP address instead. Can just use the address below for android:
 // const DEV_HOST = Platform.OS === "android" ? "192.168.1.43" : "localhost";
 const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
-const API_URL = __DEV__
-  ? `http://${DEV_HOST}:3000/api`
-  : (process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000/api");
+const DEV_URL = `http://${DEV_HOST}:3000/api`;
+const API_URL =
+  process.env.EXPO_PUBLIC_USE_LOCAL === "1"
+    ? DEV_URL
+    : process.env.EXPO_PUBLIC_API_URL || DEV_URL;
 
 let authToken: string | null = null;
 let onUnauthorized: (() => void) | null = null;
@@ -88,7 +90,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ email, code, newPassword }),
     }),
-  googleAuth: (params: { code: string; clientId: string; redirectUri: string }) =>
+  googleAuth: (params: {
+    code: string;
+    clientId: string;
+    redirectUri: string;
+  }) =>
     request<ApiResponse<AuthResponse>>("/auth/google", {
       method: "POST",
       body: JSON.stringify(params),

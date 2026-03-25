@@ -288,14 +288,34 @@ EXPO_PUBLIC_API_URL="https://snap-cals-api.onrender.com/api"
 
 ## 9. EAS Build & App Store Submission
 
-### 9.1 Configure EAS
+### 9.1 App Name & Icon
+
+Configured in `apps/mobile/app.json`:
+
+- **App name**: `expo.name` — displayed on the home screen and app stores
+- **Slug**: `expo.slug` — used by Expo/EAS (URL-safe, lowercase)
+
+**Icon files** — replace these in `apps/mobile/assets/`:
+
+| File | Purpose | Size |
+|------|---------|------|
+| `icon.png` | iOS app icon | 1024×1024 |
+| `android-icon-foreground.png` | Android adaptive icon foreground | 1024×1024 (keep content in center 66%) |
+| `android-icon-background.png` | Android adaptive icon background | 1024×1024 |
+| `android-icon-monochrome.png` | Android themed/monochrome icon | 1024×1024 |
+| `splash-icon.png` | Splash screen logo | 200×200+ |
+| `favicon.png` | Web favicon | 48×48 |
+
+After changing name or icons, rebuild with `pnpm build:apk` / `pnpm build:ios`.
+
+### 9.2 Configure EAS
 
 ```bash
 cd apps/mobile
 eas build:configure  # if not already done
 ```
 
-### 9.2 Get Android SHA-1 for Google OAuth
+### 9.3 Get Android SHA-1 for Google OAuth
 
 After your first Android build, get the signing certificate SHA-1:
 
@@ -305,7 +325,7 @@ eas credentials --platform android
 
 Go back to Google Cloud Console and update your Android OAuth client with this SHA-1.
 
-### 9.3 Build for testing
+### 9.4 Build for testing
 
 ```bash
 # iOS Simulator (for local testing)
@@ -330,7 +350,7 @@ cd apps/mobile
 npx expo start
 ```
 
-### 9.4 Test in-app purchases
+### 9.5 Test in-app purchases
 
 **iOS sandbox testing:**
 
@@ -346,7 +366,7 @@ npx expo start
 3. Upload an APK/AAB to internal testing track
 4. Open the app → Paywall → Subscribe → test purchase flow
 
-### 9.5 Production build
+### 9.6 Production build
 
 ```bash
 # iOS
@@ -356,7 +376,7 @@ eas build --profile production --platform ios
 eas build --profile production --platform android
 ```
 
-### 9.6 Submit to stores
+### 9.7 Submit to stores
 
 ```bash
 # iOS — submits to App Store Connect for review

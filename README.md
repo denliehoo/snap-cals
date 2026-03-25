@@ -212,6 +212,18 @@ pnpm test
 
 Tests will refuse to run if `DATABASE_URL_TEST` is not set. After pulling new migrations, re-run `pnpm migrate:test` in `apps/server` to keep the test branch in sync.
 
+### 8. Build APK / iOS for testing
+
+```bash
+# Android APK (standalone, no dev server needed)
+pnpm build:apk
+
+# iOS (standalone, no dev server needed)
+pnpm build:ios
+```
+
+EAS will provide a download link / QR code when the build completes. Install the APK directly on your Android device.
+
 ## In-App Purchases Setup
 
 RevenueCat powers the subscription flow. The SDK requires production builds via `eas build` — it cannot be fully tested in Expo Go.
