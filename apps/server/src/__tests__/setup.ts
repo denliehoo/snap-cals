@@ -12,3 +12,4 @@ if (!process.env.DATABASE_URL_TEST) {
 
 process.env.DATABASE_URL = process.env.DATABASE_URL_TEST;
 process.env.JWT_SECRET = "test-jwt-secret";
+process.env.API_KEY = "test-api-key";

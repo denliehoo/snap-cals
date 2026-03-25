@@ -42,6 +42,7 @@ export const setOnUnauthorized = (handler: () => void) => {
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    "X-Api-Key": process.env.EXPO_PUBLIC_API_KEY ?? "",
     ...((options.headers as Record<string, string>) || {}),
   };
   if (authToken) headers.Authorization = `Bearer ${authToken}`;

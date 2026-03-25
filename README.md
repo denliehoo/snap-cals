@@ -80,6 +80,18 @@ GOOGLE_IOS_CLIENT_ID="your-ios-client-id.apps.googleusercontent.com"
 GOOGLE_ANDROID_CLIENT_ID="your-android-client-id.apps.googleusercontent.com"
 ```
 
+Generate an API key (used by the mobile app to authenticate requests):
+
+```bash
+openssl rand -base64 32
+```
+
+Add it to `apps/server/.env`:
+
+```
+API_KEY="your-generated-key"
+```
+
 Get a free Postgres database at [neon.tech](https://neon.tech) — copy the connection string from the Neon dashboard.
 
 Get a free Gemini API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). Required for AI food estimation features.
@@ -112,6 +124,7 @@ EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID="your-ios-client-id.apps.googleusercontent.com"
 EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID="your-android-client-id.apps.googleusercontent.com"
 EXPO_PUBLIC_RC_IOS_API_KEY="your-revenuecat-ios-api-key"
 EXPO_PUBLIC_RC_ANDROID_API_KEY="your-revenuecat-android-api-key"
+EXPO_PUBLIC_API_KEY="must-match-API_KEY-in-server-env"
 ```
 
 ### 3. Run database migrations and seed

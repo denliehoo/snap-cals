@@ -31,6 +31,7 @@ describe("POST /api/favorites", () => {
   it("creates a favorite", async () => {
     const res = await request(app)
       .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send(favoriteData);
 
@@ -41,11 +42,13 @@ describe("POST /api/favorites", () => {
   it("returns 409 for duplicate name", async () => {
     await request(app)
       .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send(favoriteData);
 
     const res = await request(app)
       .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send(favoriteData);
 
@@ -55,6 +58,7 @@ describe("POST /api/favorites", () => {
   it("returns 400 for missing required fields", async () => {
     const res = await request(app)
       .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ name: "Oats" });
 
@@ -66,11 +70,13 @@ describe("GET /api/favorites", () => {
   it("lists favorites for the user", async () => {
     await request(app)
       .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send(favoriteData);
 
     const res = await request(app)
       .get("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);
@@ -83,17 +89,20 @@ describe("DELETE /api/favorites/:id", () => {
   it("deletes a favorite", async () => {
     const created = await request(app)
       .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send(favoriteData);
 
     const res = await request(app)
       .delete(`/api/favorites/${created.body.data.id}`)
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);
 
     const list = await request(app)
       .get("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`);
 
     expect(list.body.data).toHaveLength(0);
@@ -102,6 +111,7 @@ describe("DELETE /api/favorites/:id", () => {
   it("returns 404 for non-existent favorite", async () => {
     const res = await request(app)
       .delete("/api/favorites/nonexistent-id")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(404);
@@ -110,6 +120,7 @@ describe("DELETE /api/favorites/:id", () => {
   it("cannot delete another users favorite", async () => {
     const created = await request(app)
       .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send(favoriteData);
 
@@ -118,6 +129,7 @@ describe("DELETE /api/favorites/:id", () => {
 
     const res = await request(app)
       .delete(`/api/favorites/${created.body.data.id}`)
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${otherToken}`);
 
     expect(res.status).toBe(404);

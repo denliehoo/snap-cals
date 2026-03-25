@@ -1,6 +1,8 @@
 import cors from "cors";
 import express from "express";
+import { validateApiKey } from "./middleware/api-key";
 import passport from "./middleware/passport";
+import { aiLimiter, authLimiter } from "./middleware/rate-limit";
 import aiRoutes from "./routes/ai.routes";
 import authRoutes from "./routes/auth.routes";
 import entryRoutes from "./routes/entry.routes";
@@ -19,12 +21,17 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.use("/api/auth", authRoutes);
+// Webhooks use their own auth (Bearer secret), skip API key
+app.use("/api/webhooks", webhookRoutes);
+
+// All other routes require API key
+app.use("/api", validateApiKey);
+
+app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/entries", entryRoutes);
 app.use("/api/goals", goalRoutes);
-app.use("/api/ai", aiRoutes);
+app.use("/api/ai", aiLimiter, aiRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/usage", usageRoutes);
-app.use("/api/webhooks", webhookRoutes);
 
 export default app;

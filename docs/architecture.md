@@ -115,7 +115,12 @@ snap-cals/
 - Standard response wrapper: `{ data: T, message?: string }`
 - Standard error shape: `{ message: string, errors?: Record<string, string[]> }`
 
-### Auth Flow
+### API Security
+- **API key**: All `/api/*` routes (except `/api/health` and `/api/webhooks`) require an `X-Api-Key` header matching `process.env.API_KEY`. Middleware: `src/middleware/api-key.ts`. The mobile app sends this header with every request via `EXPO_PUBLIC_API_KEY`.
+- **Rate limiting**: `express-rate-limit` applied per-IP on abuse-prone routes. Auth routes (`/api/auth/*`): 20 requests / 15 min. AI routes (`/api/ai/*`): 30 requests / 15 min. Middleware: `src/middleware/rate-limit.ts`.
+- **Webhooks**: `/api/webhooks/*` is mounted before the API key middleware — webhooks authenticate via their own `Bearer` secret in the `Authorization` header.
+- **Route protection order in `app.ts`**: health check (public) → webhooks (own auth) → API key gate → rate limiters on auth/AI → Passport JWT on protected routes.
+
 - Email/password signup with OTP email verification (6-digit code via Resend, 10-min expiry, bcrypt-hashed)
 - Signup returns `{ userId, emailVerified: false }` — no JWT until verified
 - Login for unverified users returns the same pending response, redirecting to verification screen

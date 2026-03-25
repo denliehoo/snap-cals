@@ -35,6 +35,7 @@ describe("POST /api/ai/goal-coach", () => {
   it("returns 401 without token", async () => {
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .send({ messages: [{ role: "user", content: "hi" }] });
 
     expect(res.status).toBe(401);
@@ -43,6 +44,7 @@ describe("POST /api/ai/goal-coach", () => {
   it("returns 400 with empty messages", async () => {
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [] });
 
@@ -52,6 +54,7 @@ describe("POST /api/ai/goal-coach", () => {
   it("returns 400 with missing messages", async () => {
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({});
 
@@ -61,6 +64,7 @@ describe("POST /api/ai/goal-coach", () => {
   it("returns 400 with invalid message role", async () => {
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "system", content: "hi" }] });
 
@@ -70,6 +74,7 @@ describe("POST /api/ai/goal-coach", () => {
   it("returns 400 when message content exceeds limit", async () => {
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "a".repeat(301) }] });
 
@@ -80,6 +85,7 @@ describe("POST /api/ai/goal-coach", () => {
   it("returns 200 with question response", async () => {
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "I want to lose weight" }] });
 
@@ -94,6 +100,7 @@ describe("POST /api/ai/goal-coach", () => {
 
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "male 28 80kg 178cm" }] });
 
@@ -108,6 +115,7 @@ describe("POST /api/ai/goal-coach", () => {
 
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "hi" }] });
 
@@ -122,6 +130,7 @@ describe("POST /api/ai/goal-coach", () => {
 
     const res = await request(app)
       .post("/api/ai/goal-coach")
+      .set("x-api-key", process.env.API_KEY!)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "hi" }] });
 

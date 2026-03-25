@@ -34,3 +34,12 @@ description: Express/Node.js coding conventions for the Snap Cals server app
 - Controllers: `src/controllers/<name>.controller.ts`
 - Services: `src/services/<name>.service.ts`
 - Routes: `src/routes/<name>.routes.ts`
+- Middleware: `src/middleware/<name>.ts`
+
+## API Security Middleware
+
+- All `/api/*` routes (except health and webhooks) require an `X-Api-Key` header — validated by `src/middleware/api-key.ts`
+- Rate limiting via `express-rate-limit` on auth and AI routes — defined in `src/middleware/rate-limit.ts`
+- Webhooks are mounted before the API key middleware in `app.ts` since they use their own auth
+- When adding new route groups to `app.ts`, mount them after the `validateApiKey` middleware line
+- Tests must include `.set("x-api-key", process.env.API_KEY!)` on every `request(app)` chain
