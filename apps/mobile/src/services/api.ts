@@ -26,7 +26,7 @@ import { Platform } from "react-native";
 const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
 const API_URL = __DEV__
   ? `http://${DEV_HOST}:3000/api`
-  : "http://localhost:3000/api";
+  : (process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000/api");
 
 let authToken: string | null = null;
 let onUnauthorized: (() => void) | null = null;
