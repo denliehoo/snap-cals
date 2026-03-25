@@ -7,7 +7,7 @@ import type {
   SignupRequest,
   VerifyEmailRequest,
 } from "@snap-cals/shared";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";

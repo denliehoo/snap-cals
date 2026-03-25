@@ -14,7 +14,7 @@
     "@google/genai": "^1.45.0",
     "@prisma/client": "^5.20.0",
     "@snap-cals/shared": "workspace:*",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.0",
     "express": "^4.21.0",
@@ -27,7 +27,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-serve-static-core": "^5.1.1",

@@ -157,9 +157,9 @@ While in "Testing" mode, only accounts listed as test users can sign in (up to 1
 2. Connect your GitHub repo
 3. Configure:
    - **Name:** `snap-cals-api`
-   - **Root Directory:** `apps/server`
-   - **Build Command:** `cd ../.. && pnpm install && pnpm --filter @snap-cals/shared build && cd apps/server && npx prisma generate && pnpm build`
-   - **Start Command:** `node dist/index.js`
+   - **Root Directory:** (leave blank — needs monorepo root for pnpm workspaces)
+   - **Build Command:** `pnpm install && pnpm --filter @snap-cals/shared build && cd apps/server && npx prisma generate && cd ../.. && pnpm --filter @snap-cals/server build`
+   - **Start Command:** `node apps/server/dist/apps/server/src/index.js`
    - **Environment:** Node
    - **Plan:** Free (or Starter for always-on)
 
@@ -179,6 +179,7 @@ In Render dashboard → Environment, add all server env vars:
 | `GOOGLE_IOS_CLIENT_ID`      | From step 5                                                         |
 | `GOOGLE_ANDROID_CLIENT_ID`  | From step 5                                                         |
 | `REVENUECAT_WEBHOOK_SECRET` | A strong random string you choose (must match RevenueCat dashboard) |
+| `API_KEY`                   | A strong random string (`openssl rand -base64 32`) — must match mobile `EXPO_PUBLIC_API_KEY` |
 
 ### 6.3 Deploy and verify
 
@@ -194,14 +195,10 @@ Save this URL — you'll need it for the mobile app and RevenueCat webhook.
 
 ## 7. Update Mobile API URL
 
-The mobile app currently points to `localhost` for production. Update it to your Render URL.
+The mobile app reads the production API URL from `EXPO_PUBLIC_API_URL` in `apps/mobile/.env`. Set it to your Render URL:
 
-In `apps/mobile/src/services/api.ts`, change:
-
-```typescript
-const API_URL = __DEV__
-  ? `http://${DEV_HOST}:3000/api`
-  : "https://snap-cals-api.onrender.com/api"; // ← your Render URL
+```
+EXPO_PUBLIC_API_URL="https://snap-cals-api.onrender.com/api"
 ```
 
 ---
@@ -283,6 +280,8 @@ EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID="your-ios-client-id.apps.googleusercontent.com"
 EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID="your-android-client-id.apps.googleusercontent.com"
 EXPO_PUBLIC_RC_IOS_API_KEY="your-revenuecat-ios-public-key"
 EXPO_PUBLIC_RC_ANDROID_API_KEY="your-revenuecat-android-public-key"
+EXPO_PUBLIC_API_KEY="must-match-API_KEY-in-server-env"
+EXPO_PUBLIC_API_URL="https://snap-cals-api.onrender.com/api"
 ```
 
 ---
@@ -420,6 +419,7 @@ Neon free tier includes 7-day point-in-time recovery. For extra safety, set up p
 | `GOOGLE_IOS_CLIENT_ID`      | Google Cloud Console                           | Validates iOS Google OAuth tokens            |
 | `GOOGLE_ANDROID_CLIENT_ID`  | Google Cloud Console                           | Validates Android Google OAuth tokens        |
 | `REVENUECAT_WEBHOOK_SECRET` | You generate (must match RevenueCat dashboard) | Authenticates webhook requests               |
+| `API_KEY`                   | You generate (`openssl rand -base64 32`)       | Validates mobile app requests (X-Api-Key header) |
 | `DATABASE_URL_TEST`         | Neon dashboard (test branch)                   | Test database (dev only, not needed in prod) |
 
 ### Mobile (`apps/mobile/.env`)
@@ -430,6 +430,8 @@ Neon free tier includes 7-day point-in-time recovery. For extra safety, set up p
 | `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID` | Google Cloud Console               | Android Google sign-in |
 | `EXPO_PUBLIC_RC_IOS_API_KEY`           | RevenueCat dashboard (iOS app)     | RevenueCat iOS SDK     |
 | `EXPO_PUBLIC_RC_ANDROID_API_KEY`       | RevenueCat dashboard (Android app) | RevenueCat Android SDK |
+| `EXPO_PUBLIC_API_KEY`                  | Must match server `API_KEY`        | API key for server requests |
+| `EXPO_PUBLIC_API_URL`                  | Your Render URL + `/api`           | Production API base URL |
 
 ---
 
@@ -482,7 +484,8 @@ Neon free tier includes 7-day point-in-time recovery. For extra safety, set up p
 
 ### Mobile App
 
-- [ ] Production API URL updated in `apps/mobile/src/services/api.ts`
+- [ ] Production API URL updated in `apps/mobile/.env` (`EXPO_PUBLIC_API_URL`)
+- [ ] `EXPO_PUBLIC_API_KEY` set and matches server `API_KEY`
 - [ ] All mobile `.env` values filled in
 - [ ] Production build succeeds: `eas build --profile production --platform ios`
 - [ ] Production build succeeds: `eas build --profile production --platform android`
