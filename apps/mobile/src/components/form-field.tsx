@@ -1,3 +1,5 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import {
   type KeyboardTypeOptions,
   Pressable,
@@ -35,27 +37,47 @@ export default function FormField({
   maxLength,
 }: FormFieldProps) {
   const colors = useColors();
+  const [hidden, setHidden] = useState(true);
+  const isPassword = secureTextEntry === true;
 
   const input = (
-    <TextInput
-      style={[
-        styles.input,
-        {
-          backgroundColor: colors.surface,
-          borderColor: error ? colors.error : colors.border,
-          color: colors.text,
-        },
-      ]}
-      value={value}
-      onChangeText={onChangeText}
-      placeholder={placeholder}
-      placeholderTextColor={colors.textSecondary}
-      keyboardType={keyboardType}
-      secureTextEntry={secureTextEntry}
-      editable={editable}
-      maxLength={maxLength}
-      pointerEvents={onPress ? "none" : "auto"}
-    />
+    <View>
+      <TextInput
+        style={[
+          styles.input,
+          isPassword && styles.inputWithToggle,
+          {
+            backgroundColor: colors.surface,
+            borderColor: error ? colors.error : colors.border,
+            color: colors.text,
+          },
+        ]}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={colors.textSecondary}
+        keyboardType={keyboardType}
+        secureTextEntry={isPassword && hidden}
+        autoCapitalize={isPassword ? "none" : undefined}
+        autoCorrect={isPassword ? false : undefined}
+        editable={editable}
+        maxLength={maxLength}
+        pointerEvents={onPress ? "none" : "auto"}
+      />
+      {isPassword && (
+        <Pressable
+          style={styles.eyeButton}
+          onPress={() => setHidden((h) => !h)}
+          hitSlop={8}
+        >
+          <Ionicons
+            name={hidden ? "eye-off-outline" : "eye-outline"}
+            size={20}
+            color={colors.textSecondary}
+          />
+        </Pressable>
+      )}
+    </View>
   );
 
   return (
@@ -82,6 +104,16 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm + 4,
     paddingHorizontal: spacing.md,
     fontSize: fontSize.md,
+  },
+  inputWithToggle: {
+    paddingRight: spacing.md + 28,
+  },
+  eyeButton: {
+    position: "absolute",
+    right: spacing.md,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
   },
   error: { fontSize: fontSize.xs, marginTop: spacing.xs },
 });
