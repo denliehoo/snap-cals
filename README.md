@@ -2,24 +2,36 @@
 
 A mobile calorie and macro tracking app built with React Native and a custom Node.js backend. Users can log food entries, set daily nutrition goals, and view daily/weekly intake summaries.
 
-This project was built as an experiment with agentic AI using [Kiro CLI](https://kiro.dev). AI skills in `.kiro/skills/` guide code generation conventions, and `docs/` contains the architecture decisions and implementation plan that the AI follows across sessions.
+This project was built as an experiment with agentic AI using [Kiro CLI](https://kiro.dev). AI skills in `.kiro/skills/` guide code generation conventions, and `docs/` contains the architecture decisions and specs that the AI follows across sessions.
 
 ## AI-Assisted Development Approach
 
-This project is built collaboratively with [Kiro CLI](https://kiro.dev), an agentic AI coding assistant. The workflow looks like this:
+This project is built collaboratively with [Kiro CLI](https://kiro.dev), an agentic AI coding assistant. The development workflow uses three specialized agents that mirror a small engineering team:
 
-1. I describe a feature or task, and Kiro generates the implementation
-2. I review the generated code — reading through it to understand the patterns and decisions
-3. When I spot opportunities to refactor or establish coding standards, I ask Kiro to make those changes
-4. I then ask Kiro to document the conventions in `.kiro/skills/` (so it follows them in future sessions) and in `docs/` (so they're visible to humans too)
+- **PM agent** — takes a feature idea and produces a spec with acceptance criteria (writes to `docs/specs/`)
+- **Default agent** — builds the feature full-stack, following conventions from `.kiro/skills/`
+- **QA agent** — reviews the implementation against the spec, writes a QA report with pass/fail per criterion
 
-This creates a feedback loop: the AI writes code, I shape the standards, and those standards feed back into how the AI writes the next piece of code. Over time the codebase stays consistent even though an AI is doing most of the typing.
+I'm the orchestrator: I pick what to build from the product backlog (`docs/roadmap.md`), drive each phase, and review the output. The agents do the heavy lifting within each phase, but I decide when a spec is good enough, when to move to build, and when to ship.
 
-Key files that drive this:
+The full workflow is documented in [`docs/dev-workflow.md`](./docs/dev-workflow.md).
 
-- `.kiro/skills/` — YAML-frontmatter skill files that guide Kiro's code generation (naming conventions, commit format, etc.)
+### How conventions evolve
+
+The agents follow conventions defined in `.kiro/skills/`. When I spot opportunities to refactor or establish coding standards, I ask Kiro to make those changes and document them as skills. This creates a feedback loop: the AI writes code, I shape the standards, and those standards feed back into how the AI writes the next piece of code.
+
+### Key files
+
+- `.kiro/skills/` — YAML-frontmatter skill files that guide code generation (naming conventions, commit format, design system, etc.)
+- `.kiro/agents/` — agent configurations (PM, QA) with focused prompts and restricted permissions
+- `docs/dev-workflow.md` — step-by-step guide for the plan → build → QA workflow
 - `docs/architecture.md` — architectural decisions and patterns
-- `docs/phase-1-implementation-plan.md` — task-by-task plan that gets checked off as we go
+- `docs/roadmap.md` — product backlog
+- `docs/specs/` — per-feature specs and QA reports
+
+### Specs vs implementation plans
+
+Earlier phases of this project used detailed implementation plans (`docs/phase-X-implementation-plan.md`) that prescribed step-by-step build instructions. The current workflow replaces these with specs that define *what* to build and *how to verify it*, without dictating the implementation path. The PM agent writes the "what" (spec + acceptance criteria), the default agent figures out the "how", and the QA agent verifies against the "what." The old implementation plans remain as historical records.
 
 ## Tech Stack
 
@@ -42,7 +54,10 @@ snap-cals/
 │   └── server/          # Express API
 ├── packages/
 │   └── shared/          # Shared TypeScript types and enums
-├── docs/                # Implementation plans and roadmap
+├── docs/                # Architecture, roadmap, specs, and QA reports
+├── .kiro/
+│   ├── skills/          # Conventions that guide code generation
+│   └── agents/          # PM and QA agent configurations
 ├── pnpm-workspace.yaml
 └── package.json
 ```
@@ -267,7 +282,7 @@ eas build --profile development --platform android # Physical Android device
 
 ## Phase Roadmap
 
-See [docs/phase-roadmap.md](./docs/phase-roadmap.md) for the full roadmap.
+See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
 
 - **Phase 1:** CRUD calorie tracking
 - **Phase 2:** AI autofill via Gemini API
