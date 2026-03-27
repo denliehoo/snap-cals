@@ -77,5 +77,13 @@ Wire up the RevenueCat SDK (`react-native-purchases`) on mobile to enable real i
 
 Ideas for future phases, not yet prioritized or planned.
 
+- **Weight Log:** Add a weight tracking feature — users can log daily weight, view a history/trend chart, and optionally feed weight data into the AI goal coach for more accurate recommendations.
+- **Food Source / Provider Field:** Add a "source" or "where from" field to food entries (similar to MyFitnessPal). Update AI prompts to infer the provider when possible, ask for it in discussion mode if the user doesn't mention it, and auto-populate it in non-discussion mode. Make the input placeholder more descriptive to encourage users to include where they got the food. When a provider is known, the AI should try to use that provider's published nutrition data (many chains and restaurants publish macros online) rather than generic estimates.
+- **EAS OTA Updates:** Investigate and set up Expo EAS Update for over-the-air JS bundle updates without requiring a full app store release.
 - **BYOK (Bring Your Own Key):** Let power users enter their own Gemini API key in settings to get unlimited AI usage without a subscription. Useful as an alternative to paid plans for technical users. Key would be stored encrypted and sent server-side per request.
 - **Optimize Image Token Usage in AI Chat:** Currently the food photo is re-sent with every message in the AI chat flow, costing ~250 extra tokens per message. Investigate alternatives (e.g., send image only on first message, cache a text description of the image server-side, or let the user explicitly re-attach). Balance between cost savings and the ability for the AI to reference the photo when asked.
+
+## Known Bugs
+
+- **KeyboardAvoidingView broken on Android:** The keyboard overlaps input fields on Android. Investigate `KeyboardAvoidingView` behavior differences or switch to a library like `react-native-keyboard-aware-scroll-view`.
+- **SafeAreaView inconsistency:** Not all screens use `SafeAreaView` consistently. Audit and wrap all screens to prevent content from being hidden behind notches/status bars.
