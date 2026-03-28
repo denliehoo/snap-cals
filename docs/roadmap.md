@@ -85,5 +85,4 @@ Ideas for future phases, not yet prioritized or planned.
 
 ## Known Bugs
 
-- **KeyboardAvoidingView broken on Android:** The keyboard overlaps input fields on Android. Investigate `KeyboardAvoidingView` behavior differences or switch to a library like `react-native-keyboard-aware-scroll-view`.
-- **SafeAreaView inconsistency:** Not all screens use `SafeAreaView` consistently. Audit and wrap all screens to prevent content from being hidden behind notches/status bars.
+_No known bugs._

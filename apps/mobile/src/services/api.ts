@@ -22,8 +22,8 @@ import type {
 import { Platform } from "react-native";
 
 // Note: If want to test against local server in android app from a physical device using the Expo Go app, need to use the local network IP address instead. Can just use the address below for android:
-// const DEV_HOST = Platform.OS === "android" ? "192.168.1.43" : "localhost";
-const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
+const DEV_HOST = Platform.OS === "android" ? "192.168.1.43" : "localhost";
+// const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
 const DEV_URL = `http://${DEV_HOST}:3000/api`;
 const API_URL =
   process.env.EXPO_PUBLIC_USE_LOCAL === "1"

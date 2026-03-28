@@ -1,14 +1,8 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMemo } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Button from "@/components/button";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
@@ -40,10 +34,7 @@ export default function LoginScreen({ navigation }: Props) {
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <KeyboardAwareView style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>🔥 Snap Cals</Text>
         <Text style={styles.subtitle}>Log in to your account</Text>
@@ -99,7 +90,7 @@ export default function LoginScreen({ navigation }: Props) {
           <Text style={styles.link}>Don't have an account? Sign up</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareView>
   );
 }
 

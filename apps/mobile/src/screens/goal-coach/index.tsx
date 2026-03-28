@@ -1,15 +1,13 @@
 import { AI_CHAT_REPLY_MAX_LENGTH } from "@snap-cals/shared";
 import { useMemo, useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "@/components/button";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useColors } from "@/contexts/theme-context";
 import ChatView from "@/screens/ai-assist/chat-view";
 import { borderRadius, fontSize, spacing } from "@/theme";
@@ -23,12 +21,11 @@ export default function GoalCoachScreen() {
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={100}
-      >
+    <KeyboardAwareView
+      style={styles.container}
+      edges={["bottom"]}
+      keyboardVerticalOffset={100}
+    >
         <ChatView messages={messages} />
         <View style={styles.inputRow}>
           <TextInput
@@ -67,8 +64,7 @@ export default function GoalCoachScreen() {
             <Button title="Set as my goals" onPress={confirm} />
           </View>
         )}
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    </KeyboardAwareView>
   );
 }
 
@@ -80,7 +76,6 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       padding: spacing.lg,
       paddingBottom: spacing.xl,
     },
-    flex: { flex: 1 },
     inputRow: {
       flexDirection: "row",
       alignItems: "center",

@@ -8,17 +8,15 @@ import {
 import { useMemo, useRef, useState } from "react";
 import {
   Image,
-  KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import ActionSheet from "@/components/action-sheet";
 import Button from "@/components/button";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useSnackbar } from "@/components/snackbar";
 import ThemedSwitch from "@/components/themed-switch";
 import { useColors } from "@/contexts/theme-context";
@@ -110,12 +108,11 @@ export default function AiAssistScreen() {
   // Chat mode active
   if (discussionMode && chatStarted) {
     return (
-      <SafeAreaView style={styles.container} edges={["bottom"]}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          keyboardVerticalOffset={100}
-        >
+      <KeyboardAwareView
+        style={styles.container}
+        edges={["bottom"]}
+        keyboardVerticalOffset={100}
+      >
           <ChatView messages={chat.messages} imageUri={chat.imageUri} />
           <View style={styles.chatInputRow}>
             <TextInput
@@ -162,8 +159,7 @@ export default function AiAssistScreen() {
               disabled={chat.loading}
             />
           )}
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+      </KeyboardAwareView>
     );
   }
 
@@ -246,7 +242,6 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       padding: spacing.lg,
       paddingBottom: spacing.xl,
     },
-    flex: { flex: 1 },
     inputRow: {
       flexDirection: "row",
       alignItems: "flex-start",

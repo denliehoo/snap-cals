@@ -1,13 +1,8 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useMemo, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
@@ -53,10 +48,7 @@ export default function ResetPasswordScreen({ route, navigation }: Props) {
   }, [code, newPassword, confirmPassword, email, navigation, show]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <KeyboardAwareView style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>Reset password</Text>
         <Text style={styles.subtitle}>
@@ -102,7 +94,7 @@ export default function ResetPasswordScreen({ route, navigation }: Props) {
           <Button title="Reset Password" onPress={submit} loading={loading} />
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareView>
   );
 }
 

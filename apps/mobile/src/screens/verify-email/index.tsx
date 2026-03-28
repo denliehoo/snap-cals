@@ -1,14 +1,8 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Button from "@/components/button";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
@@ -63,10 +57,7 @@ export default function VerifyEmailScreen({ route, navigation }: Props) {
   }, [cooldown, userId, show]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <KeyboardAwareView style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>Verify your email</Text>
         <Text style={styles.subtitle}>
@@ -100,7 +91,7 @@ export default function VerifyEmailScreen({ route, navigation }: Props) {
           <Text style={styles.link}>Back to login</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareView>
   );
 }
 
