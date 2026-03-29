@@ -3,6 +3,8 @@ import app from "../app";
 import * as chatService from "../services/chat.service";
 import { cleanDb, createTestUser, prisma, signToken } from "./helpers";
 
+const API_KEY = process.env.API_KEY ?? "";
+
 jest.spyOn(chatService, "chat");
 
 const MOCK_QUESTION = { message: "What size?" };
@@ -36,7 +38,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 401 without token", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ messages: [{ role: "user", content: "big mac" }] });
 
     expect(res.status).toBe(401);
@@ -45,7 +47,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 400 with empty messages", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [] });
 
@@ -55,7 +57,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 400 with missing messages", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({});
 
@@ -65,7 +67,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 400 with invalid message role", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "system", content: "hi" }] });
 
@@ -75,7 +77,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 400 when message content exceeds limit", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "a".repeat(301) }] });
 
@@ -86,7 +88,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 200 with question response", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "big mac" }] });
 
@@ -99,7 +101,7 @@ describe("POST /api/ai/chat", () => {
 
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "big mac" }] });
 
@@ -110,7 +112,7 @@ describe("POST /api/ai/chat", () => {
   it("passes forceEstimate to service", async () => {
     await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({
         messages: [{ role: "user", content: "big mac" }],
@@ -130,7 +132,7 @@ describe("POST /api/ai/chat", () => {
 
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "pizza" }] });
 
@@ -143,7 +145,7 @@ describe("POST /api/ai/chat", () => {
 
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "pizza" }] });
 
@@ -156,7 +158,7 @@ describe("POST /api/ai/chat", () => {
     const image = { base64: "abc123", mimeType: "image/jpeg" };
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ messages: [{ role: "user", content: "what is this" }], image });
 
@@ -171,7 +173,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 400 with invalid image mimeType in chat", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({
         messages: [{ role: "user", content: "food" }],
@@ -185,7 +187,7 @@ describe("POST /api/ai/chat", () => {
   it("returns 400 with oversized image in chat", async () => {
     const res = await request(app)
       .post("/api/ai/chat")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({
         messages: [{ role: "user", content: "food" }],

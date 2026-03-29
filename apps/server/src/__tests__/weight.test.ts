@@ -9,12 +9,12 @@ import {
 } from "./helpers";
 
 let token: string;
-let userId: string;
+let _userId: string;
 
 beforeEach(async () => {
   await cleanDb();
   const user = await createTestUser();
-  userId = user.id;
+  _userId = user.id;
   token = signToken(user.id);
 });
 

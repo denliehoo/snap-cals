@@ -3,6 +3,8 @@ import app from "../app";
 import * as geminiService from "../services/gemini.service";
 import { cleanDb, createTestUser, prisma, signToken } from "./helpers";
 
+const API_KEY = process.env.API_KEY ?? "";
+
 jest.spyOn(geminiService, "estimateNutrition");
 
 const MOCK_RESULT = {
@@ -32,7 +34,7 @@ describe("POST /api/ai/estimate", () => {
   it("returns 401 without token", async () => {
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ description: "big mac" });
 
     expect(res.status).toBe(401);
@@ -41,7 +43,7 @@ describe("POST /api/ai/estimate", () => {
   it("returns 400 with empty description", async () => {
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ description: "" });
 
@@ -52,7 +54,7 @@ describe("POST /api/ai/estimate", () => {
   it("returns 400 with missing description", async () => {
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({});
 
@@ -62,7 +64,7 @@ describe("POST /api/ai/estimate", () => {
   it("returns 200 with valid description", async () => {
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ description: "big mac" });
 
@@ -80,7 +82,7 @@ describe("POST /api/ai/estimate", () => {
 
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ description: "pizza" });
 
@@ -95,7 +97,7 @@ describe("POST /api/ai/estimate", () => {
 
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ description: "pizza" });
 
@@ -108,7 +110,7 @@ describe("POST /api/ai/estimate", () => {
     const image = { base64: "abc123", mimeType: "image/jpeg" };
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ description: "chicken rice", image });
 
@@ -123,7 +125,7 @@ describe("POST /api/ai/estimate", () => {
     const image = { base64: "abc123", mimeType: "image/png" };
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ description: "", image });
 
@@ -137,7 +139,7 @@ describe("POST /api/ai/estimate", () => {
   it("returns 400 with invalid mimeType", async () => {
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({
         description: "food",
@@ -151,7 +153,7 @@ describe("POST /api/ai/estimate", () => {
   it("returns 400 with oversized image", async () => {
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({
         description: "food",
@@ -168,7 +170,7 @@ describe("POST /api/ai/estimate", () => {
   it("returns 400 when image missing base64", async () => {
     const res = await request(app)
       .post("/api/ai/estimate")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ description: "food", image: { mimeType: "image/jpeg" } });
 

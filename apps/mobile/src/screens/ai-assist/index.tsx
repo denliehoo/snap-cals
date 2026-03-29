@@ -61,7 +61,7 @@ export default function AiAssistScreen() {
         setReply("");
         resetChatRef.current();
       },
-      [],
+      [assist.setDescription],
     ),
   );
 

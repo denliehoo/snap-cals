@@ -2,6 +2,8 @@ import request from "supertest";
 import app from "../app";
 import { cleanDb, createTestUser, prisma, signToken } from "./helpers";
 
+const API_KEY = process.env.API_KEY ?? "";
+
 let token: string;
 
 beforeEach(async () => {
@@ -19,7 +21,7 @@ describe("GET /api/goals", () => {
   it("returns defaults when no goals set", async () => {
     const res = await request(app)
       .get("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);
@@ -27,9 +29,7 @@ describe("GET /api/goals", () => {
   });
 
   it("returns 401 without auth", async () => {
-    const res = await request(app)
-      .get("/api/goals")
-      .set("x-api-key", process.env.API_KEY!);
+    const res = await request(app).get("/api/goals").set("x-api-key", API_KEY);
     expect(res.status).toBe(401);
   });
 });
@@ -45,7 +45,7 @@ describe("PUT /api/goals", () => {
   it("creates goals", async () => {
     const res = await request(app)
       .put("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send(goalData);
 
@@ -56,13 +56,13 @@ describe("PUT /api/goals", () => {
   it("updates existing goals", async () => {
     await request(app)
       .put("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send(goalData);
 
     const res = await request(app)
       .put("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ ...goalData, dailyCalories: 2200 });
 
@@ -73,7 +73,7 @@ describe("PUT /api/goals", () => {
   it("returns 400 for missing values", async () => {
     const res = await request(app)
       .put("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ dailyCalories: 1800 });
 
@@ -83,7 +83,7 @@ describe("PUT /api/goals", () => {
   it("returns 400 for negative values", async () => {
     const res = await request(app)
       .put("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send({ ...goalData, dailyCalories: -100 });
 
@@ -93,7 +93,7 @@ describe("PUT /api/goals", () => {
   it("goals are scoped per user", async () => {
     await request(app)
       .put("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${token}`)
       .send(goalData);
 
@@ -102,7 +102,7 @@ describe("PUT /api/goals", () => {
 
     const res = await request(app)
       .get("/api/goals")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .set("Authorization", `Bearer ${otherToken}`);
 
     // Other user should get defaults, not the first user's goals

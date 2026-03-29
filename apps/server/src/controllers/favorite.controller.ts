@@ -1,9 +1,9 @@
 import { MealType as PrismaMealType, type User } from "@prisma/client";
 import {
   AI_SOURCE_MAX_LENGTH,
+  type CreateFavoriteFoodRequest,
   FOOD_NAME_MAX_LENGTH,
   SERVING_SIZE_MAX_LENGTH,
-  type CreateFavoriteFoodRequest,
 } from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";

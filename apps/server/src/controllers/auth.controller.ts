@@ -1,9 +1,9 @@
 import {
   EMAIL_MAX_LENGTH,
-  PASSWORD_MAX_LENGTH,
   type ForgotPasswordRequest,
   type GoogleAuthRequest,
   type LoginRequest,
+  PASSWORD_MAX_LENGTH,
   type ResendVerificationRequest,
   type ResetPasswordRequest,
   type SignupRequest,
@@ -52,14 +52,14 @@ export const signup = async (
         .json({ message: "Email and password are required" });
     }
     if (email.length > EMAIL_MAX_LENGTH) {
-      return res
-        .status(400)
-        .json({ message: `Email must be ${EMAIL_MAX_LENGTH} characters or less` });
+      return res.status(400).json({
+        message: `Email must be ${EMAIL_MAX_LENGTH} characters or less`,
+      });
     }
     if (password.length < 6 || password.length > PASSWORD_MAX_LENGTH) {
-      return res
-        .status(400)
-        .json({ message: `Password must be 6–${PASSWORD_MAX_LENGTH} characters` });
+      return res.status(400).json({
+        message: `Password must be 6–${PASSWORD_MAX_LENGTH} characters`,
+      });
     }
 
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -106,7 +106,10 @@ export const login = async (
         .json({ message: "Email and password are required" });
     }
 
-    if (email.length > EMAIL_MAX_LENGTH || password.length > PASSWORD_MAX_LENGTH) {
+    if (
+      email.length > EMAIL_MAX_LENGTH ||
+      password.length > PASSWORD_MAX_LENGTH
+    ) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
@@ -275,9 +278,9 @@ export const resetPassword = async (
         .json({ message: "Email, code, and new password are required" });
     }
     if (newPassword.length < 6 || newPassword.length > PASSWORD_MAX_LENGTH) {
-      return res
-        .status(400)
-        .json({ message: `Password must be 6–${PASSWORD_MAX_LENGTH} characters` });
+      return res.status(400).json({
+        message: `Password must be 6–${PASSWORD_MAX_LENGTH} characters`,
+      });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });

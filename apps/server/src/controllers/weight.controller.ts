@@ -1,8 +1,8 @@
 import type { User } from "@prisma/client";
 import {
-  WEIGHT_NOTE_MAX_LENGTH,
   type CreateWeightEntryRequest,
   type UpdateWeightEntryRequest,
+  WEIGHT_NOTE_MAX_LENGTH,
 } from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";

@@ -2,6 +2,8 @@ import request from "supertest";
 import app from "../app";
 import { cleanDb, createTestUser, prisma } from "./helpers";
 
+const API_KEY = process.env.API_KEY ?? "";
+
 // Mock the email service
 jest.mock("../services/email.service", () => ({
   sendVerificationCode: jest.fn().mockResolvedValue(undefined),
@@ -42,7 +44,7 @@ describe("POST /api/auth/signup", () => {
   it("creates a user and returns userId with emailVerified false", async () => {
     const res = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "new@test.com", password: "password123" });
 
     expect(res.status).toBe(201);
@@ -59,7 +61,7 @@ describe("POST /api/auth/signup", () => {
     await createTestUser("dup@test.com");
     const res = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "dup@test.com", password: "password123" });
 
     expect(res.status).toBe(409);
@@ -68,7 +70,7 @@ describe("POST /api/auth/signup", () => {
   it("returns 400 when email or password missing", async () => {
     const res = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "" });
     expect(res.status).toBe(400);
   });
@@ -76,7 +78,7 @@ describe("POST /api/auth/signup", () => {
   it("returns 400 when password too short", async () => {
     const res = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "a@b.com", password: "123" });
 
     expect(res.status).toBe(400);
@@ -90,7 +92,7 @@ describe("POST /api/auth/verify-email", () => {
     // Signup to get a userId and OTP
     const signupRes = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "verify@test.com", password: "password123" });
 
     const userId = signupRes.body.data.userId;
@@ -98,7 +100,7 @@ describe("POST /api/auth/verify-email", () => {
 
     const res = await request(app)
       .post("/api/auth/verify-email")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ userId, code: sentCode });
 
     expect(res.status).toBe(200);
@@ -109,12 +111,12 @@ describe("POST /api/auth/verify-email", () => {
   it("returns 400 for wrong code", async () => {
     const signupRes = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "wrong@test.com", password: "password123" });
 
     const res = await request(app)
       .post("/api/auth/verify-email")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ userId: signupRes.body.data.userId, code: "000000" });
 
     expect(res.status).toBe(400);
@@ -123,7 +125,7 @@ describe("POST /api/auth/verify-email", () => {
   it("returns 400 for expired OTP", async () => {
     const signupRes = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "expired@test.com", password: "password123" });
 
     const userId = signupRes.body.data.userId;
@@ -137,7 +139,7 @@ describe("POST /api/auth/verify-email", () => {
 
     const res = await request(app)
       .post("/api/auth/verify-email")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ userId, code: sentCode });
 
     expect(res.status).toBe(400);
@@ -147,7 +149,7 @@ describe("POST /api/auth/verify-email", () => {
   it("returns 400 for already-used OTP", async () => {
     const signupRes = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "used@test.com", password: "password123" });
 
     const userId = signupRes.body.data.userId;
@@ -156,13 +158,13 @@ describe("POST /api/auth/verify-email", () => {
     // Use the OTP
     await request(app)
       .post("/api/auth/verify-email")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ userId, code: sentCode });
 
     // Try again
     const res = await request(app)
       .post("/api/auth/verify-email")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ userId, code: sentCode });
 
     expect(res.status).toBe(400);
@@ -175,12 +177,12 @@ describe("POST /api/auth/resend-verification", () => {
   it("sends a new verification code", async () => {
     const signupRes = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "resend@test.com", password: "password123" });
 
     const res = await request(app)
       .post("/api/auth/resend-verification")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ userId: signupRes.body.data.userId });
 
     expect(res.status).toBe(200);
@@ -193,7 +195,7 @@ describe("POST /api/auth/resend-verification", () => {
 
     const res = await request(app)
       .post("/api/auth/resend-verification")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ userId: user.id });
 
     expect(res.status).toBe(400);
@@ -208,7 +210,7 @@ describe("POST /api/auth/login", () => {
     await createTestUser("login@test.com", "password123");
     const res = await request(app)
       .post("/api/auth/login")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "login@test.com", password: "password123" });
 
     expect(res.status).toBe(200);
@@ -219,12 +221,12 @@ describe("POST /api/auth/login", () => {
     // Signup creates an unverified user
     const signupRes = await request(app)
       .post("/api/auth/signup")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "unverified@test.com", password: "password123" });
 
     const res = await request(app)
       .post("/api/auth/login")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "unverified@test.com", password: "password123" });
 
     expect(res.status).toBe(200);
@@ -237,7 +239,7 @@ describe("POST /api/auth/login", () => {
     await createTestUser("login@test.com", "password123");
     const res = await request(app)
       .post("/api/auth/login")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "login@test.com", password: "wrong" });
 
     expect(res.status).toBe(401);
@@ -246,7 +248,7 @@ describe("POST /api/auth/login", () => {
   it("returns 401 for non-existent user", async () => {
     const res = await request(app)
       .post("/api/auth/login")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "nobody@test.com", password: "password123" });
 
     expect(res.status).toBe(401);
@@ -255,7 +257,7 @@ describe("POST /api/auth/login", () => {
   it("returns 400 when fields missing", async () => {
     const res = await request(app)
       .post("/api/auth/login")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({});
     expect(res.status).toBe(400);
   });
@@ -269,7 +271,7 @@ describe("POST /api/auth/forgot-password", () => {
 
     const res = await request(app)
       .post("/api/auth/forgot-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "forgot@test.com" });
 
     expect(res.status).toBe(200);
@@ -282,7 +284,7 @@ describe("POST /api/auth/forgot-password", () => {
   it("returns 200 for non-existent email (no enumeration)", async () => {
     const res = await request(app)
       .post("/api/auth/forgot-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "nobody@test.com" });
 
     expect(res.status).toBe(200);
@@ -302,7 +304,7 @@ describe("POST /api/auth/forgot-password", () => {
 
     const res = await request(app)
       .post("/api/auth/forgot-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "oauth@test.com" });
 
     expect(res.status).toBe(200);
@@ -318,14 +320,14 @@ describe("POST /api/auth/reset-password", () => {
 
     await request(app)
       .post("/api/auth/forgot-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "reset@test.com" });
 
     const sentCode = sendPasswordResetCode.mock.calls[0][1];
 
     const res = await request(app)
       .post("/api/auth/reset-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({
         email: "reset@test.com",
         code: sentCode,
@@ -337,7 +339,7 @@ describe("POST /api/auth/reset-password", () => {
     // Login with new password works
     const loginRes = await request(app)
       .post("/api/auth/login")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "reset@test.com", password: "newpassword123" });
 
     expect(loginRes.status).toBe(200);
@@ -349,12 +351,12 @@ describe("POST /api/auth/reset-password", () => {
 
     await request(app)
       .post("/api/auth/forgot-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "reset2@test.com" });
 
     const res = await request(app)
       .post("/api/auth/reset-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({
         email: "reset2@test.com",
         code: "000000",
@@ -369,7 +371,7 @@ describe("POST /api/auth/reset-password", () => {
 
     await request(app)
       .post("/api/auth/forgot-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "reset3@test.com" });
 
     const sentCode = sendPasswordResetCode.mock.calls[0][1];
@@ -381,7 +383,7 @@ describe("POST /api/auth/reset-password", () => {
 
     const res = await request(app)
       .post("/api/auth/reset-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({
         email: "reset3@test.com",
         code: sentCode,
@@ -397,14 +399,14 @@ describe("POST /api/auth/reset-password", () => {
 
     await request(app)
       .post("/api/auth/forgot-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "reset4@test.com" });
 
     const sentCode = sendPasswordResetCode.mock.calls[0][1];
 
     const res = await request(app)
       .post("/api/auth/reset-password")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ email: "reset4@test.com", code: sentCode, newPassword: "123" });
 
     expect(res.status).toBe(400);
@@ -433,7 +435,7 @@ describe("POST /api/auth/google", () => {
 
     const res = await request(app)
       .post("/api/auth/google")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ idToken: "valid-token" });
 
     expect(res.status).toBe(200);
@@ -454,13 +456,13 @@ describe("POST /api/auth/google", () => {
     // First login
     await request(app)
       .post("/api/auth/google")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ idToken: "valid-token" });
 
     // Second login
     const res = await request(app)
       .post("/api/auth/google")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ idToken: "valid-token" });
 
     expect(res.status).toBe(200);
@@ -480,7 +482,7 @@ describe("POST /api/auth/google", () => {
 
     const res = await request(app)
       .post("/api/auth/google")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ idToken: "valid-token" });
 
     expect(res.status).toBe(200);
@@ -498,7 +500,7 @@ describe("POST /api/auth/google", () => {
 
     const res = await request(app)
       .post("/api/auth/google")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ idToken: "invalid-token" });
 
     expect(res.status).toBe(401);
@@ -509,7 +511,7 @@ describe("POST /api/auth/google", () => {
 
     const res = await request(app)
       .post("/api/auth/google")
-      .set("x-api-key", process.env.API_KEY!)
+      .set("x-api-key", API_KEY)
       .send({ idToken: "valid-token" });
 
     expect(res.status).toBe(401);

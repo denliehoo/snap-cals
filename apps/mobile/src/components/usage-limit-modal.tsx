@@ -3,7 +3,7 @@ import { FREE_DAILY_AI_LIMIT } from "@snap-cals/shared";
 import { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useColors } from "@/contexts/theme-context";
-import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
+import { fontSize, fontWeight, spacing } from "@/theme";
 import AppModal from "./app-modal";
 import Button from "./button";
 

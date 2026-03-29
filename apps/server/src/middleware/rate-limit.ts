@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import type { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
 
 const isTest = process.env.NODE_ENV === "test";

@@ -1,10 +1,5 @@
 import type { PropsWithChildren } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  type ViewStyle,
-} from "react-native";
+import { KeyboardAvoidingView, StyleSheet, type ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {

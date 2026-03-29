@@ -1,5 +1,10 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AI_SOURCE_MAX_LENGTH, FOOD_NAME_MAX_LENGTH, SERVING_SIZE_MAX_LENGTH, MealType } from "@snap-cals/shared";
+import {
+  AI_SOURCE_MAX_LENGTH,
+  FOOD_NAME_MAX_LENGTH,
+  MealType,
+  SERVING_SIZE_MAX_LENGTH,
+} from "@snap-cals/shared";
 import { useMemo, useState } from "react";
 import {
   ScrollView,
