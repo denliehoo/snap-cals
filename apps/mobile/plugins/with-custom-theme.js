@@ -21,9 +21,9 @@ function withCustomTheme(config) {
     if (!appTheme.item) appTheme.item = [];
 
     const overrides = {
-      colorPrimary: "#2E7D32",
-      colorPrimaryDark: "#1B5E20",
-      colorAccent: "#2E7D32",
+      colorPrimary: "#1B5E3B",
+      colorPrimaryDark: "#0D3B25",
+      colorAccent: "#1B5E3B",
     };
 
     for (const [attr, value] of Object.entries(overrides)) {

@@ -28,11 +28,11 @@ description: Visual design system for Snap Cals — color palette, shadows, card
 
 | Token         | Value     | Usage                               |
 | ------------- | --------- | ----------------------------------- |
-| background    | `#1A1A2E` | Screen background                   |
-| surface       | `#252540` | Cards, modals, inputs               |
-| text          | `#E8E8EC` | Primary text                        |
-| textSecondary | `#9CA3AF` | Labels, meta text                   |
-| border        | `#3A3A52` | Dividers, input borders             |
+| background    | `#000000` | Screen background (true black)      |
+| surface       | `#1C1C1E` | Cards, modals, inputs               |
+| text          | `#F5F5F5` | Primary text                        |
+| textSecondary | `#8E8E93` | Labels, meta text                   |
+| border        | `#38383A` | Dividers, input borders             |
 | primaryLight  | `#1B3D2E` | Subtle highlights on dark           |
 | calorieColor  | `#E8785E` | Slightly brighter for dark contrast |
 | proteinColor  | `#7A9DBF` | Slightly brighter for dark contrast |
