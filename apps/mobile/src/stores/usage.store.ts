@@ -21,7 +21,12 @@ export const useUsageStore = create<UsageState>((set, get) => ({
   fetch: async () => {
     try {
       const { data } = await api.getUsage();
-      set({ used: data.used, limit: data.limit, resetsAt: data.resetsAt, tier: data.tier });
+      set({
+        used: data.used,
+        limit: data.limit,
+        resetsAt: data.resetsAt,
+        tier: data.tier,
+      });
     } catch {
       // silently fail — usage display is non-critical
     }

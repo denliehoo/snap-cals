@@ -8,6 +8,7 @@ import type {
   AuthResponse,
   CreateFavoriteFoodRequest,
   CreateFoodEntryRequest,
+  CreateWeightEntryRequest,
   FavoriteFoodItem,
   FoodEntry,
   Goal,
@@ -16,7 +17,9 @@ import type {
   ImageData,
   RecentFoodItem,
   UpdateFoodEntryRequest,
+  UpdateWeightEntryRequest,
   UpsertGoalRequest,
+  WeightEntry,
 } from "@snap-cals/shared";
 
 import { Platform } from "react-native";
@@ -154,4 +157,20 @@ export const api = {
     }),
 
   getUsage: () => request<ApiResponse<AiUsageResponse>>("/usage"),
+
+  // Weight
+  createWeight: (data: CreateWeightEntryRequest) =>
+    request<ApiResponse<WeightEntry>>("/weight", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  getWeightEntries: (from: string, to: string) =>
+    request<ApiResponse<WeightEntry[]>>(`/weight?from=${from}&to=${to}`),
+  updateWeight: (id: string, data: UpdateWeightEntryRequest) =>
+    request<ApiResponse<WeightEntry>>(`/weight/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  deleteWeight: (id: string) =>
+    request<{ message: string }>(`/weight/${id}`, { method: "DELETE" }),
 };

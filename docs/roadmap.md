@@ -71,13 +71,17 @@ Wire up the RevenueCat SDK (`react-native-purchases`) on mobile to enable real i
 
 **Status:** Completed — see [Phase 9 Implementation Plan](./phase-9-implementation-plan.md)
 
+### Phase 10: Weight Log
+
+Log weight from the daily view FAB, view a line chart with time range filters (7d/30d/90d/All), edit/delete entries, optional notes, date+time picker. Stores both kg and lbs (user picks preferred unit in settings). Includes navigation restructure: Goals tab moves out of bottom tabs into Settings/More; Weight tab takes its place. AI Goal Coach integration with weight data deferred.
+
+**Status:** Completed — see [Weight Log Spec](./specs/weight-log.md)
+
 ---
 
 ## Product Backlog
 
 Ideas for future phases, not yet prioritized or planned.
-
-- **Weight Log:** Log weight from the daily view FAB, view a line chart with time range filters (7d/30d/90d/All), edit/delete entries, optional notes, date+time picker. Stores both kg and lbs (user picks preferred unit in settings). Includes navigation restructure: Goals tab moves out of bottom tabs into Settings/More; Weight tab takes its place. AI Goal Coach integration with weight data deferred. — see [Weight Log Spec](./specs/weight-log.md)
 - **Food Source / Provider Field:** Add a "source" or "where from" field to food entries (similar to MyFitnessPal). Update AI prompts to infer the provider when possible, ask for it in discussion mode if the user doesn't mention it, and auto-populate it in non-discussion mode. Make the input placeholder more descriptive to encourage users to include where they got the food. When a provider is known, the AI should try to use that provider's published nutrition data (many chains and restaurants publish macros online) rather than generic estimates.
 - **EAS OTA Updates:** Investigate and set up Expo EAS Update for over-the-air JS bundle updates without requiring a full app store release.
 - **BYOK (Bring Your Own Key):** Let power users enter their own Gemini API key in settings to get unlimited AI usage without a subscription. Useful as an alternative to paid plans for technical users. Key would be stored encrypted and sent server-side per request.

@@ -3,9 +3,10 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SubscriptionTier } from "@snap-cals/shared";
 import type React from "react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Purchases from "react-native-purchases";
+import ActionSheet from "@/components/action-sheet";
 import ThemedSwitch from "@/components/themed-switch";
 import { useColors, useTheme } from "@/contexts/theme-context";
 import type { MainStackParamList } from "@/navigation";
@@ -47,23 +48,53 @@ function SettingsRow({ icon, label, onPress, color, right }: RowProps) {
 export default function SettingsScreen() {
   const colors = useColors();
   const { logout } = useAuthStore();
-  const { discussionMode, toggleDiscussionMode } = useSettingsStore();
+  const { discussionMode, toggleDiscussionMode, weightUnit, setWeightUnit } =
+    useSettingsStore();
   const { used, limit, tier } = useUsageStore();
   const { isDark, toggle } = useTheme();
-  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const isPro = tier === SubscriptionTier.PRO;
+  const [showUnitSheet, setShowUnitSheet] = useState(false);
 
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Appearance</Text>
+        <Text style={styles.sectionTitle}>Preferences</Text>
         <SettingsRow
           icon={isDark ? "moon" : "sunny-outline"}
           label="Dark Mode"
           right={<ThemedSwitch value={isDark} onValueChange={toggle} />}
         />
+        <SettingsRow
+          icon="scale-outline"
+          label={`Weight Unit: ${weightUnit}`}
+          onPress={() => setShowUnitSheet(true)}
+        />
+        <SettingsRow
+          icon="flag-outline"
+          label="My Goals"
+          onPress={() => navigation.navigate("Goals")}
+        />
       </View>
+
+      <ActionSheet
+        visible={showUnitSheet}
+        onClose={() => setShowUnitSheet(false)}
+        options={[
+          {
+            label: "Kilograms (kg)",
+            icon: "scale-outline",
+            onPress: () => setWeightUnit("kg"),
+          },
+          {
+            label: "Pounds (lbs)",
+            icon: "scale-outline",
+            onPress: () => setWeightUnit("lbs"),
+          },
+        ]}
+      />
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>AI</Text>

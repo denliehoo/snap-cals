@@ -9,8 +9,8 @@ import type {
 } from "@snap-cals/shared";
 import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 import {
   sendPasswordResetCode,
@@ -23,7 +23,13 @@ const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
 const signToken = (userId: string) =>
   jwt.sign({ sub: userId }, process.env.JWT_SECRET ?? "", { expiresIn: "7d" });
 
-const userResponse = (user: { id: string; email: string; emailVerified: boolean; subscriptionTier: string; createdAt: Date }) => ({
+const userResponse = (user: {
+  id: string;
+  email: string;
+  emailVerified: boolean;
+  subscriptionTier: string;
+  createdAt: Date;
+}) => ({
   id: user.id,
   email: user.email,
   emailVerified: user.emailVerified,
@@ -39,10 +45,14 @@ export const signup = async (
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
     if (password.length < 6) {
-      return res.status(400).json({ message: "Password must be at least 6 characters" });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters" });
     }
 
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -84,7 +94,9 @@ export const login = async (
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -143,7 +155,10 @@ export const verifyEmail = async (
 
     await prisma.$transaction([
       prisma.otp.update({ where: { id: otp.id }, data: { used: true } }),
-      prisma.user.update({ where: { id: userId }, data: { emailVerified: true } }),
+      prisma.user.update({
+        where: { id: userId },
+        data: { emailVerified: true },
+      }),
     ]);
 
     const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
@@ -228,7 +243,9 @@ export const forgotPassword = async (
       await sendPasswordResetCode(email, code);
     }
 
-    return res.json({ message: "If an account exists, a reset code has been sent" });
+    return res.json({
+      message: "If an account exists, a reset code has been sent",
+    });
   } catch (_err) {
     return res.status(500).json({ message: "Internal server error" });
   }
@@ -242,10 +259,14 @@ export const resetPassword = async (
     const { email, code, newPassword } = req.body;
 
     if (!email || !code || !newPassword) {
-      return res.status(400).json({ message: "Email, code, and new password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email, code, and new password are required" });
     }
     if (newPassword.length < 6) {
-      return res.status(400).json({ message: "Password must be at least 6 characters" });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters" });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -303,7 +324,9 @@ export const googleAuth = async (
     const { code, idToken } = req.body;
 
     if (!code && !idToken) {
-      return res.status(400).json({ message: "Authorization code or ID token is required" });
+      return res
+        .status(400)
+        .json({ message: "Authorization code or ID token is required" });
     }
 
     let email: string;
@@ -323,7 +346,9 @@ export const googleAuth = async (
       });
       const tokenData = (await tokenRes.json()) as { id_token?: string };
       if (!tokenData.id_token) {
-        return res.status(401).json({ message: "Failed to exchange authorization code" });
+        return res
+          .status(401)
+          .json({ message: "Failed to exchange authorization code" });
       }
       const ticket = await getGoogleClient().verifyIdToken({
         idToken: tokenData.id_token,
@@ -351,7 +376,9 @@ export const googleAuth = async (
 
     // 1. Check if this Google account is already linked
     const existingProvider = await prisma.authProvider.findUnique({
-      where: { provider_providerUserId: { provider: "GOOGLE", providerUserId: sub } },
+      where: {
+        provider_providerUserId: { provider: "GOOGLE", providerUserId: sub },
+      },
       include: { user: true },
     });
 
@@ -367,7 +394,11 @@ export const googleAuth = async (
 
     if (existingUser) {
       await prisma.authProvider.create({
-        data: { userId: existingUser.id, provider: "GOOGLE", providerUserId: sub },
+        data: {
+          userId: existingUser.id,
+          provider: "GOOGLE",
+          providerUserId: sub,
+        },
       });
 
       if (!existingUser.emailVerified) {
@@ -377,7 +408,9 @@ export const googleAuth = async (
         });
       }
 
-      const updated = await prisma.user.findUniqueOrThrow({ where: { id: existingUser.id } });
+      const updated = await prisma.user.findUniqueOrThrow({
+        where: { id: existingUser.id },
+      });
       const token = signToken(updated.id);
       return res.json({
         data: { token, user: userResponse(updated) },

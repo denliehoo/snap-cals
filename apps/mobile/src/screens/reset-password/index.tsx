@@ -2,8 +2,8 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
-import KeyboardAwareView from "@/components/keyboard-aware-view";
 import FormField from "@/components/form-field";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
 import type { AuthStackParamList } from "@/navigation";
@@ -51,16 +51,18 @@ export default function ResetPasswordScreen({ route, navigation }: Props) {
     <KeyboardAwareView style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>Reset password</Text>
-        <Text style={styles.subtitle}>
-          Enter the code sent to {email}
-        </Text>
+        <Text style={styles.subtitle}>Enter the code sent to {email}</Text>
 
         <FormField
           label="Reset Code"
           value={code}
           onChangeText={(v) => {
             setCode(v);
-            setFieldErrors((p) => { const n = { ...p }; delete n.code; return n; });
+            setFieldErrors((p) => {
+              const n = { ...p };
+              delete n.code;
+              return n;
+            });
           }}
           placeholder="123456"
           keyboardType="number-pad"
@@ -72,7 +74,11 @@ export default function ResetPasswordScreen({ route, navigation }: Props) {
           value={newPassword}
           onChangeText={(v) => {
             setNewPassword(v);
-            setFieldErrors((p) => { const n = { ...p }; delete n.newPassword; return n; });
+            setFieldErrors((p) => {
+              const n = { ...p };
+              delete n.newPassword;
+              return n;
+            });
           }}
           placeholder="New password"
           secureTextEntry
@@ -83,7 +89,11 @@ export default function ResetPasswordScreen({ route, navigation }: Props) {
           value={confirmPassword}
           onChangeText={(v) => {
             setConfirmPassword(v);
-            setFieldErrors((p) => { const n = { ...p }; delete n.confirmPassword; return n; });
+            setFieldErrors((p) => {
+              const n = { ...p };
+              delete n.confirmPassword;
+              return n;
+            });
           }}
           placeholder="Confirm password"
           secureTextEntry

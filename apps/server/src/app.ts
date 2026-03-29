@@ -10,6 +10,7 @@ import favoriteRoutes from "./routes/favorite.routes";
 import goalRoutes from "./routes/goal.routes";
 import usageRoutes from "./routes/usage.routes";
 import webhookRoutes from "./routes/webhook.routes";
+import weightRoutes from "./routes/weight.routes";
 
 const app = express();
 
@@ -33,5 +34,6 @@ app.use("/api/goals", goalRoutes);
 app.use("/api/ai", aiLimiter, aiRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/usage", usageRoutes);
+app.use("/api/weight", weightRoutes);
 
 export default app;

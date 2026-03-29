@@ -1,6 +1,6 @@
-import { fireEvent, render } from "@/__tests__/helpers";
 import { SubscriptionTier } from "@snap-cals/shared";
 import Purchases from "react-native-purchases";
+import { fireEvent, render } from "@/__tests__/helpers";
 import SettingsScreen from "./";
 
 const mockLogout = jest.fn();
@@ -19,10 +19,14 @@ jest.mock("@/stores/auth.store", () => ({
   useAuthStore: () => ({ logout: mockLogout }),
 }));
 
+const mockSetWeightUnit = jest.fn();
+
 jest.mock("@/stores/settings.store", () => ({
   useSettingsStore: () => ({
     discussionMode: false,
     toggleDiscussionMode: mockToggleDiscussion,
+    weightUnit: "kg",
+    setWeightUnit: mockSetWeightUnit,
   }),
 }));
 
@@ -51,8 +55,10 @@ beforeEach(() => {
 describe("SettingsScreen", () => {
   it("renders all sections", async () => {
     const { getByText } = await render(<SettingsScreen />);
-    expect(getByText("Appearance")).toBeTruthy();
+    expect(getByText("Preferences")).toBeTruthy();
     expect(getByText("Dark Mode")).toBeTruthy();
+    expect(getByText("Weight Unit: kg")).toBeTruthy();
+    expect(getByText("My Goals")).toBeTruthy();
     expect(getByText("AI")).toBeTruthy();
     expect(getByText("Discussion Mode")).toBeTruthy();
     expect(getByText("Subscription")).toBeTruthy();

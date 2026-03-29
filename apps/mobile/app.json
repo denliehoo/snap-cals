@@ -45,7 +45,8 @@
         }
       ],
       "expo-web-browser",
-      "expo-dev-client"
+      "expo-dev-client",
+      "./plugins/with-custom-theme"
     ],
     "extra": {
       "eas": {

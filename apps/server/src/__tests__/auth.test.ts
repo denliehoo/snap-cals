@@ -19,13 +19,13 @@ jest.mock("google-auth-library", () => {
   };
 });
 
-const { __mockVerifyIdToken: mockVerifyIdToken } =
-  jest.requireMock("google-auth-library");
+const { __mockVerifyIdToken: mockVerifyIdToken } = jest.requireMock(
+  "google-auth-library",
+);
 
-const {
-  sendVerificationCode,
-  sendPasswordResetCode,
-} = jest.requireMock("../services/email.service");
+const { sendVerificationCode, sendPasswordResetCode } = jest.requireMock(
+  "../services/email.service",
+);
 
 beforeEach(async () => {
   await cleanDb();
@@ -66,7 +66,10 @@ describe("POST /api/auth/signup", () => {
   });
 
   it("returns 400 when email or password missing", async () => {
-    const res = await request(app).post("/api/auth/signup").set("x-api-key", process.env.API_KEY!).send({ email: "" });
+    const res = await request(app)
+      .post("/api/auth/signup")
+      .set("x-api-key", process.env.API_KEY!)
+      .send({ email: "" });
     expect(res.status).toBe(400);
   });
 
@@ -250,7 +253,10 @@ describe("POST /api/auth/login", () => {
   });
 
   it("returns 400 when fields missing", async () => {
-    const res = await request(app).post("/api/auth/login").set("x-api-key", process.env.API_KEY!).send({});
+    const res = await request(app)
+      .post("/api/auth/login")
+      .set("x-api-key", process.env.API_KEY!)
+      .send({});
     expect(res.status).toBe(400);
   });
 });
@@ -320,7 +326,11 @@ describe("POST /api/auth/reset-password", () => {
     const res = await request(app)
       .post("/api/auth/reset-password")
       .set("x-api-key", process.env.API_KEY!)
-      .send({ email: "reset@test.com", code: sentCode, newPassword: "newpassword123" });
+      .send({
+        email: "reset@test.com",
+        code: sentCode,
+        newPassword: "newpassword123",
+      });
 
     expect(res.status).toBe(200);
 
@@ -345,7 +355,11 @@ describe("POST /api/auth/reset-password", () => {
     const res = await request(app)
       .post("/api/auth/reset-password")
       .set("x-api-key", process.env.API_KEY!)
-      .send({ email: "reset2@test.com", code: "000000", newPassword: "newpass123" });
+      .send({
+        email: "reset2@test.com",
+        code: "000000",
+        newPassword: "newpass123",
+      });
 
     expect(res.status).toBe(400);
   });
@@ -368,7 +382,11 @@ describe("POST /api/auth/reset-password", () => {
     const res = await request(app)
       .post("/api/auth/reset-password")
       .set("x-api-key", process.env.API_KEY!)
-      .send({ email: "reset3@test.com", code: sentCode, newPassword: "newpass123" });
+      .send({
+        email: "reset3@test.com",
+        code: sentCode,
+        newPassword: "newpass123",
+      });
 
     expect(res.status).toBe(400);
     expect(res.body.message).toContain("expired");

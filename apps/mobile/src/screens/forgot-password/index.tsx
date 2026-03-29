@@ -2,8 +2,8 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Button from "@/components/button";
-import KeyboardAwareView from "@/components/keyboard-aware-view";
 import FormField from "@/components/form-field";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
 import type { AuthStackParamList } from "@/navigation";
@@ -25,7 +25,9 @@ export default function ForgotPasswordScreen({ route, navigation }: Props) {
     setLoading(true);
     try {
       await api.forgotPassword(email.trim().toLowerCase());
-      navigation.navigate("ResetPassword", { email: email.trim().toLowerCase() });
+      navigation.navigate("ResetPassword", {
+        email: email.trim().toLowerCase(),
+      });
     } catch (e: unknown) {
       show(getErrorMessage(e, "Failed to send reset code"), "error");
     } finally {

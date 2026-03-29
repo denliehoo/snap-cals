@@ -1,5 +1,5 @@
-import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import Purchases from "react-native-purchases";
+import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import PaywallScreen from "./";
 
 const mockGoBack = jest.fn();
@@ -23,7 +23,9 @@ beforeEach(() => jest.clearAllMocks());
 
 describe("PaywallScreen", () => {
   it("shows error state when offerings fail", async () => {
-    (Purchases.getOfferings as jest.Mock).mockRejectedValueOnce(new Error("fail"));
+    (Purchases.getOfferings as jest.Mock).mockRejectedValueOnce(
+      new Error("fail"),
+    );
     const { getByText } = await render(<PaywallScreen />);
     await waitFor(() => {
       expect(getByText("Subscriptions not available right now")).toBeTruthy();
@@ -32,7 +34,9 @@ describe("PaywallScreen", () => {
   });
 
   it("shows error state when offerings are empty", async () => {
-    (Purchases.getOfferings as jest.Mock).mockResolvedValueOnce({ current: null });
+    (Purchases.getOfferings as jest.Mock).mockResolvedValueOnce({
+      current: null,
+    });
     const { getByText } = await render(<PaywallScreen />);
     await waitFor(() => {
       expect(getByText("Subscriptions not available right now")).toBeTruthy();
@@ -75,7 +79,9 @@ describe("PaywallScreen", () => {
     (Purchases.getOfferings as jest.Mock).mockResolvedValueOnce({
       current: { monthly: mockPackage, availablePackages: [mockPackage] },
     });
-    (Purchases.purchasePackage as jest.Mock).mockRejectedValueOnce({ userCancelled: true });
+    (Purchases.purchasePackage as jest.Mock).mockRejectedValueOnce({
+      userCancelled: true,
+    });
     const { getByText, queryByText } = await render(<PaywallScreen />);
     await waitFor(() => expect(getByText("Subscribe")).toBeTruthy());
 

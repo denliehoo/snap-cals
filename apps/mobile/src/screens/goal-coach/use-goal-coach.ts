@@ -67,10 +67,7 @@ export function useGoalCoach() {
 
   const confirm = () => {
     if (recommendation) {
-      navigation.navigate("MainTabs", {
-        screen: "GoalsTab",
-        params: { prefill: recommendation },
-      } as never);
+      navigation.navigate("Goals", { prefill: recommendation });
     }
   };
 

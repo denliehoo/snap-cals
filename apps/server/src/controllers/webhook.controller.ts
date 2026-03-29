@@ -20,9 +20,15 @@ export const handleRevenueCat = async (req: Request, res: Response) => {
   }
 
   if (PRO_EVENTS.has(type)) {
-    await prisma.user.update({ where: { id: user.id }, data: { subscriptionTier: "PRO" } });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { subscriptionTier: "PRO" },
+    });
   } else if (FREE_EVENTS.has(type)) {
-    await prisma.user.update({ where: { id: user.id }, data: { subscriptionTier: "FREE" } });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { subscriptionTier: "FREE" },
+    });
   }
 
   res.sendStatus(200);

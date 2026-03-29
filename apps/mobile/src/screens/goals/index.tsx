@@ -1,7 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
@@ -9,7 +11,7 @@ import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import UsageLimitModal from "@/components/usage-limit-modal";
 import { useColors } from "@/contexts/theme-context";
-import type { MainStackParamList, MainTabParamList } from "@/navigation";
+import type { MainStackParamList } from "@/navigation";
 import { useUsageStore } from "@/stores/usage.store";
 import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 import { useGoals } from "./use-goals";
@@ -17,7 +19,7 @@ import { useGoals } from "./use-goals";
 export default function GoalsScreen() {
   const colors = useColors();
   const route =
-    useRoute<BottomTabScreenProps<MainTabParamList, "GoalsTab">["route"]>();
+    useRoute<NativeStackScreenProps<MainStackParamList, "Goals">["route"]>();
   const navigation =
     useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const prefill = route.params?.prefill;

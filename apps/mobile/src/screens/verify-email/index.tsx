@@ -2,8 +2,8 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Button from "@/components/button";
-import KeyboardAwareView from "@/components/keyboard-aware-view";
 import FormField from "@/components/form-field";
+import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
 import type { AuthStackParamList } from "@/navigation";
@@ -74,14 +74,17 @@ export default function VerifyEmailScreen({ route, navigation }: Props) {
         />
 
         <View style={styles.buttonWrapper}>
-          <Button title="Verify" onPress={submit} loading={loading} disabled={code.length !== 6} />
+          <Button
+            title="Verify"
+            onPress={submit}
+            loading={loading}
+            disabled={code.length !== 6}
+          />
         </View>
 
         <TouchableOpacity onPress={resend} disabled={cooldown > 0}>
           <Text style={[styles.link, cooldown > 0 && styles.linkDisabled]}>
-            {cooldown > 0
-              ? `Resend code in ${cooldown}s`
-              : "Resend code"}
+            {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
           </Text>
         </TouchableOpacity>
 

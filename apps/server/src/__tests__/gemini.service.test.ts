@@ -68,7 +68,8 @@ describe("gemini.service", () => {
 
     await estimateNutrition("chicken rice", image, client);
 
-    const contents = (client.models.generateContent as jest.Mock).mock.calls[0][0].contents;
+    const contents = (client.models.generateContent as jest.Mock).mock
+      .calls[0][0].contents;
     expect(contents[0].parts).toEqual([
       { inlineData: { mimeType: "image/jpeg", data: "abc123" } },
       { text: "chicken rice" },
@@ -80,7 +81,8 @@ describe("gemini.service", () => {
 
     await estimateNutrition("pizza", undefined, client);
 
-    const contents = (client.models.generateContent as jest.Mock).mock.calls[0][0].contents;
+    const contents = (client.models.generateContent as jest.Mock).mock
+      .calls[0][0].contents;
     expect(contents[0].parts).toEqual([{ text: "pizza" }]);
   });
 });

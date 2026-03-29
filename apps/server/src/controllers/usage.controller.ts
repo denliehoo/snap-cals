@@ -1,5 +1,5 @@
 import type { User } from "@prisma/client";
-import { FREE_DAILY_AI_LIMIT, SubscriptionTier } from "@snap-cals/shared";
+import { FREE_DAILY_AI_LIMIT, type SubscriptionTier } from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
 

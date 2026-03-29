@@ -38,6 +38,7 @@ model User {
   authProviders    AuthProvider[]
   otps             Otp[]
   aiUsage          AiUsage[]
+  weightEntries    WeightEntry[]
 }
 
 model AuthProvider {
@@ -119,4 +120,18 @@ model AiUsage {
   user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, period])
+}
+
+model WeightEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  weightKg  Float
+  weightLbs Float
+  note      String?
+  loggedAt  DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, loggedAt])
 }

@@ -1,5 +1,5 @@
 import Purchases from "react-native-purchases";
-import { initPurchases, identifyUser, logoutPurchases } from "./use-purchases";
+import { identifyUser, initPurchases, logoutPurchases } from "./use-purchases";
 
 // The hook reads API_KEY at module load from Platform.select + env vars.
 // In test env these are empty, so SDK calls are no-ops (early return).

@@ -208,6 +208,34 @@ export interface AiChatResponse {
   estimate?: AiEstimateResponse;
 }
 
+// Weight
+export type WeightUnit = "kg" | "lbs";
+
+export interface WeightEntry {
+  id: string;
+  userId: string;
+  weightKg: number;
+  weightLbs: number;
+  note: string | null;
+  loggedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateWeightEntryRequest {
+  weight: number;
+  unit: WeightUnit;
+  loggedAt: string;
+  note?: string;
+}
+
+export interface UpdateWeightEntryRequest {
+  weight?: number;
+  unit?: WeightUnit;
+  loggedAt?: string;
+  note?: string;
+}
+
 // AI Goal Coach
 export interface GoalCoachRequest {
   messages: ChatMessage[];

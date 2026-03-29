@@ -24,6 +24,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Image Picker | expo-image-picker | Camera and gallery access, returns base64 for Gemini |
 | In-App Purchases | RevenueCat (react-native-purchases) | Cross-platform subscription management, webhook-driven tier updates |
 | Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
+| Charts           | react-native-chart-kit + react-native-svg | Lightweight line chart for weight history, Expo-compatible |
 
 ## Monorepo Structure
 
@@ -86,6 +87,16 @@ snap-cals/
 - Chat history is ephemeral (screen state only, not persisted to DB)
 
 ### In-App Purchases (RevenueCat)
+
+### Weight Log
+- Weight entries store both `weightKg` and `weightLbs` — user enters in their preferred unit, server computes the counterpart (1 kg = 2.20462 lbs)
+- Weight unit preference is client-side only (SecureStore via settings Zustand store), defaults to kg
+- Weight History screen (Weight tab) shows a line chart (`react-native-chart-kit` + `react-native-svg`) with time range filter (7d/30d/90d/All) and a scrollable entry list
+- Multiple weight entries per day are allowed
+- FAB action sheet on Daily View includes "Log Weight" option
+- Chart and list auto-refresh on screen focus (via `useFocusEffect`) to reflect adds/edits/deletes
+
+### In-App Purchases (RevenueCat)
 - `react-native-purchases` SDK configured on app startup with platform-specific API keys from env vars
 - `Purchases.logIn(userId)` called after auth (login, signup verification, OAuth, restore) so webhook `app_user_id` maps to DB user ID
 - `Purchases.logOut()` called on app logout
@@ -101,11 +112,12 @@ snap-cals/
 - Includes macro-specific colors (calories, protein, carbs, fat)
 - All UI components should import from theme — no hardcoded values
 - Designed for easy theme swapping (change colors in one file)
+- Android native dialogs (time picker, etc.) are themed via an Expo config plugin (`plugins/with-custom-theme.js`) that sets `colorPrimary`/`colorAccent` in Android's `styles.xml`. This only takes effect in `eas build` — Expo Go uses its own native theme, so native dialogs will appear with default blue colors during Expo Go development.
 
 ### API Design
 - Base path: `/api`
 - Auth routes: `/api/auth/signup`, `/api/auth/login`, `/api/auth/verify-email`, `/api/auth/resend-verification`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/google`
-- Resource routes: `/api/entries`, `/api/goals`, `/api/favorites`
+- Resource routes: `/api/entries`, `/api/goals`, `/api/favorites`, `/api/weight`
 - Recents route: `GET /api/entries/recent` — returns last 20 food entries for the user (no deduplication)
 - AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API
 - AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`), optional `forceEstimate` flag, and optional image, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
@@ -137,16 +149,19 @@ snap-cals/
 - React Navigation switches between auth stack and main app stack based on auth state
 
 ### Navigation
-- Bottom tabs: Daily, Weekly, Goals, More (settings)
-- More/Settings tab houses logout, dark mode toggle, and future account-related features
+- Bottom tabs: Daily, Weekly, Weight, More (settings)
+- Goals screen is accessible from the More/Settings tab via a "My Goals" row (navigates as a stack screen)
+- More/Settings tab houses logout, dark mode toggle, weight unit preference, My Goals link, and future account-related features
 - Auth stack (Login, Signup, VerifyEmail, ForgotPassword, ResetPassword) shown when unauthenticated; main stack with tabs shown when authenticated
 - `EntryForm` is a modal screen pushed on top of the tab navigator
+- `WeightLog` is a modal screen pushed on top of the tab navigator (for logging/editing weight entries)
+- `Goals` is a stack screen accessible from Settings (moved out of bottom tabs to make room for Weight tab)
 - `QuickAdd` screen accessible from the FAB action sheet on Daily View — shows Favorites and Recents sections with swipe gestures (swipe right to favorite a recent, swipe left to remove a favorite)
 
 ### Database
 - Postgres on Neon (free tier)
 - Prisma ORM for schema definition, migrations, and type-safe queries
-- Models: User, FoodEntry, Goal, FavoriteFood, AuthProvider, Otp
+- Models: User, FoodEntry, Goal, FavoriteFood, AuthProvider, Otp, WeightEntry
 - AuthProvider tracks OAuth providers per user with `@@unique([provider, providerUserId])` — extensible to Facebook/Apple/GitHub
 - Otp stores hashed 6-digit codes for email verification and password reset with 10-min expiry
 - FavoriteFood stores reusable food templates per user with `@@unique([userId, name])` and a max of 25 per user
@@ -209,3 +224,4 @@ snap-cals/
 - **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth, account linking) — completed
 - **Phase 8:** Subscription & Usage Limits — completed
 - **Phase 9:** RevenueCat SDK Integration — completed
+- **Phase 10:** Weight Log — in progress

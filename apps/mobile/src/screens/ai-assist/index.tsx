@@ -113,52 +113,51 @@ export default function AiAssistScreen() {
         edges={["bottom"]}
         keyboardVerticalOffset={100}
       >
-          <ChatView messages={chat.messages} imageUri={chat.imageUri} />
-          <View style={styles.chatInputRow}>
-            <TextInput
-              style={styles.chatInput}
-              placeholder="Reply..."
-              placeholderTextColor={colors.textSecondary}
-              value={reply}
-              onChangeText={setReply}
-              maxLength={AI_CHAT_REPLY_MAX_LENGTH}
-              editable={!chat.loading}
-            />
-            <Button
-              title="Send"
-              onPress={() => {
-                const text = reply.trim();
-                if (!text) return;
-                setReply("");
-                chat.sendMessage(text);
-              }}
-              disabled={!reply.trim()}
-              loading={chat.loading}
-            />
+        <ChatView messages={chat.messages} imageUri={chat.imageUri} />
+        <View style={styles.chatInputRow}>
+          <TextInput
+            style={styles.chatInput}
+            placeholder="Reply..."
+            placeholderTextColor={colors.textSecondary}
+            value={reply}
+            onChangeText={setReply}
+            maxLength={AI_CHAT_REPLY_MAX_LENGTH}
+            editable={!chat.loading}
+          />
+          <Button
+            title="Send"
+            onPress={() => {
+              const text = reply.trim();
+              if (!text) return;
+              setReply("");
+              chat.sendMessage(text);
+            }}
+            disabled={!reply.trim()}
+            loading={chat.loading}
+          />
+        </View>
+        {reply.length >= AI_CHAT_REPLY_MAX_LENGTH * 0.8 && (
+          <Text
+            style={[
+              styles.charCount,
+              reply.length >= AI_CHAT_REPLY_MAX_LENGTH && styles.charCountLimit,
+            ]}
+          >
+            {reply.length}/{AI_CHAT_REPLY_MAX_LENGTH}
+          </Text>
+        )}
+        {chat.estimate ? (
+          <View style={styles.confirmRow}>
+            <Button title="Confirm Estimate" onPress={chat.confirm} />
           </View>
-          {reply.length >= AI_CHAT_REPLY_MAX_LENGTH * 0.8 && (
-            <Text
-              style={[
-                styles.charCount,
-                reply.length >= AI_CHAT_REPLY_MAX_LENGTH &&
-                  styles.charCountLimit,
-              ]}
-            >
-              {reply.length}/{AI_CHAT_REPLY_MAX_LENGTH}
-            </Text>
-          )}
-          {chat.estimate ? (
-            <View style={styles.confirmRow}>
-              <Button title="Confirm Estimate" onPress={chat.confirm} />
-            </View>
-          ) : (
-            <Button
-              title="Get Estimate"
-              variant="text"
-              onPress={() => chat.sendMessage("", true)}
-              disabled={chat.loading}
-            />
-          )}
+        ) : (
+          <Button
+            title="Get Estimate"
+            variant="text"
+            onPress={() => chat.sendMessage("", true)}
+            disabled={chat.loading}
+          />
+        )}
       </KeyboardAwareView>
     );
   }

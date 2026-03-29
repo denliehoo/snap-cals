@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
+import bcrypt from "bcryptjs";
 
 export function generateOtp(): string {
   return crypto.randomInt(100000, 999999).toString();

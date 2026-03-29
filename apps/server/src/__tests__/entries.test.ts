@@ -61,7 +61,10 @@ describe("POST /api/entries", () => {
   });
 
   it("returns 401 without auth", async () => {
-    const res = await request(app).post("/api/entries").set("x-api-key", process.env.API_KEY!).send(entryData);
+    const res = await request(app)
+      .post("/api/entries")
+      .set("x-api-key", process.env.API_KEY!)
+      .send(entryData);
     expect(res.status).toBe(401);
   });
 });
@@ -240,7 +243,10 @@ describe("GET /api/entries/recent", () => {
       .set(auth)
       .send({ ...entryData, name: "Rice", date: "2026-03-13" });
 
-    const res = await request(app).get("/api/entries/recent").set("x-api-key", process.env.API_KEY!).set(auth);
+    const res = await request(app)
+      .get("/api/entries/recent")
+      .set("x-api-key", process.env.API_KEY!)
+      .set(auth);
 
     expect(res.status).toBe(200);
     expect(res.body.data).toHaveLength(4); // no dedup — all 4 entries returned
@@ -258,7 +264,10 @@ describe("GET /api/entries/recent", () => {
         .send({ ...entryData, name: `Food ${i}`, date: "2026-03-15" });
     }
 
-    const res = await request(app).get("/api/entries/recent").set("x-api-key", process.env.API_KEY!).set(auth);
+    const res = await request(app)
+      .get("/api/entries/recent")
+      .set("x-api-key", process.env.API_KEY!)
+      .set(auth);
 
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBeLessThanOrEqual(20);
@@ -266,7 +275,11 @@ describe("GET /api/entries/recent", () => {
 
   it("does not return other users entries", async () => {
     const auth = { Authorization: `Bearer ${token}` };
-    await request(app).post("/api/entries").set("x-api-key", process.env.API_KEY!).set(auth).send(entryData);
+    await request(app)
+      .post("/api/entries")
+      .set("x-api-key", process.env.API_KEY!)
+      .set(auth)
+      .send(entryData);
 
     const other = await createTestUser("other@test.com");
     const otherToken = signToken(other.id);
@@ -281,7 +294,9 @@ describe("GET /api/entries/recent", () => {
   });
 
   it("returns 401 without auth", async () => {
-    const res = await request(app).get("/api/entries/recent").set("x-api-key", process.env.API_KEY!);
+    const res = await request(app)
+      .get("/api/entries/recent")
+      .set("x-api-key", process.env.API_KEY!);
     expect(res.status).toBe(401);
   });
 });

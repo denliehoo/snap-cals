@@ -1,4 +1,8 @@
-import type { AuthPendingResponse, AuthResponse, User } from "@snap-cals/shared";
+import type {
+  AuthPendingResponse,
+  AuthResponse,
+  User,
+} from "@snap-cals/shared";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { identifyUser, logoutPurchases } from "@/hooks/use-purchases";
@@ -15,10 +19,16 @@ interface AuthState {
   logout: () => Promise<void>;
   restore: () => Promise<void>;
   setAuth: (token: string, user: User) => Promise<void>;
-  googleLogin: (params: { code: string; clientId: string; redirectUri: string }) => Promise<void>;
+  googleLogin: (params: {
+    code: string;
+    clientId: string;
+    redirectUri: string;
+  }) => Promise<void>;
 }
 
-function isAuthResponse(data: AuthResponse | AuthPendingResponse): data is AuthResponse {
+function isAuthResponse(
+  data: AuthResponse | AuthPendingResponse,
+): data is AuthResponse {
   return "token" in data;
 }
 

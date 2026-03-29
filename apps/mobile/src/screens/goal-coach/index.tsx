@@ -1,11 +1,6 @@
 import { AI_CHAT_REPLY_MAX_LENGTH } from "@snap-cals/shared";
 import { useMemo, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import Button from "@/components/button";
 import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useColors } from "@/contexts/theme-context";
@@ -26,44 +21,44 @@ export default function GoalCoachScreen() {
       edges={["bottom"]}
       keyboardVerticalOffset={100}
     >
-        <ChatView messages={messages} />
-        <View style={styles.inputRow}>
-          <TextInput
-            style={styles.input}
-            placeholder="Reply..."
-            placeholderTextColor={colors.textSecondary}
-            value={reply}
-            onChangeText={setReply}
-            maxLength={AI_CHAT_REPLY_MAX_LENGTH}
-            editable={!loading}
-          />
-          <Button
-            title="Send"
-            onPress={() => {
-              const text = reply.trim();
-              if (!text) return;
-              setReply("");
-              sendMessage(text);
-            }}
-            disabled={!reply.trim()}
-            loading={loading}
-          />
+      <ChatView messages={messages} />
+      <View style={styles.inputRow}>
+        <TextInput
+          style={styles.input}
+          placeholder="Reply..."
+          placeholderTextColor={colors.textSecondary}
+          value={reply}
+          onChangeText={setReply}
+          maxLength={AI_CHAT_REPLY_MAX_LENGTH}
+          editable={!loading}
+        />
+        <Button
+          title="Send"
+          onPress={() => {
+            const text = reply.trim();
+            if (!text) return;
+            setReply("");
+            sendMessage(text);
+          }}
+          disabled={!reply.trim()}
+          loading={loading}
+        />
+      </View>
+      {reply.length >= AI_CHAT_REPLY_MAX_LENGTH * 0.8 && (
+        <Text
+          style={[
+            styles.charCount,
+            reply.length >= AI_CHAT_REPLY_MAX_LENGTH && styles.charCountLimit,
+          ]}
+        >
+          {reply.length}/{AI_CHAT_REPLY_MAX_LENGTH}
+        </Text>
+      )}
+      {recommendation && (
+        <View style={styles.confirmRow}>
+          <Button title="Set as my goals" onPress={confirm} />
         </View>
-        {reply.length >= AI_CHAT_REPLY_MAX_LENGTH * 0.8 && (
-          <Text
-            style={[
-              styles.charCount,
-              reply.length >= AI_CHAT_REPLY_MAX_LENGTH && styles.charCountLimit,
-            ]}
-          >
-            {reply.length}/{AI_CHAT_REPLY_MAX_LENGTH}
-          </Text>
-        )}
-        {recommendation && (
-          <View style={styles.confirmRow}>
-            <Button title="Set as my goals" onPress={confirm} />
-          </View>
-        )}
+      )}
     </KeyboardAwareView>
   );
 }

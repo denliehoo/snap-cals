@@ -4,13 +4,16 @@ import { AppState, Platform } from "react-native";
 import Purchases, { type CustomerInfo } from "react-native-purchases";
 import { useUsageStore } from "@/stores/usage.store";
 
-const API_KEY = Platform.select({
-  ios: process.env.EXPO_PUBLIC_RC_IOS_API_KEY,
-  android: process.env.EXPO_PUBLIC_RC_ANDROID_API_KEY,
-}) ?? "";
+const API_KEY =
+  Platform.select({
+    ios: process.env.EXPO_PUBLIC_RC_IOS_API_KEY,
+    android: process.env.EXPO_PUBLIC_RC_ANDROID_API_KEY,
+  }) ?? "";
 
 function tierFromCustomerInfo(info: CustomerInfo): SubscriptionTier {
-  return info.entitlements.active.pro ? SubscriptionTier.PRO : SubscriptionTier.FREE;
+  return info.entitlements.active.pro
+    ? SubscriptionTier.PRO
+    : SubscriptionTier.FREE;
 }
 
 export function initPurchases() {

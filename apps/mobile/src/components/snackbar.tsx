@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import type React from "react";
 import {
   createContext,
@@ -7,22 +8,9 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Animated,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { useColors } from "@/contexts/theme-context";
-import {
-  borderRadius,
-  fontSize,
-  fontWeight,
-  shadow,
-  spacing,
-} from "@/theme";
+import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 
 type SnackbarType = "success" | "error";
 
@@ -55,8 +43,16 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
   const dismiss = useCallback(() => {
     if (timeout.current) clearTimeout(timeout.current);
     Animated.parallel([
-      Animated.timing(translateY, { toValue: -100, duration: 200, useNativeDriver: true }),
-      Animated.timing(opacity, { toValue: 0, duration: 200, useNativeDriver: true }),
+      Animated.timing(translateY, {
+        toValue: -100,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
     ]).start(() => setVisible(false));
   }, [translateY, opacity]);
 
@@ -69,8 +65,17 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
       translateY.setValue(-100);
       opacity.setValue(0);
       Animated.parallel([
-        Animated.spring(translateY, { toValue: 0, useNativeDriver: true, damping: 15, stiffness: 120 }),
-        Animated.timing(opacity, { toValue: 1, duration: 200, useNativeDriver: true }),
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true,
+          damping: 15,
+          stiffness: 120,
+        }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
       ]).start();
       timeout.current = setTimeout(dismiss, 3000);
     },
@@ -91,7 +96,11 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
           ]}
         >
           <Pressable style={styles.content} onPress={dismiss}>
-            <Ionicons name={ICON[type]} size={20} color={colors.textOnPrimary} />
+            <Ionicons
+              name={ICON[type]}
+              size={20}
+              color={colors.textOnPrimary}
+            />
             <Text style={[styles.text, { color: colors.textOnPrimary }]}>
               {message}
             </Text>

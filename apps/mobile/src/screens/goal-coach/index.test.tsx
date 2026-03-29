@@ -43,7 +43,10 @@ describe("GoalCoachScreen", () => {
 
     await waitFor(() => expect(getByText(/What's your goal/)).toBeTruthy());
 
-    fireEvent.changeText(getByPlaceholderText("Reply..."), "I want to lose weight");
+    fireEvent.changeText(
+      getByPlaceholderText("Reply..."),
+      "I want to lose weight",
+    );
     fireEvent.press(getByText("Send"));
 
     await waitFor(() => {
@@ -72,7 +75,10 @@ describe("GoalCoachScreen", () => {
 
     await waitFor(() => expect(getByText(/What's your goal/)).toBeTruthy());
 
-    fireEvent.changeText(getByPlaceholderText("Reply..."), "male 28 80kg 178cm active");
+    fireEvent.changeText(
+      getByPlaceholderText("Reply..."),
+      "male 28 80kg 178cm active",
+    );
     fireEvent.press(getByText("Send"));
 
     await waitFor(() => {
@@ -106,9 +112,8 @@ describe("GoalCoachScreen", () => {
 
     fireEvent.press(getByText("Set as my goals"));
 
-    expect(mockNavigate).toHaveBeenCalledWith("MainTabs", {
-      screen: "GoalsTab",
-      params: { prefill: recommendation },
+    expect(mockNavigate).toHaveBeenCalledWith("Goals", {
+      prefill: recommendation,
     });
   });
 

@@ -11,6 +11,7 @@ import type {
   FoodEntry,
   GoalRecommendation,
   MealType,
+  WeightEntry,
 } from "@snap-cals/shared";
 import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
@@ -19,17 +20,19 @@ import { initPurchases, usePurchasesListener } from "./hooks/use-purchases";
 import AiAssistScreen from "./screens/ai-assist";
 import DailyViewScreen from "./screens/daily-view";
 import EntryFormScreen from "./screens/entry-form";
-import GoalsScreen from "./screens/goals";
+import ForgotPasswordScreen from "./screens/forgot-password";
 import GoalCoachScreen from "./screens/goal-coach";
+import GoalsScreen from "./screens/goals";
 import LoginScreen from "./screens/login";
 import PaywallScreen from "./screens/paywall";
 import QuickAddScreen from "./screens/quick-add";
+import ResetPasswordScreen from "./screens/reset-password";
 import SettingsScreen from "./screens/settings";
 import SignupScreen from "./screens/signup";
 import VerifyEmailScreen from "./screens/verify-email";
-import ForgotPasswordScreen from "./screens/forgot-password";
-import ResetPasswordScreen from "./screens/reset-password";
 import WeeklyViewScreen from "./screens/weekly-view";
+import WeightHistoryScreen from "./screens/weight-history";
+import WeightLogScreen from "./screens/weight-log";
 import { useAuthStore } from "./stores/auth.store";
 import { useSettingsStore } from "./stores/settings.store";
 import { useUsageStore } from "./stores/usage.store";
@@ -45,7 +48,7 @@ export type AuthStackParamList = {
 export type MainTabParamList = {
   DailyTab: { date?: string } | undefined;
   WeeklyTab: undefined;
-  GoalsTab: { prefill?: GoalRecommendation } | undefined;
+  WeightTab: undefined;
   SettingsTab: undefined;
 };
 
@@ -56,8 +59,10 @@ export type MainStackParamList = {
   EntryForm: { entry?: FoodEntry; prefill?: EntryFormPrefill } | undefined;
   AiAssist: undefined;
   QuickAdd: undefined;
+  Goals: { prefill?: GoalRecommendation } | undefined;
   GoalCoach: undefined;
   Paywall: undefined;
+  WeightLog: { entry?: WeightEntry } | undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -82,7 +87,7 @@ function MainTabs() {
           const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
             DailyTab: "today-outline",
             WeeklyTab: "bar-chart-outline",
-            GoalsTab: "flag-outline",
+            WeightTab: "scale-outline",
             SettingsTab: "menu-outline",
           };
           return (
@@ -110,9 +115,13 @@ function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="GoalsTab"
-        component={GoalsScreen}
-        options={{ title: "Goals", tabBarLabel: "Goals", headerTitle: "Goals" }}
+        name="WeightTab"
+        component={WeightHistoryScreen}
+        options={{
+          title: "Weight",
+          tabBarLabel: "Weight",
+          headerTitle: "Weight History",
+        }}
       />
       <Tab.Screen
         name="SettingsTab"
@@ -215,6 +224,11 @@ export default function Navigation() {
             options={{ title: "Quick Add", headerBackTitle: "Back" }}
           />
           <MainStack.Screen
+            name="Goals"
+            component={GoalsScreen}
+            options={{ title: "Goals", headerBackTitle: "Back" }}
+          />
+          <MainStack.Screen
             name="GoalCoach"
             component={GoalCoachScreen}
             options={{ title: "AI Goal Coach", headerBackTitle: "Back" }}
@@ -224,14 +238,25 @@ export default function Navigation() {
             component={PaywallScreen}
             options={{ title: "Upgrade to Pro", headerBackTitle: "Back" }}
           />
+          <MainStack.Screen
+            name="WeightLog"
+            component={WeightLogScreen}
+            options={{ title: "Log Weight", headerBackTitle: "Back" }}
+          />
         </MainStack.Navigator>
       ) : (
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>
           <AuthStack.Screen name="Login" component={LoginScreen} />
           <AuthStack.Screen name="Signup" component={SignupScreen} />
           <AuthStack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
-          <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-          <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+          <AuthStack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
+          <AuthStack.Screen
+            name="ResetPassword"
+            component={ResetPasswordScreen}
+          />
         </AuthStack.Navigator>
       )}
     </NavigationContainer>

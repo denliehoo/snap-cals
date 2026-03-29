@@ -14,12 +14,20 @@ interface Props {
   onUpgrade: () => void;
 }
 
-export default function UsageLimitModal({ visible, onClose, resetsAt, onUpgrade }: Props) {
+export default function UsageLimitModal({
+  visible,
+  onClose,
+  resetsAt,
+  onUpgrade,
+}: Props) {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const resetTime = resetsAt
-    ? new Date(resetsAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    ? new Date(resetsAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
     : "midnight UTC";
 
   return (

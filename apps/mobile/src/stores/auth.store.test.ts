@@ -19,11 +19,22 @@ jest.mock("@/services/api", () => ({
 
 const { api } = jest.requireMock("@/services/api");
 
-const mockUser = { id: "user-1", email: "test@example.com", emailVerified: true, subscriptionTier: "FREE", createdAt: "" };
+const mockUser = {
+  id: "user-1",
+  email: "test@example.com",
+  emailVerified: true,
+  subscriptionTier: "FREE",
+  createdAt: "",
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
-  useAuthStore.setState({ token: null, user: null, isLoading: true, error: null });
+  useAuthStore.setState({
+    token: null,
+    user: null,
+    isLoading: true,
+    error: null,
+  });
 });
 
 describe("auth.store RevenueCat integration", () => {
@@ -59,8 +70,12 @@ describe("auth.store RevenueCat integration", () => {
   });
 
   it("calls identifyUser after googleLogin", async () => {
-    api.googleAuth.mockResolvedValue({ data: { token: "tok", user: mockUser } });
-    await useAuthStore.getState().googleLogin({ code: "c", clientId: "id", redirectUri: "uri" });
+    api.googleAuth.mockResolvedValue({
+      data: { token: "tok", user: mockUser },
+    });
+    await useAuthStore
+      .getState()
+      .googleLogin({ code: "c", clientId: "id", redirectUri: "uri" });
     expect(identifyUser).toHaveBeenCalledWith("user-1");
   });
 });

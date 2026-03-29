@@ -32,6 +32,7 @@ export async function cleanDb() {
   await prisma.authProvider.deleteMany();
   await prisma.foodEntry.deleteMany();
   await prisma.favoriteFood.deleteMany();
+  await prisma.weightEntry.deleteMany();
   await prisma.goal.deleteMany();
   await prisma.user.deleteMany();
 }

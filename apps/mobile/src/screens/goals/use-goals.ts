@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import type { GoalRecommendation } from "@snap-cals/shared";
+import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { getErrorMessage } from "@/utils/error";
 

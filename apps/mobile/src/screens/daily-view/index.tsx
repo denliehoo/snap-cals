@@ -162,6 +162,11 @@ export default function DailyViewScreen({ navigation, route }: Props) {
             icon: "star-outline",
             onPress: () => navigation.navigate("QuickAdd"),
           },
+          {
+            label: "Log Weight",
+            icon: "scale-outline",
+            onPress: () => navigation.navigate("WeightLog"),
+          },
         ]}
       />
       <UsageLimitModal
