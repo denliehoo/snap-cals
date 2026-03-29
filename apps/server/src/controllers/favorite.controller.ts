@@ -1,6 +1,8 @@
 import { MealType as PrismaMealType, type User } from "@prisma/client";
 import {
   AI_SOURCE_MAX_LENGTH,
+  FOOD_NAME_MAX_LENGTH,
+  SERVING_SIZE_MAX_LENGTH,
   type CreateFavoriteFoodRequest,
 } from "@snap-cals/shared";
 import type { Request, Response } from "express";
@@ -33,6 +35,18 @@ export const create = async (
 
     if (!Object.values(PrismaMealType).includes(mealType)) {
       return res.status(400).json({ message: "Invalid meal type" });
+    }
+
+    if (name.length > FOOD_NAME_MAX_LENGTH) {
+      return res.status(400).json({
+        message: `name must be ${FOOD_NAME_MAX_LENGTH} characters or less`,
+      });
+    }
+
+    if (servingSize && servingSize.length > SERVING_SIZE_MAX_LENGTH) {
+      return res.status(400).json({
+        message: `servingSize must be ${SERVING_SIZE_MAX_LENGTH} characters or less`,
+      });
     }
 
     if (source && source.length > AI_SOURCE_MAX_LENGTH) {

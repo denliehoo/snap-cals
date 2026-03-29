@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from "@snap-cals/shared";
 import { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Button from "@/components/button";
@@ -49,6 +50,7 @@ export default function SignupScreen({ navigation }: Props) {
           placeholder="Email"
           keyboardType="email-address"
           error={fieldErrors.email}
+          maxLength={EMAIL_MAX_LENGTH}
         />
         <FormField
           label="Password"
@@ -60,6 +62,7 @@ export default function SignupScreen({ navigation }: Props) {
           placeholder="Password"
           secureTextEntry
           error={fieldErrors.password}
+          maxLength={PASSWORD_MAX_LENGTH}
         />
 
         <View style={styles.buttonWrapper}>

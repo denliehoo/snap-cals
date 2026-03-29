@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { EMAIL_MAX_LENGTH } from "@snap-cals/shared";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Button from "@/components/button";
@@ -49,6 +50,7 @@ export default function ForgotPasswordScreen({ route, navigation }: Props) {
           onChangeText={setEmail}
           placeholder="Email"
           keyboardType="email-address"
+          maxLength={EMAIL_MAX_LENGTH}
         />
 
         <View style={styles.buttonWrapper}>

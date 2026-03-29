@@ -1,5 +1,5 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AI_SOURCE_MAX_LENGTH, MealType } from "@snap-cals/shared";
+import { AI_SOURCE_MAX_LENGTH, FOOD_NAME_MAX_LENGTH, SERVING_SIZE_MAX_LENGTH, MealType } from "@snap-cals/shared";
 import { useMemo, useState } from "react";
 import {
   ScrollView,
@@ -74,6 +74,7 @@ export default function EntryFormScreen({ navigation, route }: Props) {
         }}
         placeholder="e.g. Chicken Breast"
         error={fieldErrors.name}
+        maxLength={FOOD_NAME_MAX_LENGTH}
       />
       <FormField
         label="Calories *"
@@ -122,6 +123,7 @@ export default function EntryFormScreen({ navigation, route }: Props) {
         value={fields.servingSize}
         onChangeText={setters.setServingSize}
         placeholder="e.g. 100g, 1 cup"
+        maxLength={SERVING_SIZE_MAX_LENGTH}
       />
 
       <FormField

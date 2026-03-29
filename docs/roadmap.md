@@ -82,4 +82,4 @@ Ideas for future work, not yet prioritized or planned.
 
 ## Known Bugs
 
-- **Unlimited field lengths:** Most text fields (name, servingSize, etc.) accept any input length. Could allow excessively long strings to reach the backend.
+(none)

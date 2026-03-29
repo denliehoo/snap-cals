@@ -1,11 +1,13 @@
-import type {
-  ForgotPasswordRequest,
-  GoogleAuthRequest,
-  LoginRequest,
-  ResendVerificationRequest,
-  ResetPasswordRequest,
-  SignupRequest,
-  VerifyEmailRequest,
+import {
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  type ForgotPasswordRequest,
+  type GoogleAuthRequest,
+  type LoginRequest,
+  type ResendVerificationRequest,
+  type ResetPasswordRequest,
+  type SignupRequest,
+  type VerifyEmailRequest,
 } from "@snap-cals/shared";
 import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
@@ -49,10 +51,15 @@ export const signup = async (
         .status(400)
         .json({ message: "Email and password are required" });
     }
-    if (password.length < 6) {
+    if (email.length > EMAIL_MAX_LENGTH) {
       return res
         .status(400)
-        .json({ message: "Password must be at least 6 characters" });
+        .json({ message: `Email must be ${EMAIL_MAX_LENGTH} characters or less` });
+    }
+    if (password.length < 6 || password.length > PASSWORD_MAX_LENGTH) {
+      return res
+        .status(400)
+        .json({ message: `Password must be 6–${PASSWORD_MAX_LENGTH} characters` });
     }
 
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -97,6 +104,10 @@ export const login = async (
       return res
         .status(400)
         .json({ message: "Email and password are required" });
+    }
+
+    if (email.length > EMAIL_MAX_LENGTH || password.length > PASSWORD_MAX_LENGTH) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -263,10 +274,10 @@ export const resetPassword = async (
         .status(400)
         .json({ message: "Email, code, and new password are required" });
     }
-    if (newPassword.length < 6) {
+    if (newPassword.length < 6 || newPassword.length > PASSWORD_MAX_LENGTH) {
       return res
         .status(400)
-        .json({ message: "Password must be at least 6 characters" });
+        .json({ message: `Password must be 6–${PASSWORD_MAX_LENGTH} characters` });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });

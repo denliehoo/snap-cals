@@ -1,7 +1,8 @@
 import type { User } from "@prisma/client";
-import type {
-  CreateWeightEntryRequest,
-  UpdateWeightEntryRequest,
+import {
+  WEIGHT_NOTE_MAX_LENGTH,
+  type CreateWeightEntryRequest,
+  type UpdateWeightEntryRequest,
 } from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
@@ -25,6 +26,11 @@ export const create = async (
       return res
         .status(400)
         .json({ message: "weight, unit, and loggedAt are required" });
+    }
+    if (note && note.length > WEIGHT_NOTE_MAX_LENGTH) {
+      return res.status(400).json({
+        message: `note must be ${WEIGHT_NOTE_MAX_LENGTH} characters or less`,
+      });
     }
     const entry = await prisma.weightEntry.create({
       data: {
@@ -74,6 +80,11 @@ export const update = async (
     if (!existing) return res.status(404).json({ message: "Entry not found" });
 
     const { weight, unit, loggedAt, note } = req.body;
+    if (note && note.length > WEIGHT_NOTE_MAX_LENGTH) {
+      return res.status(400).json({
+        message: `note must be ${WEIGHT_NOTE_MAX_LENGTH} characters or less`,
+      });
+    }
     const weightData = weight && unit ? convertWeight(weight, unit) : {};
 
     const entry = await prisma.weightEntry.update({

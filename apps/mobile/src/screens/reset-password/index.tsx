@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { PASSWORD_MAX_LENGTH } from "@snap-cals/shared";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
@@ -83,6 +84,7 @@ export default function ResetPasswordScreen({ route, navigation }: Props) {
           placeholder="New password"
           secureTextEntry
           error={fieldErrors.newPassword}
+          maxLength={PASSWORD_MAX_LENGTH}
         />
         <FormField
           label="Confirm Password"
@@ -98,6 +100,7 @@ export default function ResetPasswordScreen({ route, navigation }: Props) {
           placeholder="Confirm password"
           secureTextEntry
           error={fieldErrors.confirmPassword}
+          maxLength={PASSWORD_MAX_LENGTH}
         />
 
         <View style={styles.buttonWrapper}>

@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { WEIGHT_NOTE_MAX_LENGTH } from "@snap-cals/shared";
 import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import Button from "@/components/button";
@@ -108,6 +109,7 @@ export default function WeightLogScreen({ navigation, route }: Props) {
         value={note}
         onChangeText={setNote}
         placeholder="Optional note"
+        maxLength={WEIGHT_NOTE_MAX_LENGTH}
       />
 
       <View style={styles.actions}>
