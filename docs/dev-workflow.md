@@ -6,11 +6,13 @@ This is a guide for **you** (the human developer) on how to use the Kiro CLI age
 
 You have three agents configured in `.kiro/agents/`. Each has a focused role and restricted permissions.
 
-| Agent   | Shortcut       | Switch command        | Can write to                          | Role                                        |
-| ------- | -------------- | --------------------- | ------------------------------------- | ------------------------------------------- |
-| PM      | `Ctrl+Shift+P` | `/agent swap pm`      | `docs/specs/**`, `docs/roadmap.md`    | Writes specs with acceptance criteria       |
-| Default | (built-in)     | `/agent swap default` | Everything                            | Builds the feature full-stack               |
-| QA      | `Ctrl+Shift+Q` | `/agent swap qa`      | `docs/specs/**`, `docs/roadmap.md`    | Reviews implementation against the spec     |
+| Agent   | Switch command        | Can write to                          | Role                                        |
+| ------- | --------------------- | ------------------------------------- | ------------------------------------------- |
+| PM      | `/agent swap pm`      | `docs/specs/**`, `docs/roadmap.md`    | Writes specs with acceptance criteria       |
+| Default | `/agent swap default` | Everything                            | Builds the feature full-stack               |
+| QA      | `/agent swap qa`      | `docs/specs/**`, `docs/roadmap.md`    | Reviews implementation against the spec     |
+
+Switch agents using `/agent swap <name>` (e.g., `/agent swap pm`). Keyboard shortcuts are configured in each agent's JSON file but may not work in all terminals (e.g., VS Code's integrated terminal intercepts many key combos). The `/agent swap` command always works.
 
 The PM and QA agents are intentionally restricted — they can't modify source code. This separation is the key idea: the agent that plans the work is not the agent that builds it, and the agent that reviews it is not the agent that wrote it.
 
@@ -27,7 +29,7 @@ If the item doesn't exist yet, add it to the roadmap first. It can be rough — 
 ### Step 1: Plan (PM agent)
 
 ```
-Ctrl+Shift+P
+/agent swap pm
 ```
 
 Tell the PM agent what you want to build. Reference the roadmap item if it helps:
@@ -68,7 +70,7 @@ After building, it should also:
 ### Step 3: QA (QA agent)
 
 ```
-Ctrl+Shift+Q
+/agent swap qa
 /clear
 ```
 
@@ -127,7 +129,7 @@ Review the fix, test it yourself, commit.
 If the bug is complex or you're not sure what's going wrong, use the QA agent first to investigate:
 
 ```
-Ctrl+Shift+Q
+/agent swap qa
 ```
 
 > "Investigate: weekly view shows wrong totals when entries span midnight"
