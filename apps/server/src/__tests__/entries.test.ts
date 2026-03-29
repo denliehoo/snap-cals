@@ -60,6 +60,27 @@ describe("POST /api/entries", () => {
     expect(res.status).toBe(400);
   });
 
+  it("creates an entry with source", async () => {
+    const res = await request(app)
+      .post("/api/entries")
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ ...entryData, source: "McDonald's" });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.source).toBe("McDonald's");
+  });
+
+  it("returns 400 when source exceeds 100 chars", async () => {
+    const res = await request(app)
+      .post("/api/entries")
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ ...entryData, source: "a".repeat(101) });
+
+    expect(res.status).toBe(400);
+  });
+
   it("returns 401 without auth", async () => {
     const res = await request(app)
       .post("/api/entries")
@@ -169,6 +190,39 @@ describe("PUT /api/entries/:id", () => {
       .send({ name: "X" });
 
     expect(res.status).toBe(404);
+  });
+
+  it("updates source on an entry", async () => {
+    const created = await request(app)
+      .post("/api/entries")
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send(entryData);
+
+    const res = await request(app)
+      .put(`/api/entries/${created.body.data.id}`)
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ source: "Subway" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.source).toBe("Subway");
+  });
+
+  it("returns 400 when updating source exceeds 100 chars", async () => {
+    const created = await request(app)
+      .post("/api/entries")
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send(entryData);
+
+    const res = await request(app)
+      .put(`/api/entries/${created.body.data.id}`)
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ source: "a".repeat(101) });
+
+    expect(res.status).toBe(400);
   });
 
   it("returns 404 when updating another users entry", async () => {

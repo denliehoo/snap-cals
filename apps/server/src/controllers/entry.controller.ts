@@ -1,7 +1,8 @@
 import { MealType as PrismaMealType, type User } from "@prisma/client";
-import type {
-  CreateFoodEntryRequest,
-  UpdateFoodEntryRequest,
+import {
+  AI_SOURCE_MAX_LENGTH,
+  type CreateFoodEntryRequest,
+  type UpdateFoodEntryRequest,
 } from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
@@ -13,8 +14,17 @@ export const create = async (
   res: Response,
 ) => {
   try {
-    const { name, calories, protein, carbs, fat, servingSize, mealType, date } =
-      req.body;
+    const {
+      name,
+      calories,
+      protein,
+      carbs,
+      fat,
+      servingSize,
+      source,
+      mealType,
+      date,
+    } = req.body;
 
     if (!name || calories == null || !mealType || !date) {
       return res
@@ -26,6 +36,12 @@ export const create = async (
       return res.status(400).json({ message: "Invalid meal type" });
     }
 
+    if (source && source.length > AI_SOURCE_MAX_LENGTH) {
+      return res.status(400).json({
+        message: `source must be ${AI_SOURCE_MAX_LENGTH} characters or less`,
+      });
+    }
+
     const entry = await prisma.foodEntry.create({
       data: {
         userId: userId(req),
@@ -35,6 +51,7 @@ export const create = async (
         carbs: Number(carbs) || 0,
         fat: Number(fat) || 0,
         servingSize: servingSize || "",
+        source: source || null,
         mealType,
         date: new Date(date),
       },
@@ -112,8 +129,27 @@ export const update = async (
       return res.status(400).json({ message: "Invalid meal type" });
     }
 
-    const { name, calories, protein, carbs, fat, servingSize, mealType, date } =
-      req.body;
+    if (
+      req.body.source !== undefined &&
+      req.body.source &&
+      req.body.source.length > AI_SOURCE_MAX_LENGTH
+    ) {
+      return res.status(400).json({
+        message: `source must be ${AI_SOURCE_MAX_LENGTH} characters or less`,
+      });
+    }
+
+    const {
+      name,
+      calories,
+      protein,
+      carbs,
+      fat,
+      servingSize,
+      source,
+      mealType,
+      date,
+    } = req.body;
 
     const entry = await prisma.foodEntry.update({
       where: { id },
@@ -124,6 +160,7 @@ export const update = async (
         ...(carbs !== undefined && { carbs: Number(carbs) }),
         ...(fat !== undefined && { fat: Number(fat) }),
         ...(servingSize !== undefined && { servingSize }),
+        ...(source !== undefined && { source: source || null }),
         ...(mealType !== undefined && { mealType }),
         ...(date !== undefined && { date: new Date(date) }),
       },
@@ -148,6 +185,7 @@ export const getRecent = async (req: Request, res: Response) => {
         carbs: true,
         fat: true,
         servingSize: true,
+        source: true,
         mealType: true,
       },
     });

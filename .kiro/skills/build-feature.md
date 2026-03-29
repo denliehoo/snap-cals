@@ -42,7 +42,7 @@ Replace `<feature-name>` with the actual feature name from the spec filename.
 After the QA subagent returns:
 
 1. Read `docs/specs/<feature-name>-qa.md` to see the full report.
-2. If verdict is **PASS** — tell the user the feature is done and ready to commit. Stop here.
+2. If verdict is **PASS** — proceed to Phase 4.
 3. If verdict is **NEEDS WORK**:
    a. Fix every failure listed in the QA report.
    b. Re-run `pnpm check` and `pnpm test` to verify fixes.
@@ -50,6 +50,13 @@ After the QA subagent returns:
    d. Read the new report. If still NEEDS WORK, repeat from step 3. Continue until verdict is PASS.
 
 Maximum 3 QA iterations. If still failing after 3 rounds, stop and tell the user what's unresolved so they can intervene.
+
+## Phase 4: Finalize
+
+After QA passes:
+
+1. Add the feature to the Roadmap list in `README.md`.
+2. Tell the user the feature is done and ready to commit.
 
 ## Rules
 

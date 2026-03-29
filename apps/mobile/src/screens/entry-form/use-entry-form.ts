@@ -38,6 +38,7 @@ export function useEntryForm(
   const [servingSize, setServingSize] = useState(
     entry?.servingSize || prefill?.servingSize || "",
   );
+  const [source, setSource] = useState(entry?.source || prefill?.source || "");
   const [mealType, setMealType] = useState<MealType>(
     (entry?.mealType as MealType) || prefill?.mealType || guessMealType(),
   );
@@ -75,6 +76,7 @@ export function useEntryForm(
         carbs: Number(carbs) || 0,
         fat: Number(fat) || 0,
         servingSize,
+        source: source.trim() || undefined,
         mealType,
         date,
       };
@@ -122,6 +124,7 @@ export function useEntryForm(
       carbs,
       fat,
       servingSize,
+      source,
       mealType,
       date,
     },
@@ -132,6 +135,7 @@ export function useEntryForm(
       setCarbs,
       setFat,
       setServingSize,
+      setSource,
       setMealType,
       setDate,
     },

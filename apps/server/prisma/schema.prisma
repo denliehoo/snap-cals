@@ -75,6 +75,7 @@ model FoodEntry {
   carbs       Float
   fat         Float
   servingSize String
+  source      String?
   mealType    MealType
   date        DateTime @db.Date
   createdAt   DateTime @default(now())
@@ -103,6 +104,7 @@ model FavoriteFood {
   carbs       Float
   fat         Float
   servingSize String
+  source      String?
   mealType    MealType
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])

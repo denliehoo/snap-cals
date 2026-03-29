@@ -9,6 +9,7 @@ const nutritionSchema = z.object({
   carbs: z.number(),
   fat: z.number(),
   servingSize: z.string(),
+  source: z.string().optional(),
 });
 
 export type NutritionEstimate = z.infer<typeof nutritionSchema>;
@@ -16,7 +17,11 @@ export type NutritionEstimate = z.infer<typeof nutritionSchema>;
 const SYSTEM_PROMPT =
   "You are a nutrition estimator. Given a food description, estimate its nutrition for a single item. " +
   "If no quantity is specified, assume a standard serving. " +
-  "Return calories (kcal), protein (g), carbs (g), fat (g), a cleaned-up food name, and serving size.";
+  "Return calories (kcal), protein (g), carbs (g), fat (g), a cleaned-up food name, and serving size. " +
+  "If the source/provider is clearly identifiable from the description (e.g. 'Big Mac' → 'McDonald\\'s', " +
+  "'Starbucks latte' → 'Starbucks'), include it in the 'source' field and use that provider's published " +
+  "nutrition data when possible. If the user explicitly mentions a source, use it. " +
+  "If the source is ambiguous or generic, return an empty string for 'source'.";
 
 export function createGeminiClient(apiKey = process.env.GEMINI_API_KEY ?? "") {
   return new GoogleGenAI({ apiKey });

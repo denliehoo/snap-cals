@@ -64,6 +64,27 @@ describe("POST /api/favorites", () => {
 
     expect(res.status).toBe(400);
   });
+
+  it("creates a favorite with source", async () => {
+    const res = await request(app)
+      .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ ...favoriteData, name: "Big Mac", source: "McDonald's" });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.source).toBe("McDonald's");
+  });
+
+  it("returns 400 when source exceeds 100 chars", async () => {
+    const res = await request(app)
+      .post("/api/favorites")
+      .set("x-api-key", process.env.API_KEY!)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ ...favoriteData, source: "a".repeat(101) });
+
+    expect(res.status).toBe(400);
+  });
 });
 
 describe("GET /api/favorites", () => {

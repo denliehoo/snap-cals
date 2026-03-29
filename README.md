@@ -280,16 +280,18 @@ eas build --profile development --platform android # Physical Android device
 - **Android:** Add license testers in Google Play Console → Settings → License testing
 - RevenueCat sandbox mode is enabled automatically in development builds
 
-## Phase Roadmap
+## Roadmap
 
 See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
 
-- **Phase 1:** CRUD calorie tracking
-- **Phase 2:** AI autofill via Gemini API
-- **Phase 3:** AI chat for clarifying questions
-- **Phase 4:** Image-based food recognition
-- **Phase 5:** Code quality (Biome, testing)
-- **Phase 6:** Goal coaching
-- **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth)
-- **Phase 8:** Subscription & usage limits
-- **Phase 9:** RevenueCat SDK integration
+1. CRUD calorie tracking
+2. AI autofill via Gemini API
+3. AI chat for clarifying questions
+4. Image-based food recognition
+5. Code quality (Biome, testing)
+6. Goal coaching
+7. Auth enhancements (email verification, password reset, Google OAuth)
+8. Subscription & usage limits
+9. RevenueCat SDK integration
+10. Weight log
+11. Food source / provider field

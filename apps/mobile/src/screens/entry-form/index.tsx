@@ -1,5 +1,5 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { MealType } from "@snap-cals/shared";
+import { AI_SOURCE_MAX_LENGTH, MealType } from "@snap-cals/shared";
 import { useMemo, useState } from "react";
 import {
   ScrollView,
@@ -122,6 +122,14 @@ export default function EntryFormScreen({ navigation, route }: Props) {
         value={fields.servingSize}
         onChangeText={setters.setServingSize}
         placeholder="e.g. 100g, 1 cup"
+      />
+
+      <FormField
+        label="Source"
+        value={fields.source}
+        onChangeText={setters.setSource}
+        placeholder="e.g. McDonald's, Homemade, Hawker"
+        maxLength={AI_SOURCE_MAX_LENGTH}
       />
 
       <Text style={styles.label}>Meal Type</Text>

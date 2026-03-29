@@ -46,7 +46,7 @@ describe("AiAssistScreen", () => {
     const { getByPlaceholderText, getByText } = await render(
       <AiAssistScreen />,
     );
-    expect(getByPlaceholderText(/grande oat milk latte/)).toBeTruthy();
+    expect(getByPlaceholderText(/Big Mac from McDonald/)).toBeTruthy();
     expect(getByText("Estimate")).toBeTruthy();
     expect(getByText(/AI estimates may not be exact/)).toBeTruthy();
   });
@@ -78,7 +78,7 @@ describe("AiAssistScreen", () => {
       <AiAssistScreen />,
     );
     fireEvent.changeText(
-      getByPlaceholderText(/grande oat milk latte/),
+      getByPlaceholderText(/Big Mac from McDonald/),
       "latte",
     );
     fireEvent.press(getByText("Estimate"));
@@ -98,7 +98,7 @@ describe("AiAssistScreen", () => {
       <AiAssistScreen />,
     );
     fireEvent.changeText(
-      getByPlaceholderText(/grande oat milk latte/),
+      getByPlaceholderText(/Big Mac from McDonald/),
       "pizza",
     );
     fireEvent.press(getByText("Estimate"));
@@ -113,7 +113,7 @@ describe("AiAssistScreen", () => {
       <AiAssistScreen />,
     );
     fireEvent.changeText(
-      getByPlaceholderText(/grande oat milk latte/),
+      getByPlaceholderText(/Big Mac from McDonald/),
       "a".repeat(170),
     );
 

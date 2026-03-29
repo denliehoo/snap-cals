@@ -15,6 +15,7 @@ const chatResponseSchema = z.discriminatedUnion("type", [
       carbs: z.number(),
       fat: z.number(),
       servingSize: z.string(),
+      source: z.string().optional(),
     }),
   }),
 ]);
@@ -24,9 +25,14 @@ export type ChatResponse = z.infer<typeof chatResponseSchema>;
 const SYSTEM_PROMPT =
   "You are a nutrition assistant. Ask up to 3 short clarifying questions to improve your estimate " +
   "(portion size, brand, preparation). When you have enough info or the user wants an estimate now, " +
-  "respond with a nutrition estimate. Always respond in JSON with " +
+  "respond with a nutrition estimate. " +
+  "If the user mentions where the food is from, acknowledge it and use provider-specific nutrition data. " +
+  "If the source is clearly inferable, state your assumption and ask the user to confirm (batch with other questions). " +
+  "If the source is ambiguous, ask where the food is from (batch with other questions). " +
+  "When a source is known, include it in the estimate 'source' field. If unknown, use an empty string. " +
+  "Always respond in JSON with " +
   '{ "type": "question", "content": "..." } or ' +
-  '{ "type": "estimate", "content": "...", "estimate": { name, calories, protein, carbs, fat, servingSize } }.';
+  '{ "type": "estimate", "content": "...", "estimate": { name, calories, protein, carbs, fat, servingSize, source } }.';
 
 export async function chat(
   messages: ChatMessage[],

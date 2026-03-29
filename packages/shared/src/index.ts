@@ -36,6 +36,7 @@ export interface FoodEntry {
   carbs: number;
   fat: number;
   servingSize: string;
+  source: string | null;
   mealType: MealType;
   date: string;
   createdAt: string;
@@ -106,6 +107,7 @@ export interface CreateFoodEntryRequest {
   carbs: number;
   fat: number;
   servingSize: string;
+  source?: string;
   mealType: MealType;
   date: string;
 }
@@ -140,6 +142,7 @@ export interface FavoriteFoodItem {
   carbs: number;
   fat: number;
   servingSize: string;
+  source: string | null;
   mealType: MealType;
   createdAt: string;
 }
@@ -151,6 +154,7 @@ export interface CreateFavoriteFoodRequest {
   carbs: number;
   fat: number;
   servingSize: string;
+  source?: string;
   mealType: MealType;
 }
 
@@ -161,12 +165,14 @@ export interface RecentFoodItem {
   carbs: number;
   fat: number;
   servingSize: string;
+  source: string | null;
   mealType: MealType;
 }
 
 // AI Chat limits
 export const AI_DESCRIPTION_MAX_LENGTH = 200;
 export const AI_CHAT_REPLY_MAX_LENGTH = 300;
+export const AI_SOURCE_MAX_LENGTH = 100;
 
 // Image
 export interface ImageData {
@@ -189,6 +195,7 @@ export interface AiEstimateResponse {
   carbs: number;
   fat: number;
   servingSize: string;
+  source?: string;
 }
 
 // AI Chat

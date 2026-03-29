@@ -1,5 +1,8 @@
 import { MealType as PrismaMealType, type User } from "@prisma/client";
-import type { CreateFavoriteFoodRequest } from "@snap-cals/shared";
+import {
+  AI_SOURCE_MAX_LENGTH,
+  type CreateFavoriteFoodRequest,
+} from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
 
@@ -11,8 +14,16 @@ export const create = async (
   res: Response,
 ) => {
   try {
-    const { name, calories, protein, carbs, fat, servingSize, mealType } =
-      req.body;
+    const {
+      name,
+      calories,
+      protein,
+      carbs,
+      fat,
+      servingSize,
+      source,
+      mealType,
+    } = req.body;
 
     if (!name || calories == null || !mealType) {
       return res
@@ -22,6 +33,12 @@ export const create = async (
 
     if (!Object.values(PrismaMealType).includes(mealType)) {
       return res.status(400).json({ message: "Invalid meal type" });
+    }
+
+    if (source && source.length > AI_SOURCE_MAX_LENGTH) {
+      return res.status(400).json({
+        message: `source must be ${AI_SOURCE_MAX_LENGTH} characters or less`,
+      });
     }
 
     const existing = await prisma.favoriteFood.findUnique({
@@ -51,6 +68,7 @@ export const create = async (
         carbs: Number(carbs) || 0,
         fat: Number(fat) || 0,
         servingSize: servingSize || "",
+        source: source || null,
         mealType,
       },
     });

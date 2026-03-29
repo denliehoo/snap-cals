@@ -168,7 +168,7 @@ export default function AiAssistScreen() {
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
-          placeholder='e.g. "grande oat milk latte" or "2 eggs on toast"'
+          placeholder="e.g. Big Mac from McDonald's"
           placeholderTextColor={colors.textSecondary}
           value={assist.description}
           onChangeText={assist.setDescription}

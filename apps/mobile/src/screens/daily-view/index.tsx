@@ -119,6 +119,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
           )}
           refreshing={refreshing}
           onRefresh={onRefresh}
+          stickySectionHeadersEnabled
           contentContainerStyle={
             sections.length === 0 ? styles.emptyContainer : styles.listContent
           }
@@ -192,6 +193,7 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       paddingHorizontal: spacing.md,
       paddingVertical: spacing.sm,
       marginTop: spacing.sm,
+      backgroundColor: colors.background,
     },
     sectionTitle: {
       fontSize: fontSize.sm,

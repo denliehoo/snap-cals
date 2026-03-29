@@ -11,7 +11,9 @@ interface Props {
 
 export default function EntryRow({ entry, onPress, onLongPress }: Props) {
   const colors = useColors();
-  const { name, servingSize, calories, protein, carbs, fat } = entry;
+  const { name, source, servingSize, calories, protein, carbs, fat } = entry;
+
+  const meta = [source, servingSize].filter(Boolean).join(" · ");
 
   return (
     <TouchableOpacity
@@ -23,9 +25,9 @@ export default function EntryRow({ entry, onPress, onLongPress }: Props) {
       <View style={styles.top}>
         <View style={styles.info}>
           <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
-          {servingSize ? (
+          {meta ? (
             <Text style={[styles.meta, { color: colors.textSecondary }]}>
-              {servingSize}
+              {meta}
             </Text>
           ) : null}
         </View>

@@ -119,8 +119,8 @@ snap-cals/
 - Auth routes: `/api/auth/signup`, `/api/auth/login`, `/api/auth/verify-email`, `/api/auth/resend-verification`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/google`
 - Resource routes: `/api/entries`, `/api/goals`, `/api/favorites`, `/api/weight`
 - Recents route: `GET /api/entries/recent` — returns last 20 food entries for the user (no deduplication)
-- AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API
-- AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`), optional `forceEstimate` flag, and optional image, returns AI's next response (clarifying question or nutrition estimate) via multi-turn Gemini conversation
+- AI routes: `/api/ai/estimate` — accepts food description and/or image (base64 + mimeType), returns structured nutrition estimates via Gemini API. Includes optional `source` field when the provider is identifiable from the description.
+- AI routes: `/api/ai/chat` — accepts conversation history (`ChatMessage[]`), optional `forceEstimate` flag, and optional image, returns AI's next response (clarifying question or nutrition estimate with optional `source`) via multi-turn Gemini conversation
 - AI routes: `/api/ai/goal-coach` — accepts conversation history (`ChatMessage[]`), returns AI's next response (clarifying question or goal recommendation with daily calories/macros) via multi-turn Gemini conversation for personalized nutrition goal setting
 - All non-auth routes protected via Passport.js JWT middleware
 - Request/response types defined in `@snap-cals/shared`
@@ -165,6 +165,7 @@ snap-cals/
 - AuthProvider tracks OAuth providers per user with `@@unique([provider, providerUserId])` — extensible to Facebook/Apple/GitHub
 - Otp stores hashed 6-digit codes for email verification and password reset with 10-min expiry
 - FavoriteFood stores reusable food templates per user with `@@unique([userId, name])` and a max of 25 per user
+- FoodEntry and FavoriteFood have an optional `source` field (string, nullable) for recording where food came from (e.g. "McDonald's", "Homemade")
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
 - Neon branching: `main` branch for dev data, `unit-test` branch for automated tests
 - Migration workflow: always use `prisma migrate dev --create-only` to generate migrations, then `prisma migrate deploy` to apply — never run `prisma migrate dev` without `--create-only` against a database with data you want to keep
@@ -212,16 +213,3 @@ snap-cals/
 - Custom `render` in `src/__tests__/helpers.tsx` wraps components in ThemeProvider + SnackbarProvider
 - Always import `render` from helpers, not directly from `@testing-library/react-native`
 - `pnpm test` runs both suites; `pnpm test:server` and `pnpm test:mobile` run individually
-
-## Phase Roadmap
-
-- **Phase 1:** CRUD calorie tracking — completed
-- **Phase 2:** AI autofill via Gemini API — completed
-- **Phase 3:** AI chat with clarifying questions (toggleable) — completed
-- **Phase 4:** Image-based food recognition — completed
-- **Phase 5:** Quick features (favorites, recents, image crop) & code quality (Biome) — completed
-- **Phase 6:** AI Goal Coach — completed
-- **Phase 7:** Auth enhancements (email verification, password reset, Google OAuth, account linking) — completed
-- **Phase 8:** Subscription & Usage Limits — completed
-- **Phase 9:** RevenueCat SDK Integration — completed
-- **Phase 10:** Weight Log — in progress

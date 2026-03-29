@@ -36,6 +36,7 @@ export default function QuickAddScreen({ navigation }: Props) {
 
   const handlePress = (item: QuickAddItem) => {
     const { name, calories, protein, carbs, fat, servingSize, mealType } = item;
+    const source = "source" in item ? item.source : undefined;
     const prefill: EntryFormPrefill = {
       name,
       calories,
@@ -43,6 +44,7 @@ export default function QuickAddScreen({ navigation }: Props) {
       carbs,
       fat,
       servingSize,
+      source: source ?? undefined,
       mealType,
     };
     navigation.navigate("EntryForm", { prefill });
@@ -119,7 +121,16 @@ export default function QuickAddScreen({ navigation }: Props) {
         onPress={() => handlePress(item)}
       >
         <View style={styles.top}>
-          <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+          <View style={styles.nameCol}>
+            <Text style={[styles.name, { color: colors.text }]}>
+              {item.name}
+            </Text>
+            {"source" in item && item.source ? (
+              <Text style={[styles.source, { color: colors.textSecondary }]}>
+                {item.source}
+              </Text>
+            ) : null}
+          </View>
           <Text style={[styles.cals, { color: colors.calorieColor }]}>
             {item.calories} kcal
           </Text>
@@ -230,11 +241,17 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       justifyContent: "space-between",
       alignItems: "center",
     },
+    nameCol: {
+      flex: 1,
+      marginRight: spacing.sm,
+    },
     name: {
       fontSize: fontSize.md,
       fontWeight: fontWeight.semibold,
-      flex: 1,
-      marginRight: spacing.sm,
+    },
+    source: {
+      fontSize: fontSize.xs,
+      marginTop: 2,
     },
     cals: { fontSize: fontSize.md, fontWeight: fontWeight.bold },
     macroRow: { flexDirection: "row", gap: spacing.md, marginTop: spacing.sm },

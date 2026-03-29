@@ -28,9 +28,11 @@ const auth = (req: ReturnType<typeof withApiKey>) =>
 
 describe("POST /api/weight", () => {
   it("creates entry with both kg and lbs", async () => {
-    const res = await auth(
-      withApiKey(request(app).post("/api/weight")),
-    ).send({ weight: 70, unit: "kg", loggedAt: new Date().toISOString() });
+    const res = await auth(withApiKey(request(app).post("/api/weight"))).send({
+      weight: 70,
+      unit: "kg",
+      loggedAt: new Date().toISOString(),
+    });
 
     expect(res.status).toBe(201);
     expect(res.body.data.weightKg).toBe(70);
@@ -38,9 +40,11 @@ describe("POST /api/weight", () => {
   });
 
   it("converts lbs to kg", async () => {
-    const res = await auth(
-      withApiKey(request(app).post("/api/weight")),
-    ).send({ weight: 154.32, unit: "lbs", loggedAt: new Date().toISOString() });
+    const res = await auth(withApiKey(request(app).post("/api/weight"))).send({
+      weight: 154.32,
+      unit: "lbs",
+      loggedAt: new Date().toISOString(),
+    });
 
     expect(res.status).toBe(201);
     expect(res.body.data.weightLbs).toBe(154.32);
@@ -48,9 +52,7 @@ describe("POST /api/weight", () => {
   });
 
   it("stores optional note", async () => {
-    const res = await auth(
-      withApiKey(request(app).post("/api/weight")),
-    ).send({
+    const res = await auth(withApiKey(request(app).post("/api/weight"))).send({
       weight: 70,
       unit: "kg",
       loggedAt: new Date().toISOString(),
@@ -62,17 +64,20 @@ describe("POST /api/weight", () => {
   });
 
   it("returns 400 for missing weight", async () => {
-    const res = await auth(
-      withApiKey(request(app).post("/api/weight")),
-    ).send({ unit: "kg", loggedAt: new Date().toISOString() });
+    const res = await auth(withApiKey(request(app).post("/api/weight"))).send({
+      unit: "kg",
+      loggedAt: new Date().toISOString(),
+    });
 
     expect(res.status).toBe(400);
   });
 
   it("returns 400 for negative weight", async () => {
-    const res = await auth(
-      withApiKey(request(app).post("/api/weight")),
-    ).send({ weight: -5, unit: "kg", loggedAt: new Date().toISOString() });
+    const res = await auth(withApiKey(request(app).post("/api/weight"))).send({
+      weight: -5,
+      unit: "kg",
+      loggedAt: new Date().toISOString(),
+    });
 
     expect(res.status).toBe(400);
   });
