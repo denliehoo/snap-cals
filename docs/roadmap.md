@@ -82,6 +82,7 @@ Log weight from the daily view FAB, view a line chart with time range filters (7
 ## Product Backlog
 
 Ideas for future phases, not yet prioritized or planned.
+
 - **Food Source / Provider Field:** Add a "source" or "where from" field to food entries (similar to MyFitnessPal). Update AI prompts to infer the provider when possible, ask for it in discussion mode if the user doesn't mention it, and auto-populate it in non-discussion mode. Make the input placeholder more descriptive to encourage users to include where they got the food. When a provider is known, the AI should try to use that provider's published nutrition data (many chains and restaurants publish macros online) rather than generic estimates.
 - **EAS OTA Updates:** Investigate and set up Expo EAS Update for over-the-air JS bundle updates without requiring a full app store release.
 - **BYOK (Bring Your Own Key):** Let power users enter their own Gemini API key in settings to get unlimited AI usage without a subscription. Useful as an alternative to paid plans for technical users. Key would be stored encrypted and sent server-side per request.
@@ -89,4 +90,4 @@ Ideas for future phases, not yet prioritized or planned.
 
 ## Known Bugs
 
-_No known bugs._
+- **Limit fields:** Most fields currently can have any input length. This could be dangerous as people could send a long string to the backend
