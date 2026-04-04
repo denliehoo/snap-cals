@@ -143,7 +143,7 @@ export default function AiAssistScreen() {
                 replyVoice.recording ? replyVoice.stop : replyVoice.start
               }
               disabled={chat.loading && !replyVoice.recording}
-              style={[styles.micButton, { borderColor: colors.border }]}
+              style={styles.micButton}
             >
               <Ionicons
                 name={replyVoice.recording ? "stop-circle" : "mic-outline"}
@@ -212,7 +212,7 @@ export default function AiAssistScreen() {
         />
         {descriptionVoice.available && (
           <TouchableOpacity
-            style={[styles.micButton, { borderColor: colors.border }]}
+            style={styles.micButton}
             onPress={
               descriptionVoice.recording
                 ? descriptionVoice.stop
@@ -318,17 +318,18 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       alignItems: "center",
     },
     micButton: {
-      padding: spacing.sm,
-      borderRadius: borderRadius.md,
-      borderWidth: 1,
+      backgroundColor: colors.surface,
+      width: 40,
+      height: 40,
+      borderRadius: 20,
       justifyContent: "center",
       alignItems: "center",
     },
     sendButton: {
       backgroundColor: colors.primary,
-      borderRadius: 20,
       width: 40,
       height: 40,
+      borderRadius: 20,
       justifyContent: "center",
       alignItems: "center",
     },
