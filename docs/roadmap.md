@@ -70,6 +70,12 @@ Add an optional `source` free-text field (max 100 chars) to food entries and fav
 
 See [Spec](./specs/food-source.md), [QA Report](./specs/food-source-qa.md).
 
+### 12. Voice Logging
+
+Add speech-to-text via `expo-speech-recognition` (on-device, English-only) as an input modality on the AI Assist screen. Mic button in both the initial input row and the chat reply row. Tap to record, tap to stop (or auto-stop at 30s). Interim results shown in real-time. Transcribed text populates the input field (truncated to char limit) — user reviews and submits manually. Permission denied → Alert with "Open Settings" button. Mic hidden if speech recognition unavailable on device. No backend changes. Requires dev build.
+
+See [Spec](./specs/voice-logging.md), [QA Report](./specs/voice-logging-qa.md).
+
 ---
 
 ## Backlog
@@ -79,7 +85,6 @@ Ideas for future work, not yet prioritized or planned.
 - **EAS OTA Updates:** Investigate and set up Expo EAS Update for over-the-air JS bundle updates without requiring a full app store release.
 - **BYOK (Bring Your Own Key):** Let power users enter their own Gemini API key in settings to get unlimited AI usage without a subscription. Useful as an alternative to paid plans for technical users. Key would be stored encrypted and sent server-side per request.
 - **Optimize Image Token Usage in AI Chat:** Currently the food photo is re-sent with every message in the AI chat flow, costing ~250 extra tokens per message. Investigate alternatives (e.g., send image only on first message, cache a text description of the image server-side, or let the user explicitly re-attach). Balance between cost savings and the ability for the AI to reference the photo when asked.
-- **Voice Logging:** Add speech-to-text as an input modality for food logging. User taps a mic button, speaks naturally (e.g., "two eggs and toast with butter"), and the transcribed text is fed into the existing AI estimation pipeline. No new backend logic needed — just a new frontend input that routes to `/api/ai/estimate` or `/api/ai/chat`.
 - **Data Export (CSV):** Let users export their food entry and weight data for a date range as a CSV file. Useful for sharing with trainers, doctors, or nutritionists. Server-side endpoint that queries entries and returns CSV. Consider making this a Pro-only feature.
 - **Intermittent Fasting Timer:** A start/stop eating window timer with countdown and optional push notifications. Tracks fasting windows (e.g., 16:8, 18:6) and shows current fasting state on the daily view. Mostly a frontend feature with optional server persistence of fasting history.
 - **AI Meal Suggestions:** "What should I eat?" button on the daily view that sends remaining daily calories/macros to the AI and returns meal ideas that fit the user's remaining budget. Leverages existing Gemini integration with a new prompt — minimal backend work.

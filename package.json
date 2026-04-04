@@ -1,6 +1,7 @@
 {
   "name": "snap-cals",
   "private": true,
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev:server": "pnpm --filter @snap-cals/server dev",
     "dev:mobile": "EXPO_PUBLIC_USE_LOCAL=1 pnpm --filter @snap-cals/mobile start --go",

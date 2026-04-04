@@ -12,5 +12,8 @@ export const AI_DESCRIPTION_MAX_LENGTH = 200;
 export const AI_CHAT_REPLY_MAX_LENGTH = 300;
 export const AI_SOURCE_MAX_LENGTH = 100;
 
+// Voice
+export const VOICE_RECORDING_MAX_DURATION_MS = 30_000;
+
 // Image
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB base64 string length limit

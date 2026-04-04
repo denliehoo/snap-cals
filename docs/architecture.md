@@ -25,6 +25,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | In-App Purchases | RevenueCat (react-native-purchases) | Cross-platform subscription management, webhook-driven tier updates |
 | Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
 | Charts           | react-native-chart-kit + react-native-svg | Lightweight line chart for weight history, Expo-compatible |
+| Speech Recognition | expo-speech-recognition | On-device voice-to-text for hands-free food logging, requires dev build |
 
 ## Monorepo Structure
 
@@ -105,6 +106,14 @@ snap-cals/
 - After successful purchase, optimistic local update (`setTier(PRO)`) — webhook handles server-side tier update
 - Requires `expo-dev-client` + EAS Build — native IAP modules don't work in Expo Go
 - EAS Build profiles configured in `apps/mobile/eas.json` (development, ios-simulator, preview, production)
+
+### Voice Logging
+- `expo-speech-recognition` provides on-device speech-to-text on the AI Assist screen
+- Available in both initial input mode (description field) and chat mode (reply field)
+- `useVoiceInput` hook (co-located in `screens/ai-assist/`) encapsulates permissions, recording state, interim results, 30-second timeout, and cleanup
+- Mic button is hidden entirely if speech recognition is unavailable on the device
+- Transcribed text is truncated to the field's max length (`AI_DESCRIPTION_MAX_LENGTH` or `AI_CHAT_REPLY_MAX_LENGTH`)
+- Requires dev build (`expo-dev-client`) — does not work in Expo Go
 
 ### Theme / Design System
 - Centralized in `apps/mobile/src/theme.ts`

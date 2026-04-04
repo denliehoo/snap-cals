@@ -295,3 +295,4 @@ See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
 9. RevenueCat SDK integration
 10. Weight log
 11. Food source / provider field
+12. Voice logging

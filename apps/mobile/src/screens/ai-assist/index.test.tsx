@@ -6,6 +6,15 @@ const mockPickFromGallery = jest.fn();
 const mockClearImage = jest.fn();
 let mockImage: { base64: string; mimeType: string; uri: string } | null = null;
 
+jest.mock("./use-voice-input", () => ({
+  useVoiceInput: () => ({
+    recording: false,
+    available: false,
+    start: jest.fn(),
+    stop: jest.fn(),
+  }),
+}));
+
 jest.mock("./use-image-picker", () => ({
   useImagePicker: () => ({
     image: mockImage,

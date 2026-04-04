@@ -26,6 +26,7 @@ import ChatView from "./chat-view";
 import { useAiAssist } from "./use-ai-assist";
 import { useChat } from "./use-chat";
 import { useImagePicker } from "./use-image-picker";
+import { useVoiceInput } from "./use-voice-input";
 
 export default function AiAssistScreen() {
   const colors = useColors();
@@ -41,6 +42,12 @@ export default function AiAssistScreen() {
   const [sheetVisible, setSheetVisible] = useState(false);
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
+  const descriptionVoice = useVoiceInput(
+    assist.setDescription,
+    AI_DESCRIPTION_MAX_LENGTH,
+  );
+  const replyVoice = useVoiceInput(setReply, AI_CHAT_REPLY_MAX_LENGTH);
+
   const imageData = image
     ? { base64: image.base64, mimeType: image.mimeType }
     : undefined;
@@ -50,6 +57,10 @@ export default function AiAssistScreen() {
   clearImageRef.current = clearImage;
   const resetChatRef = useRef(chat.reset);
   resetChatRef.current = chat.reset;
+  const descriptionVoiceStopRef = useRef(descriptionVoice.stop);
+  descriptionVoiceStopRef.current = descriptionVoice.stop;
+  const replyVoiceStopRef = useRef(replyVoice.stop);
+  replyVoiceStopRef.current = replyVoice.stop;
 
   // Reset ephemeral state when leaving this screen (e.g. after confirming an entry)
   useFocusEffect(
@@ -60,6 +71,8 @@ export default function AiAssistScreen() {
         setChatStarted(false);
         setReply("");
         resetChatRef.current();
+        descriptionVoiceStopRef.current();
+        replyVoiceStopRef.current();
       },
       [assist.setDescription],
     ),
@@ -124,6 +137,21 @@ export default function AiAssistScreen() {
             maxLength={AI_CHAT_REPLY_MAX_LENGTH}
             editable={!chat.loading}
           />
+          {replyVoice.available && (
+            <TouchableOpacity
+              onPress={
+                replyVoice.recording ? replyVoice.stop : replyVoice.start
+              }
+              disabled={chat.loading && !replyVoice.recording}
+              style={[styles.micButton, { borderColor: colors.border }]}
+            >
+              <Ionicons
+                name={replyVoice.recording ? "stop-circle" : "mic-outline"}
+                size={24}
+                color={replyVoice.recording ? colors.error : colors.primary}
+              />
+            </TouchableOpacity>
+          )}
           <Button
             title="Send"
             onPress={() => {
@@ -177,6 +205,24 @@ export default function AiAssistScreen() {
           autoFocus
           editable={!assist.loading}
         />
+        {descriptionVoice.available && (
+          <TouchableOpacity
+            style={[styles.micButton, { borderColor: colors.border }]}
+            onPress={
+              descriptionVoice.recording
+                ? descriptionVoice.stop
+                : descriptionVoice.start
+            }
+            disabled={assist.loading && !descriptionVoice.recording}
+            testID="mic-button"
+          >
+            <Ionicons
+              name={descriptionVoice.recording ? "stop-circle" : "mic-outline"}
+              size={24}
+              color={descriptionVoice.recording ? colors.error : colors.primary}
+            />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={[styles.cameraButton, { borderColor: colors.border }]}
           onPress={() => setSheetVisible(true)}
@@ -260,6 +306,13 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       borderColor: colors.border,
     },
     cameraButton: {
+      padding: spacing.sm,
+      borderRadius: borderRadius.md,
+      borderWidth: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    micButton: {
       padding: spacing.sm,
       borderRadius: borderRadius.md,
       borderWidth: 1,

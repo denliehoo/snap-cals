@@ -6,11 +6,11 @@ This is a guide for **you** (the human developer) on how to use the Kiro CLI age
 
 You have three agents configured in `.kiro/agents/`. Each has a focused role and restricted permissions.
 
-| Agent   | Switch command        | Can write to                          | Role                                        |
-| ------- | --------------------- | ------------------------------------- | ------------------------------------------- |
-| PM      | `/agent swap pm`      | `docs/specs/**`, `docs/roadmap.md`    | Writes specs with acceptance criteria       |
-| Default | `/agent swap default` | Everything                            | Builds the feature full-stack               |
-| QA      | `/agent swap qa`      | `docs/specs/**`, `docs/roadmap.md`    | Reviews implementation against the spec     |
+| Agent   | Switch command        | Can write to                       | Role                                    |
+| ------- | --------------------- | ---------------------------------- | --------------------------------------- |
+| PM      | `/agent swap pm`      | `docs/specs/**`, `docs/roadmap.md` | Writes specs with acceptance criteria   |
+| Default | `/agent swap default` | Everything                         | Builds the feature full-stack           |
+| QA      | `/agent swap qa`      | `docs/specs/**`, `docs/roadmap.md` | Reviews implementation against the spec |
 
 Switch agents using `/agent swap <name>` (e.g., `/agent swap pm`). Keyboard shortcuts are configured in each agent's JSON file but may not work in all terminals (e.g., VS Code's integrated terminal intercepts many key combos). The `/agent swap` command always works.
 
@@ -37,6 +37,7 @@ Tell the PM agent what you want to build. Reference the roadmap item if it helps
 > "I want to build the favorites feature from the roadmap — users should be able to star food entries and re-log them quickly."
 
 The PM agent will:
+
 1. Ask you clarifying questions (scope, edge cases, UX expectations)
 2. Review the existing codebase, architecture docs, shared types, and Prisma schema
 3. Write a spec to `docs/specs/<feature-name>.md` with:
@@ -51,7 +52,7 @@ The PM agent will:
 ### Step 2: Build + QA (default agent)
 
 ```
-/agent swap default
+/agent swap kiro_default
 /clear
 ```
 
@@ -121,6 +122,7 @@ These are handled automatically by the build-feature skill's QA loop — the QA 
 Use `/clear` when switching from planning (PM agent) to building (default agent). This gives the builder a fresh context so it's not anchored to the planning conversation.
 
 You do **not** need to `/clear` when:
+
 - Iterating within a phase (e.g., asking the PM agent to revise the spec)
 - The build-feature skill is running (it handles QA internally via subagents with isolated context)
 - Doing a quick bug fix with the default agent
@@ -140,8 +142,8 @@ docs/
 
 ## Summary
 
-| Phase     | Agent   | Input                    | Output                              |
-| --------- | ------- | ------------------------ | ----------------------------------- |
-| Pick      | You     | `docs/roadmap.md`        | Decision on what to build next      |
-| Plan      | PM      | Your description         | `docs/specs/<feature>.md` + roadmap update |
-| Build+QA  | Default (+ QA subagent) | `build-feature` skill + spec | Working code + QA report + architecture/README updates + roadmap update |
+| Phase    | Agent                   | Input                        | Output                                                                  |
+| -------- | ----------------------- | ---------------------------- | ----------------------------------------------------------------------- |
+| Pick     | You                     | `docs/roadmap.md`            | Decision on what to build next                                          |
+| Plan     | PM                      | Your description             | `docs/specs/<feature>.md` + roadmap update                              |
+| Build+QA | Default (+ QA subagent) | `build-feature` skill + spec | Working code + QA report + architecture/README updates + roadmap update |
