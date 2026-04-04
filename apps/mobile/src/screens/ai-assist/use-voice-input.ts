@@ -27,6 +27,7 @@ export function useVoiceInput(
 ) {
   const [recording, setRecording] = useState(false);
   const [available, setAvailable] = useState(false);
+  const recordingRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const useSpeechEvent = useEvent ?? noopEvent;
 
@@ -44,23 +45,28 @@ export function useVoiceInput(
   useEffect(() => {
     return () => {
       clearTimer();
-      if (recording) {
+      if (recordingRef.current) {
         SpeechModule?.abort();
       }
     };
-  }, [recording, clearTimer]);
+  }, [clearTimer]);
 
   useSpeechEvent("result", (event) => {
+    if (!recordingRef.current) return;
     const transcript = event.results[0]?.transcript ?? "";
     setText(transcript.slice(0, maxLength));
   });
 
   useSpeechEvent("end", () => {
+    if (!recordingRef.current) return;
+    recordingRef.current = false;
     setRecording(false);
     clearTimer();
   });
 
   useSpeechEvent("error", () => {
+    if (!recordingRef.current) return;
+    recordingRef.current = false;
     setRecording(false);
     clearTimer();
   });
@@ -85,6 +91,7 @@ export function useVoiceInput(
       return;
     }
 
+    recordingRef.current = true;
     setRecording(true);
     SpeechModule.start({
       lang: "en-US",

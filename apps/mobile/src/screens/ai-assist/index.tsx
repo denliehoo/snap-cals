@@ -137,7 +137,7 @@ export default function AiAssistScreen() {
             maxLength={AI_CHAT_REPLY_MAX_LENGTH}
             editable={!chat.loading}
           />
-          {replyVoice.available && (
+          {replyVoice.available && !reply.trim() ? (
             <TouchableOpacity
               onPress={
                 replyVoice.recording ? replyVoice.stop : replyVoice.start
@@ -151,18 +151,23 @@ export default function AiAssistScreen() {
                 color={replyVoice.recording ? colors.error : colors.primary}
               />
             </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                const text = reply.trim();
+                if (!text) return;
+                setReply("");
+                chat.sendMessage(text);
+              }}
+              disabled={!reply.trim() || chat.loading}
+              style={[
+                styles.sendButton,
+                { opacity: !reply.trim() || chat.loading ? 0.5 : 1 },
+              ]}
+            >
+              <Ionicons name="send" size={20} color={colors.textOnPrimary} />
+            </TouchableOpacity>
           )}
-          <Button
-            title="Send"
-            onPress={() => {
-              const text = reply.trim();
-              if (!text) return;
-              setReply("");
-              chat.sendMessage(text);
-            }}
-            disabled={!reply.trim()}
-            loading={chat.loading}
-          />
         </View>
         {reply.length >= AI_CHAT_REPLY_MAX_LENGTH * 0.8 && (
           <Text
@@ -316,6 +321,14 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       padding: spacing.sm,
       borderRadius: borderRadius.md,
       borderWidth: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    sendButton: {
+      backgroundColor: colors.primary,
+      borderRadius: 20,
+      width: 40,
+      height: 40,
       justifyContent: "center",
       alignItems: "center",
     },
