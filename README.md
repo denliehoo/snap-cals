@@ -280,6 +280,14 @@ eas build --profile development --platform android # Physical Android device
 - **Android:** Add license testers in Google Play Console → Settings → License testing
 - RevenueCat sandbox mode is enabled automatically in development builds
 
+## Keeping the Server Awake (Render Free Tier)
+
+Render's free tier spins down after 15 minutes of inactivity. To keep the server alive during active hours, set up a cron job at [cron-job.org](https://cron-job.org) (free) to ping the health endpoint:
+
+- **URL:** `https://your-app.onrender.com/api/health`
+- **Cron expression:** `*/14 7-21 * * *` (every 14 minutes, 7am–10pm)
+- **Timezone:** Set to your local timezone
+
 ## Roadmap
 
 See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
