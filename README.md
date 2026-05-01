@@ -51,6 +51,7 @@ Earlier phases of this project used detailed implementation plans (`docs/phase-X
 snap-cals/
 ├── apps/
 │   ├── mobile/          # React Native + Expo app
+│   ├── admin/           # React + Vite admin dashboard
 │   └── server/          # Express API
 ├── packages/
 │   └── shared/          # Shared TypeScript types and enums
@@ -227,7 +228,47 @@ pnpm test
 
 Tests will refuse to run if `DATABASE_URL_TEST` is not set. After pulling new migrations, re-run `pnpm migrate:test` in `apps/server` to keep the test branch in sync.
 
-### 8. Build APK / iOS for testing
+### 8. Set up the admin panel (optional)
+
+Create a separate Neon project for admin data and add to `apps/server/.env`:
+
+```
+ADMIN_DATABASE_URL="your-admin-neon-connection-string"
+ADMIN_DIRECT_URL="your-admin-neon-direct-connection-string"
+ADMIN_JWT_SECRET="a-different-secret-from-JWT_SECRET"
+```
+
+Run the admin migration and seed:
+
+```bash
+cd apps/server
+npx prisma migrate dev --create-only --name init --schema=prisma/admin/schema.prisma
+npx prisma migrate deploy --schema=prisma/admin/schema.prisma
+pnpm seed:admin
+```
+
+Create `apps/admin/.env`:
+
+```bash
+cp apps/admin/.env.example apps/admin/.env
+```
+
+Edit `apps/admin/.env`:
+
+```
+VITE_API_URL=http://localhost:3000/api
+VITE_API_KEY=must-match-API_KEY-in-server-env
+```
+
+Run the admin dashboard:
+
+```bash
+pnpm dev:admin
+```
+
+Default admin login: `admin@snapcals.com` / `admin123`
+
+### 9. Build APK / iOS for testing
 
 ```bash
 # Android APK (standalone, no dev server needed)
@@ -304,3 +345,4 @@ See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
 10. Weight log
 11. Food source / provider field
 12. Voice logging
+13. Admin panel

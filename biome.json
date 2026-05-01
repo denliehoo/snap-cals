@@ -10,6 +10,7 @@
       "apps/mobile/src/**",
       "apps/server/src/**",
       "apps/server/prisma/**",
+      "apps/admin/src/**",
       "packages/shared/src/**"
     ]
   },

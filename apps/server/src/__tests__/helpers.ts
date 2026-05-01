@@ -16,6 +16,14 @@ export function signToken(userId: string) {
   });
 }
 
+export function signAdminToken(adminId: string) {
+  return jwt.sign(
+    { sub: adminId, role: "admin" },
+    process.env.ADMIN_JWT_SECRET ?? "",
+    { expiresIn: "1h" },
+  );
+}
+
 export async function createTestUser(
   email = "test@test.com",
   password = "password123",

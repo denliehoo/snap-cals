@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/admin-client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("ADMIN_DATABASE_URL")
+  directUrl = env("ADMIN_DIRECT_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

@@ -24,3 +24,13 @@ export const aiLimiter = rateLimit({
   skip,
   message: { message: "Too many requests, please try again later" },
 });
+
+/** Admin auth routes: 20 requests per 15 minutes per IP */
+export const adminAuthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip,
+  message: { message: "Too many requests, please try again later" },
+});

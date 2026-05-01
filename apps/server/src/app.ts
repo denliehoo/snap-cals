@@ -3,6 +3,7 @@ import express from "express";
 import { validateApiKey } from "./middleware/api-key";
 import passport from "./middleware/passport";
 import { aiLimiter, authLimiter } from "./middleware/rate-limit";
+import adminRoutes from "./routes/admin.routes";
 import aiRoutes from "./routes/ai.routes";
 import authRoutes from "./routes/auth.routes";
 import entryRoutes from "./routes/entry.routes";
@@ -29,6 +30,7 @@ app.use("/api/webhooks", webhookRoutes);
 app.use("/api", validateApiKey);
 
 app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/entries", entryRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/ai", aiLimiter, aiRoutes);

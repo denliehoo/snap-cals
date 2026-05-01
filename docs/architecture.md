@@ -189,6 +189,18 @@ snap-cals/
 - Migration workflow: always use `prisma migrate dev --create-only` to generate migrations, then `prisma migrate deploy` to apply — never run `prisma migrate dev` without `--create-only` against a database with data you want to keep
 - Tests require `DATABASE_URL_TEST` env var pointing to the test branch — they refuse to run without it
 
+### Admin Database
+- Separate Neon project for admin auth data — isolates admin credentials from app user data
+- Prisma schema at `prisma/admin/schema.prisma`, generates to `node_modules/.prisma/admin-client`
+- Admin migrations live in `prisma/admin/migrations/` (separate from app migrations in `prisma/migrations/`) — Prisma resolves the migrations directory relative to the schema file
+- Server imports two Prisma clients: `src/lib/prisma.ts` (app DB) and `src/lib/admin-prisma.ts` (admin DB)
+- `postinstall` runs `prisma generate` for both schemas
+- Admin model: `Admin` (id, email, name, passwordHash, createdAt)
+- Admin auth uses a separate JWT secret (`ADMIN_JWT_SECRET`) — must differ from the app JWT secret
+- Admin JWT payload includes `role: "admin"` to distinguish from app JWTs
+- Admin routes at `/api/admin/*` are protected by `authenticateAdmin` middleware (except `/api/admin/auth/login`)
+- Seed script: `pnpm seed:admin` creates the first admin account
+
 ## Mobile Conventions
 
 ### File Naming

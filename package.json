@@ -4,6 +4,7 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev:server": "pnpm --filter @snap-cals/server dev",
+    "dev:admin": "pnpm --filter @snap-cals/admin dev",
     "dev:mobile": "EXPO_PUBLIC_USE_LOCAL=1 pnpm --filter @snap-cals/mobile start --go",
     "prod:mobile": "pnpm --filter @snap-cals/mobile start --go",
     "test": "pnpm --filter @snap-cals/server --filter @snap-cals/mobile --parallel test",
