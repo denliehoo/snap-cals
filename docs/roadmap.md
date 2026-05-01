@@ -78,6 +78,16 @@ See [Spec](./specs/voice-logging.md), [QA Report](./specs/voice-logging-qa.md).
 
 ---
 
+## Up Next
+
+### 13. Admin Panel
+
+A web-based admin dashboard (`apps/admin`, React + Vite) for viewing and managing user data. Separate admin database (Neon) with its own `Admin` model and auth system (email/password + JWT). The Express server connects to both databases via dual Prisma clients. v1 includes: admin login, user list with search, individual user detail (daily entries, weekly summary, weight history, goals — all read + edit for entries/goals), and admin account creation. Dashboard page is a "coming soon" placeholder. Responsive design (desktop + mobile web). No user deletion, no admin password reset, no platform-wide analytics in v1.
+
+See [Spec](./specs/admin-panel.md).
+
+---
+
 ## Backlog
 
 Ideas for future work, not yet prioritized or planned.

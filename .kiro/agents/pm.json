@@ -6,7 +6,7 @@
   "allowedTools": ["fs_read", "grep", "glob", "code", "web_search", "web_fetch"],
   "toolsSettings": {
     "fs_write": {
-      "allowedPaths": ["docs/specs/**", "docs/roadmap.md"]
+      "allowedPaths": ["docs/specs/**", "docs/roadmap.md", "docs/architecture.md" , "README.md"]
     }
   },
   "resources": [

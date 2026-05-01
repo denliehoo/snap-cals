@@ -26,6 +26,10 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
 | Charts           | react-native-chart-kit + react-native-svg | Lightweight line chart for weight history, Expo-compatible |
 | Speech Recognition | expo-speech-recognition | On-device voice-to-text for hands-free food logging, requires dev build |
+| Admin Frontend   | React + Vite + TypeScript                                | Lightweight SPA for admin dashboard, no SSR needed |
+| Admin DB         | Postgres (Neon, separate project)                        | Isolates admin auth data from app user data |
+| Admin Charts     | Recharts (or similar)                                    | Lightweight web charting for weight history in admin |
+| Admin CSS        | Tailwind CSS                                             | Utility-first, responsive design out of the box |
 
 ## Monorepo Structure
 
@@ -39,9 +43,14 @@ snap-cals/
 │   │       ├── services/      # API service layer
 │   │       ├── stores/        # Zustand stores
 │   │       └── theme.ts       # Design system (colors, spacing, fonts)
+│   ├── admin/           # React + Vite admin dashboard
+│   │   └── src/
+│   │       ├── pages/         # Page components (login, users, etc.)
+│   │       ├── components/    # Reusable UI components
+│   │       └── services/      # API service layer
 │   └── server/          # Express API
 │       └── src/
-│           ├── routes/        # Express route definitions
+│           ├── routes/        # Express route definitions (app + admin)
 │           ├── controllers/   # Request handlers
 │           ├── services/      # Business logic (Gemini AI, etc.)
 │           └── middleware/     # Auth, validation, error handling
