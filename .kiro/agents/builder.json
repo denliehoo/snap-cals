@@ -1,0 +1,26 @@
+{
+  "name": "builder",
+  "description": "Full-stack builder agent — builds features from specs, runs checks, iterates with QA, and handles git operations. Auto-trusts all tools.",
+  "prompt": "You are the builder for Snap Cals, a mobile calorie tracking app. You implement features full-stack (Prisma, Express API, React Native frontend, shared types) following the project's coding conventions defined in .kiro/skills/. You run checks, fix issues, and iterate with the QA subagent until acceptance criteria pass. You also handle git commits and pushes when the user asks.",
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "grep",
+    "glob",
+    "code",
+    "use_subagent",
+    "web_search",
+    "web_fetch"
+  ],
+  "allowedTools": ["*"],
+  "resources": [
+    "file://docs/architecture.md",
+    "file://docs/roadmap.md",
+    "file://packages/shared/src/index.ts",
+    "file://apps/server/prisma/schema.prisma",
+    "skill://.kiro/skills/*.md"
+  ],
+  "keyboardShortcut": "ctrl+shift+b",
+  "welcomeMessage": "Builder mode. Give me a spec and I'll build it full-stack, or tell me what to fix."
+}

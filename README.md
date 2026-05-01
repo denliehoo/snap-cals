@@ -9,7 +9,7 @@ This project was built as an experiment with agentic AI using [Kiro CLI](https:/
 This project is built collaboratively with [Kiro CLI](https://kiro.dev), an agentic AI coding assistant. The development workflow uses three specialized agents that mirror a small engineering team:
 
 - **PM agent** — takes a feature idea and produces a spec with acceptance criteria (writes to `docs/specs/`)
-- **Default agent** — builds the feature full-stack, following conventions from `.kiro/skills/`
+- **Builder agent** — builds the feature full-stack, following conventions from `.kiro/skills/`
 - **QA agent** — reviews the implementation against the spec, writes a QA report with pass/fail per criterion
 
 I'm the orchestrator: I pick what to build from the product backlog (`docs/roadmap.md`), drive each phase, and review the output. The agents do the heavy lifting within each phase, but I decide when a spec is good enough, when to move to build, and when to ship.
@@ -31,7 +31,7 @@ The agents follow conventions defined in `.kiro/skills/`. When I spot opportunit
 
 ### Specs vs implementation plans
 
-Earlier phases of this project used detailed implementation plans (`docs/phase-X-implementation-plan.md`) that prescribed step-by-step build instructions. The current workflow replaces these with specs that define *what* to build and *how to verify it*, without dictating the implementation path. The PM agent writes the "what" (spec + acceptance criteria), the default agent figures out the "how", and the QA agent verifies against the "what." The old implementation plans remain as historical records.
+Earlier phases of this project used detailed implementation plans (`docs/phase-X-implementation-plan.md`) that prescribed step-by-step build instructions. The current workflow replaces these with specs that define *what* to build and *how to verify it*, without dictating the implementation path. The PM agent writes the "what" (spec + acceptance criteria), the builder agent figures out the "how", and the QA agent verifies against the "what." The old implementation plans remain as historical records.
 
 ## Tech Stack
 

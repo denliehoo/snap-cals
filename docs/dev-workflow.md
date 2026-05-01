@@ -9,7 +9,7 @@ You have three agents configured in `.kiro/agents/`. Each has a focused role and
 | Agent   | Switch command        | Can write to                       | Role                                    |
 | ------- | --------------------- | ---------------------------------- | --------------------------------------- |
 | PM      | `/agent swap pm`      | `docs/specs/**`, `docs/roadmap.md` | Writes specs with acceptance criteria   |
-| Default | `/agent swap default` | Everything                         | Builds the feature full-stack           |
+| Builder | `/agent swap builder` | Everything                         | Builds the feature full-stack           |
 | QA      | `/agent swap qa`      | `docs/specs/**`, `docs/roadmap.md` | Reviews implementation against the spec |
 
 Switch agents using `/agent swap <name>` (e.g., `/agent swap pm`). Keyboard shortcuts are configured in each agent's JSON file but may not work in all terminals (e.g., VS Code's integrated terminal intercepts many key combos). The `/agent swap` command always works.
@@ -49,10 +49,10 @@ The PM agent will:
 
 **Don't move on until you're happy with the spec.** Read through the acceptance criteria carefully. If something is missing or wrong, tell the PM agent to revise it. This is the cheapest place to catch mistakes — before any code is written.
 
-### Step 2: Build + QA (default agent)
+### Step 2: Build + QA (builder agent)
 
 ```
-/agent swap kiro_default
+/agent swap builder
 /clear
 ```
 
@@ -62,7 +62,7 @@ Then tell it to build using the skill:
 
 > "Using the build-feature skill, implement docs/specs/favorites.md"
 
-That's it. The `build-feature` skill (`.kiro/skills/build-feature.md`) instructs the default agent to:
+That's it. The `build-feature` skill (`.kiro/skills/build-feature.md`) instructs the builder agent to:
 
 1. **Read** — all skills in `.kiro/skills/`, `docs/architecture.md`, and the spec
 2. **Build** — full-stack implementation following all conventions
@@ -82,10 +82,10 @@ Not everything goes through the full plan → build → QA cycle. Bug fixes are 
 
 ### Small bugs (obvious fix)
 
-Use the default agent directly. No spec needed.
+Use the builder agent directly. No spec needed.
 
 ```
-/agent swap default
+/agent swap builder
 ```
 
 > "The entry form crashes when protein is left blank — fix it"
@@ -104,10 +104,10 @@ If the bug is complex or you're not sure what's going wrong, use the QA agent fi
 
 The QA agent will read the relevant code, trace the logic, and write up what it finds. It can't fix anything (no source code write access), but it'll tell you exactly what's wrong and where.
 
-Then switch to the default agent to fix it:
+Then switch to the builder agent to fix it:
 
 ```
-/agent swap default
+/agent swap builder
 /clear
 ```
 
@@ -115,24 +115,24 @@ Then switch to the default agent to fix it:
 
 ### Bugs found during QA of a feature
 
-These are handled automatically by the build-feature skill's QA loop — the QA report describes failures and the default agent fixes them before re-running QA.
+These are handled automatically by the build-feature skill's QA loop — the QA report describes failures and the builder agent fixes them before re-running QA.
 
 ## When to `/clear`
 
-Use `/clear` when switching from planning (PM agent) to building (default agent). This gives the builder a fresh context so it's not anchored to the planning conversation.
+Use `/clear` when switching from planning (PM agent) to building (builder agent). This gives the builder a fresh context so it's not anchored to the planning conversation.
 
 You do **not** need to `/clear` when:
 
 - Iterating within a phase (e.g., asking the PM agent to revise the spec)
 - The build-feature skill is running (it handles QA internally via subagents with isolated context)
-- Doing a quick bug fix with the default agent
+- Doing a quick bug fix with the builder agent
 - Asking follow-up questions in the same phase
 
 ## File structure
 
 ```
 docs/
-├── architecture.md              # Updated by default agent during builds
+├── architecture.md              # Updated by builder agent during builds
 ├── roadmap.md                   # Product backlog — maintained by you, refined by PM, marked done by QA
 ├── dev-workflow.md              # This file (for you, the human)
 └── specs/
@@ -146,4 +146,4 @@ docs/
 | -------- | ----------------------- | ---------------------------- | ----------------------------------------------------------------------- |
 | Pick     | You                     | `docs/roadmap.md`            | Decision on what to build next                                          |
 | Plan     | PM                      | Your description             | `docs/specs/<feature>.md` + roadmap update                              |
-| Build+QA | Default (+ QA subagent) | `build-feature` skill + spec | Working code + QA report + architecture/README updates + roadmap update |
+| Build+QA | Builder (+ QA subagent) | `build-feature` skill + spec | Working code + QA report + architecture/README updates + roadmap update |
