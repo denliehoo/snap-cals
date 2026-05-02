@@ -2,6 +2,10 @@ import { MealType } from "@snap-cals/shared";
 import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import EntryFormScreen from "./";
 
+jest.mock("@/hooks/use-web-redirect", () => ({
+  useWebRedirect: () => false,
+}));
+
 jest.mock("@/services/api", () => ({
   api: {
     createEntry: jest.fn().mockResolvedValue({ data: {} }),

@@ -75,19 +75,23 @@ export default function LoginScreen({ navigation }: Props) {
           <Button title="Log In" onPress={submit} loading={loading} />
         </View>
 
-        <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>or</Text>
-          <View style={styles.dividerLine} />
-        </View>
+        {google.ready && (
+          <>
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or</Text>
+              <View style={styles.dividerLine} />
+            </View>
 
-        <TouchableOpacity
-          style={styles.googleButton}
-          onPress={google.trigger}
-          disabled={!google.ready || google.loading}
-        >
-          <Text style={styles.googleText}>Continue with Google</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.googleButton}
+              onPress={google.trigger}
+              disabled={google.loading}
+            >
+              <Text style={styles.googleText}>Continue with Google</Text>
+            </TouchableOpacity>
+          </>
+        )}
 
         <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
           <Text style={styles.link}>Don't have an account? Sign up</Text>

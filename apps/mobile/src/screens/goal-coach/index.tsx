@@ -4,16 +4,20 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import Button from "@/components/button";
 import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useColors } from "@/contexts/theme-context";
+import { useWebRedirect } from "@/hooks/use-web-redirect";
 import ChatView from "@/screens/ai-assist/chat-view";
 import { borderRadius, fontSize, spacing } from "@/theme";
 import { useGoalCoach } from "./use-goal-coach";
 
 export default function GoalCoachScreen() {
+  const redirecting = useWebRedirect();
   const colors = useColors();
   const { messages, loading, recommendation, sendMessage, confirm } =
     useGoalCoach();
   const [reply, setReply] = useState("");
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  if (redirecting) return null;
 
   return (
     <KeyboardAwareView

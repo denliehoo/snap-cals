@@ -1,8 +1,8 @@
 import { type FoodEntry, MealType } from "@snap-cals/shared";
 import { useState } from "react";
-import { Alert } from "react-native";
 import type { EntryFormPrefill } from "@/navigation";
 import { api } from "@/services/api";
+import { showAlert } from "@/utils/alert";
 import { toLocalDateString } from "@/utils/date";
 import { getErrorMessage } from "@/utils/error";
 
@@ -94,7 +94,7 @@ export function useEntryForm(
   };
 
   const confirmDelete = (onSuccess: () => void) => {
-    Alert.alert("Delete Entry", "Are you sure?", [
+    showAlert("Delete Entry", "Are you sure?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",

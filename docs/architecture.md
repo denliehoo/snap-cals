@@ -26,6 +26,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
 | Charts           | react-native-chart-kit + react-native-svg | Lightweight line chart for weight history, Expo-compatible |
 | Speech Recognition | expo-speech-recognition | On-device voice-to-text for hands-free food logging, requires dev build |
+| Web Support      | react-native-web + react-dom + @expo/metro-runtime       | PWA / mobile web version via Expo's web target, same codebase as native |
 | Admin Frontend   | React + Vite + TypeScript                                | Lightweight SPA for admin dashboard, no SSR needed |
 | Admin DB         | Postgres (Neon, separate project)                        | Isolates admin auth data from app user data |
 | Admin Charts     | Recharts (or similar)                                    | Lightweight web charting for weight history in admin |
@@ -131,6 +132,20 @@ snap-cals/
 - All UI components should import from theme — no hardcoded values
 - Designed for easy theme swapping (change colors in one file)
 - Android native dialogs (time picker, etc.) are themed via an Expo config plugin (`plugins/with-custom-theme.js`) that sets `colorPrimary`/`colorAccent` in Android's `styles.xml`. This only takes effect in `eas build` — Expo Go uses its own native theme, so native dialogs will appear with default blue colors during Expo Go development.
+
+### Web / PWA Support
+- Same `apps/mobile` codebase compiled for web via `react-native-web` + Expo's web target
+- Platform-specific code uses `.web.ts` / `.web.tsx` file extension convention — Metro resolves these automatically on web builds
+- Storage abstraction: `utils/storage.ts` (wraps `expo-secure-store`) and `utils/storage.web.ts` (wraps `localStorage`) — all stores and contexts import from `utils/storage`
+- Web overrides exist for: image picker, voice input, purchases, paywall, settings, time picker, quick-add, weight history, Google auth
+- Google OAuth button is conditionally rendered (hidden on web where `useGoogleAuth` returns `ready: false`)
+- Paywall shows "Coming Soon" on web — no in-app purchases
+- Swipe gestures (quick-add, weight history) replaced with visible buttons on web
+- Weight history chart omitted on web (react-native-chart-kit web compatibility is unreliable)
+- Navigation linking config maps screens to URL paths for browser back/forward and bookmarking (web only)
+- PWA manifest configured in `app.json` `web` section: standalone display, theme colors, app name
+- Build: `npx expo export --platform web` → static SPA in `dist/`
+- Dev: `pnpm dev:mw` or `expo start --web`
 
 ### API Design
 - Base path: `/api`

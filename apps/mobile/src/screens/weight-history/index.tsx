@@ -3,25 +3,23 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { WeightEntry } from "@snap-cals/shared";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import {
   ActivityIndicator,
-  Alert,
-  type Animated,
-  Dimensions,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
-import { RectButton, Swipeable } from "react-native-gesture-handler";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
 import type { MainStackParamList, MainTabParamList } from "@/navigation";
 import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
+import { showAlert } from "@/utils/alert";
 import { useWeightHistory } from "./use-weight-history";
+import WeightChart from "./weight-chart";
+import WeightEntryItem from "./weight-entry-item";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, "WeightTab">,
@@ -29,7 +27,6 @@ type Props = CompositeScreenProps<
 >;
 
 const RANGES = ["7d", "30d", "90d", "all"] as const;
-const screenWidth = Dimensions.get("window").width;
 
 export default function WeightHistoryScreen({ navigation }: Props) {
   const colors = useColors();
@@ -44,15 +41,10 @@ export default function WeightHistoryScreen({ navigation }: Props) {
     weightUnit,
   } = useWeightHistory();
   const styles = useMemo(() => makeStyles(colors), [colors]);
-  const swipeableRefs = useRef<Map<string, Swipeable>>(new Map());
 
   const handleDelete = (entry: WeightEntry) => {
-    Alert.alert("Delete Weight Entry", "Delete this entry?", [
-      {
-        text: "Cancel",
-        style: "cancel",
-        onPress: () => swipeableRefs.current.get(entry.id)?.close(),
-      },
+    showAlert("Delete Weight Entry", "Delete this entry?", [
+      { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
         style: "destructive",
@@ -64,63 +56,8 @@ export default function WeightHistoryScreen({ navigation }: Props) {
     ]);
   };
 
-  const renderRightActions = (
-    _progress: Animated.AnimatedInterpolation<number>,
-    _drag: Animated.AnimatedInterpolation<number>,
-  ) => (
-    <View style={[styles.swipeAction, { backgroundColor: colors.error }]}>
-      <Ionicons name="trash" size={24} color={colors.textOnPrimary} />
-    </View>
-  );
-
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
-
-  const renderItem = ({ item }: { item: WeightEntry }) => {
-    const displayWeight = weightUnit === "kg" ? item.weightKg : item.weightLbs;
-    return (
-      <Swipeable
-        ref={(ref) => {
-          if (ref) swipeableRefs.current.set(item.id, ref);
-        }}
-        renderRightActions={renderRightActions}
-        onSwipeableOpen={() => handleDelete(item)}
-      >
-        <RectButton
-          style={[styles.entryRow, { backgroundColor: colors.surface }]}
-          onPress={() => navigation.navigate("WeightLog", { entry: item })}
-        >
-          <View style={styles.entryLeft}>
-            <Text style={[styles.entryWeight, { color: colors.text }]}>
-              {displayWeight} {weightUnit}
-            </Text>
-            <Text style={[styles.entryDate, { color: colors.textSecondary }]}>
-              {formatDate(item.loggedAt)}
-            </Text>
-            {item.note ? (
-              <Text style={[styles.entryNote, { color: colors.textSecondary }]}>
-                {item.note}
-              </Text>
-            ) : null}
-          </View>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={colors.textSecondary}
-          />
-        </RectButton>
-      </Swipeable>
-    );
-  };
-
   return (
     <View style={styles.container}>
-      {/* Range toggle */}
       <View style={styles.rangeRow}>
         {RANGES.map((r) => (
           <TouchableOpacity
@@ -144,36 +81,7 @@ export default function WeightHistoryScreen({ navigation }: Props) {
           style={styles.loader}
         />
       ) : chartData.length >= 2 ? (
-        <LineChart
-          data={{
-            labels: chartData
-              .filter((_, i) => {
-                const step = Math.max(1, Math.floor(chartData.length / 5));
-                return i % step === 0 || i === chartData.length - 1;
-              })
-              .map((d) =>
-                d.date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                }),
-              ),
-            datasets: [{ data: chartData.map((d) => d.value) }],
-          }}
-          width={screenWidth - spacing.md * 2}
-          height={200}
-          yAxisSuffix={` ${weightUnit}`}
-          chartConfig={{
-            backgroundColor: colors.surface,
-            backgroundGradientFrom: colors.surface,
-            backgroundGradientTo: colors.surface,
-            decimalPlaces: 1,
-            color: () => colors.primary,
-            labelColor: () => colors.textSecondary,
-            propsForDots: { r: "4", fill: colors.primary },
-          }}
-          bezier
-          style={styles.chart}
-        />
+        <WeightChart data={chartData} weightUnit={weightUnit} />
       ) : (
         <View style={styles.emptyChart}>
           <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
@@ -187,7 +95,14 @@ export default function WeightHistoryScreen({ navigation }: Props) {
       <FlatList
         data={entries}
         keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <WeightEntryItem
+            entry={item}
+            weightUnit={weightUnit}
+            onPress={() => navigation.navigate("WeightLog", { entry: item })}
+            onDelete={() => handleDelete(item)}
+          />
+        )}
         contentContainerStyle={
           entries.length === 0 ? styles.emptyContainer : styles.listContent
         }
@@ -239,36 +154,11 @@ const makeStyles = (colors: ReturnType<typeof useColors>) =>
       color: colors.textOnPrimary,
       fontWeight: fontWeight.medium,
     },
-    chart: { borderRadius: borderRadius.md, alignSelf: "center" },
     loader: { marginVertical: spacing.xl },
     emptyChart: {
       height: 120,
       justifyContent: "center",
       alignItems: "center",
-    },
-    entryRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      paddingVertical: spacing.md,
-      paddingHorizontal: spacing.md,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    entryLeft: { flex: 1 },
-    entryWeight: {
-      fontSize: fontSize.md,
-      fontWeight: fontWeight.semibold,
-    },
-    entryDate: { fontSize: fontSize.sm },
-    entryNote: {
-      fontSize: fontSize.xs,
-      fontStyle: "italic",
-      marginTop: 2,
-    },
-    swipeAction: {
-      justifyContent: "center",
-      alignItems: "center",
-      width: 80,
     },
     listContent: { paddingBottom: 80 },
     emptyContainer: { flex: 1, justifyContent: "center", alignItems: "center" },

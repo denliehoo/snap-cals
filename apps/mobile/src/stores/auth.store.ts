@@ -3,11 +3,11 @@ import type {
   AuthResponse,
   User,
 } from "@snap-cals/shared";
-import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { identifyUser, logoutPurchases } from "@/hooks/use-purchases";
 import { api, setOnUnauthorized, setToken } from "@/services/api";
 import { getErrorMessage } from "@/utils/error";
+import { deleteItem, getItem, setItem } from "@/utils/storage";
 
 interface AuthState {
   token: string | null;
@@ -40,8 +40,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   restore: async () => {
     try {
-      const token = await SecureStore.getItemAsync("token");
-      const userJson = await SecureStore.getItemAsync("user");
+      const token = await getItem("token");
+      const userJson = await getItem("user");
       if (token && userJson) {
         setToken(token);
         const user = JSON.parse(userJson);
@@ -58,8 +58,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   setAuth: async (token: string, user: User) => {
     setToken(token);
-    await SecureStore.setItemAsync("token", token);
-    await SecureStore.setItemAsync("user", JSON.stringify(user));
+    await setItem("token", token);
+    await setItem("user", JSON.stringify(user));
     set({ token, user });
     identifyUser(user.id).catch(() => {});
   },
@@ -104,8 +104,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: async () => {
     setToken(null);
-    await SecureStore.deleteItemAsync("token");
-    await SecureStore.deleteItemAsync("user");
+    await deleteItem("token");
+    await deleteItem("user");
     logoutPurchases().catch(() => {});
     set({ token: null, user: null });
   },

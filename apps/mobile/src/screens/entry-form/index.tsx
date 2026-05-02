@@ -18,6 +18,7 @@ import DatePickerModal from "@/components/date-picker-modal";
 import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import { useColors } from "@/contexts/theme-context";
+import { useWebRedirect } from "@/hooks/use-web-redirect";
 import type { MainStackParamList } from "@/navigation";
 import { borderRadius, fontSize, fontWeight, spacing } from "@/theme";
 import { parseLocalDate } from "@/utils/date";
@@ -28,6 +29,7 @@ type Props = NativeStackScreenProps<MainStackParamList, "EntryForm">;
 const MEAL_TYPES = Object.values(MealType);
 
 export default function EntryFormScreen({ navigation, route }: Props) {
+  const redirecting = useWebRedirect();
   const colors = useColors();
   const { show } = useSnackbar();
   const {
@@ -45,6 +47,8 @@ export default function EntryFormScreen({ navigation, route }: Props) {
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  if (redirecting) return null;
 
   const dateLabel = parseLocalDate(fields.date).toLocaleDateString("en-US", {
     weekday: "short",

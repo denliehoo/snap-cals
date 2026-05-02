@@ -1,5 +1,5 @@
-import * as SecureStore from "expo-secure-store";
 import { identifyUser, logoutPurchases } from "@/hooks/use-purchases";
+import * as storage from "@/utils/storage";
 import { useAuthStore } from "./auth.store";
 
 jest.mock("@/hooks/use-purchases", () => ({
@@ -44,7 +44,7 @@ describe("auth.store RevenueCat integration", () => {
   });
 
   it("calls identifyUser after restore when token exists", async () => {
-    (SecureStore.getItemAsync as jest.Mock)
+    (storage.getItem as jest.Mock)
       .mockResolvedValueOnce("tok")
       .mockResolvedValueOnce(JSON.stringify(mockUser));
 
@@ -53,7 +53,7 @@ describe("auth.store RevenueCat integration", () => {
   });
 
   it("does not call identifyUser after restore when no token", async () => {
-    (SecureStore.getItemAsync as jest.Mock).mockResolvedValue(null);
+    (storage.getItem as jest.Mock).mockResolvedValue(null);
     await useAuthStore.getState().restore();
     expect(identifyUser).not.toHaveBeenCalled();
   });

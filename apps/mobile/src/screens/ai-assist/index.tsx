@@ -20,6 +20,7 @@ import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useSnackbar } from "@/components/snackbar";
 import ThemedSwitch from "@/components/themed-switch";
 import { useColors } from "@/contexts/theme-context";
+import { useWebRedirect } from "@/hooks/use-web-redirect";
 import { useSettingsStore } from "@/stores/settings.store";
 import { borderRadius, fontSize, spacing } from "@/theme";
 import ChatView from "./chat-view";
@@ -29,6 +30,7 @@ import { useImagePicker } from "./use-image-picker";
 import { useVoiceInput } from "./use-voice-input";
 
 export default function AiAssistScreen() {
+  const redirecting = useWebRedirect();
   const colors = useColors();
   const { show } = useSnackbar();
   const assist = useAiAssist((msg) => show(msg, "error"));
@@ -194,6 +196,8 @@ export default function AiAssistScreen() {
       </KeyboardAwareView>
     );
   }
+
+  if (redirecting) return null;
 
   // Initial input mode (both discussion and one-shot)
   return (

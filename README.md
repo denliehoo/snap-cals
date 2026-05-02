@@ -143,6 +143,12 @@ EXPO_PUBLIC_RC_ANDROID_API_KEY="your-revenuecat-android-api-key"
 EXPO_PUBLIC_API_KEY="must-match-API_KEY-in-server-env"
 ```
 
+Optional — only needed for testing on a physical device (Android app or mobile web). Find your Mac's local IP with `ipconfig getifaddr en0`:
+
+```
+EXPO_PUBLIC_LOCAL_IP="192.168.x.x"
+```
+
 ### 3. Run database migrations and seed
 
 ```bash
@@ -201,6 +207,23 @@ This starts the Expo dev server. Then either:
 - Scan the QR code with Expo Go on your phone
 - Press `i` for iOS Simulator
 - Press `a` for Android Emulator
+
+### 6b. Run the web version
+
+```bash
+pnpm dev:mw
+```
+
+Opens the app in your browser at `http://localhost:8088`. The web version uses the same codebase as the mobile app with `.web.ts` / `.web.tsx` overrides for native-only modules.
+
+To build for production:
+
+```bash
+cd apps/mobile
+npx expo export --platform web
+```
+
+This outputs static files to `apps/mobile/dist/` — deployable to any static hosting provider (Vercel, Netlify, Cloudflare Pages, etc.). SPA routing requires a catch-all redirect rule (all paths → `index.html`).
 
 ### 7. Run tests
 
@@ -326,8 +349,11 @@ eas build --profile development --platform android # Physical Android device
 Render's free tier spins down after 15 minutes of inactivity. To keep the server alive during active hours, set up a cron job at [cron-job.org](https://cron-job.org) (free) to ping the health endpoint:
 
 - **URL:** `https://your-app.onrender.com/api/health`
-- **Cron expression:** `*/14 7-21 * * *` (every 14 minutes, 7am–10pm)
+- **Keepalive cron:** `*/14 7-21 * * *` (every 14 minutes, 7am–10pm)
+- **Wake-up cron:** `50-55 6 * * *` (every minute from 6:50–6:55am)
 - **Timezone:** Set to your local timezone
+
+The wake-up job handles cold starts. After hours of inactivity, the first request triggers a boot that takes 30–90 seconds — longer than cron-job.org's request timeout. The rapid 6:50–6:55 burst ensures at least one request lands after the service finishes booting, keeping it warm for the 7:00 keepalive to take over.
 
 ## Roadmap
 
@@ -346,3 +372,4 @@ See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
 11. Food source / provider field
 12. Voice logging
 13. Admin panel
+14. PWA / mobile web version

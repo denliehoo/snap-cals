@@ -34,7 +34,13 @@
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "name": "Snap Cals",
+      "shortName": "Snap Cals",
+      "description": "Track calories and macros with AI-powered food recognition",
+      "backgroundColor": "#000000",
+      "themeColor": "#1B5E3B"
     },
     "plugins": [
       [

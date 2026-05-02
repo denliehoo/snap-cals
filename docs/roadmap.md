@@ -82,6 +82,12 @@ A web-based admin dashboard (`apps/admin`, React + Vite) for viewing and managin
 
 See [Spec](./specs/admin-panel.md), [QA Report](./specs/admin-panel-qa.md).
 
+### 14. PWA / Mobile Web Version
+
+Ship the app as a Progressive Web App using Expo's built-in web support (`react-native-web`), avoiding the $99/year Apple Developer fee. Same `apps/mobile` codebase with `.web.ts` / `.web.tsx` overrides for native-only modules (`expo-secure-store` → `localStorage`, `expo-image-picker` → HTML file input, `react-native-purchases` → no-op stubs, `expo-speech-recognition` → disabled, `@react-native-community/datetimepicker` → HTML input). PWA manifest enables "Add to Home Screen" for app-like experience. Web version is free-tier only (paywall shows "Coming Soon"); email/password auth only (no Google OAuth). No voice logging on web. Camera/image input for AI food estimation supported via browser APIs. React Navigation linking config for proper URL paths and browser back/forward. Static build (`npx expo export --platform web`) deployable to any hosting provider.
+
+See [Spec](./specs/pwa-web-version.md), [QA Report](./specs/pwa-web-version-qa.md).
+
 ---
 
 ## Backlog

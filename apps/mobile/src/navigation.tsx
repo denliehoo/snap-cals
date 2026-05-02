@@ -14,7 +14,7 @@ import type {
   WeightEntry,
 } from "@snap-cals/shared";
 import { useEffect } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import { useColors, useTheme } from "./contexts/theme-context";
 import { initPurchases, usePurchasesListener } from "./hooks/use-purchases";
 import AiAssistScreen from "./screens/ai-assist";
@@ -68,6 +68,34 @@ export type MainStackParamList = {
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const MainStack = createNativeStackNavigator<MainStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
+
+const linking = {
+  prefixes: [],
+  config: {
+    screens: {
+      Login: "login",
+      Signup: "signup",
+      VerifyEmail: "verify-email",
+      ForgotPassword: "forgot-password",
+      ResetPassword: "reset-password",
+      MainTabs: {
+        screens: {
+          DailyTab: "daily",
+          WeeklyTab: "weekly",
+          WeightTab: "weight",
+          SettingsTab: "settings",
+        },
+      },
+      EntryForm: "entry",
+      AiAssist: "ai-assist",
+      QuickAdd: "quick-add",
+      Goals: "goals",
+      GoalCoach: "goal-coach",
+      Paywall: "paywall",
+      WeightLog: "weight-log",
+    },
+  },
+} as const;
 
 function MainTabs() {
   const colors = useColors();
@@ -195,7 +223,11 @@ export default function Navigation() {
       };
 
   return (
-    <NavigationContainer theme={navTheme}>
+    <NavigationContainer
+      theme={navTheme}
+      // biome-ignore lint/suspicious/noExplicitAny: React Navigation linking types don't support nested navigator configs cleanly
+      linking={Platform.OS === "web" ? (linking as any) : undefined}
+    >
       {token ? (
         <MainStack.Navigator
           screenOptions={{
