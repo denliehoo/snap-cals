@@ -16,6 +16,7 @@ import type {
   GoalCoachResponse,
   ImageData,
   RecentFoodItem,
+  SignupStatusResponse,
   UpdateFoodEntryRequest,
   UpdateWeightEntryRequest,
   UpsertGoalRequest,
@@ -67,6 +68,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  getSignupStatus: async (): Promise<ApiResponse<SignupStatusResponse>> => {
+    const res = await fetch(`${API_URL}/settings/signup-status`);
+    return res.json();
+  },
   signup: (email: string, password: string) =>
     request<ApiResponse<AuthPendingResponse>>("/auth/signup", {
       method: "POST",

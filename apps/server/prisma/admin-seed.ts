@@ -18,6 +18,13 @@ async function main() {
   });
 
   console.log(`Admin seeded: ${admin.email}`);
+
+  await adminPrisma.platformSetting.upsert({
+    where: { key: "signupEnabled" },
+    update: {},
+    create: { key: "signupEnabled", value: "true" },
+  });
+  console.log("Platform settings seeded");
 }
 
 main()

@@ -88,6 +88,12 @@ Ship the app as a Progressive Web App using Expo's built-in web support (`react-
 
 See [Spec](./specs/pwa-web-version.md), [QA Report](./specs/pwa-web-version-qa.md).
 
+### 15. Signup Toggle
+
+Admin-controlled toggle to open/close new user registrations. A `PlatformSetting` model in the admin database stores the `signupEnabled` flag. Admin dashboard gets a "Platform Settings" page with a toggle switch. Server enforces the setting on `POST /api/auth/signup` and `POST /api/auth/google` (new accounts only — existing users always log in). A public `GET /api/settings/signup-status` endpoint lets the mobile/web app check the status and show a "not accepting signups" screen when disabled. Existing users are unaffected.
+
+See [Spec](./specs/signup-toggle.md), [QA Report](./specs/signup-toggle-qa.md).
+
 ---
 
 ## Backlog

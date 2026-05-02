@@ -6,6 +6,7 @@ import Button from "@/components/button";
 import FormField from "@/components/form-field";
 import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useSnackbar } from "@/components/snackbar";
+import { useSignupEnabled } from "@/contexts/signup-status-context";
 import { useColors } from "@/contexts/theme-context";
 import { useAuthForm } from "@/hooks/use-auth-form";
 import { useGoogleAuth } from "@/hooks/use-google-auth";
@@ -15,6 +16,7 @@ import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
 export default function LoginScreen({ navigation }: Props) {
+  const signupEnabled = useSignupEnabled();
   const colors = useColors();
   const { show } = useSnackbar();
   const {
@@ -93,7 +95,11 @@ export default function LoginScreen({ navigation }: Props) {
           </>
         )}
 
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(signupEnabled ? "Signup" : "SignupsClosed")
+          }
+        >
           <Text style={styles.link}>Don't have an account? Sign up</Text>
         </TouchableOpacity>
       </View>

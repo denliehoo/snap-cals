@@ -13,8 +13,9 @@ import type {
   MealType,
   WeightEntry,
 } from "@snap-cals/shared";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, Platform, View } from "react-native";
+import { SignupStatusContext } from "./contexts/signup-status-context";
 import { useColors, useTheme } from "./contexts/theme-context";
 import { initPurchases, usePurchasesListener } from "./hooks/use-purchases";
 import AiAssistScreen from "./screens/ai-assist";
@@ -29,10 +30,12 @@ import QuickAddScreen from "./screens/quick-add";
 import ResetPasswordScreen from "./screens/reset-password";
 import SettingsScreen from "./screens/settings";
 import SignupScreen from "./screens/signup";
+import SignupsClosedScreen from "./screens/signups-closed";
 import VerifyEmailScreen from "./screens/verify-email";
 import WeeklyViewScreen from "./screens/weekly-view";
 import WeightHistoryScreen from "./screens/weight-history";
 import WeightLogScreen from "./screens/weight-log";
+import { api } from "./services/api";
 import { useAuthStore } from "./stores/auth.store";
 import { useSettingsStore } from "./stores/settings.store";
 import { useUsageStore } from "./stores/usage.store";
@@ -40,6 +43,7 @@ import { useUsageStore } from "./stores/usage.store";
 export type AuthStackParamList = {
   Login: undefined;
   Signup: undefined;
+  SignupsClosed: undefined;
   VerifyEmail: { userId: string };
   ForgotPassword: { email?: string };
   ResetPassword: { email: string };
@@ -75,6 +79,7 @@ const linking = {
     screens: {
       Login: "login",
       Signup: "signup",
+      SignupsClosed: "signups-closed",
       VerifyEmail: "verify-email",
       ForgotPassword: "forgot-password",
       ResetPassword: "reset-password",
@@ -170,11 +175,16 @@ export default function Navigation() {
   const fetchUsage = useUsageStore((s) => s.fetch);
   const { isDark } = useTheme();
   const colors = useColors();
+  const [signupEnabled, setSignupEnabled] = useState(true);
 
   useEffect(() => {
     initPurchases();
     restore();
     restoreSettings();
+    api
+      .getSignupStatus()
+      .then((res) => setSignupEnabled(res.data.signupEnabled))
+      .catch(() => {});
   }, [restore, restoreSettings]);
 
   usePurchasesListener();
@@ -277,19 +287,28 @@ export default function Navigation() {
           />
         </MainStack.Navigator>
       ) : (
-        <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-          <AuthStack.Screen name="Login" component={LoginScreen} />
-          <AuthStack.Screen name="Signup" component={SignupScreen} />
-          <AuthStack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
-          <AuthStack.Screen
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-          />
-          <AuthStack.Screen
-            name="ResetPassword"
-            component={ResetPasswordScreen}
-          />
-        </AuthStack.Navigator>
+        <SignupStatusContext.Provider value={signupEnabled}>
+          <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+            <AuthStack.Screen name="Login" component={LoginScreen} />
+            <AuthStack.Screen name="Signup" component={SignupScreen} />
+            <AuthStack.Screen
+              name="SignupsClosed"
+              component={SignupsClosedScreen}
+            />
+            <AuthStack.Screen
+              name="VerifyEmail"
+              component={VerifyEmailScreen}
+            />
+            <AuthStack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+            />
+            <AuthStack.Screen
+              name="ResetPassword"
+              component={ResetPasswordScreen}
+            />
+          </AuthStack.Navigator>
+        </SignupStatusContext.Provider>
       )}
     </NavigationContainer>
   );

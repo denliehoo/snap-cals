@@ -18,9 +18,12 @@ import {
   sendPasswordResetCode,
   sendVerificationCode,
 } from "../services/email.service";
+import { isSignupEnabled } from "../services/settings.service";
 import { generateOtp, hashOtp, verifyOtp } from "../utils/otp";
 
 const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+const SIGNUPS_CLOSED_MSG =
+  "We're not accepting new sign-ups at the moment. Please check back later.";
 
 const signToken = (userId: string) =>
   jwt.sign({ sub: userId }, process.env.JWT_SECRET ?? "", { expiresIn: "7d" });
@@ -45,6 +48,10 @@ export const signup = async (
 ) => {
   try {
     const { email, password } = req.body;
+
+    if (!(await isSignupEnabled())) {
+      return res.status(403).json({ message: SIGNUPS_CLOSED_MSG });
+    }
 
     if (!email || !password) {
       return res
@@ -432,6 +439,10 @@ export const googleAuth = async (
     }
 
     // 3. Create new user + provider
+    if (!(await isSignupEnabled())) {
+      return res.status(403).json({ message: SIGNUPS_CLOSED_MSG });
+    }
+
     const newUser = await prisma.user.create({
       data: {
         email,

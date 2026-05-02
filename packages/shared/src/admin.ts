@@ -54,3 +54,15 @@ export interface AdminUpdateEntryRequest {
   mealType?: string;
   date?: string;
 }
+
+export interface PlatformSettings {
+  signupEnabled: boolean;
+}
+
+export interface UpdatePlatformSettingsRequest {
+  signupEnabled?: boolean;
+}
+
+export interface SignupStatusResponse {
+  signupEnabled: boolean;
+}

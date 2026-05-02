@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.routes";
 import entryRoutes from "./routes/entry.routes";
 import favoriteRoutes from "./routes/favorite.routes";
 import goalRoutes from "./routes/goal.routes";
+import settingsRoutes from "./routes/settings.routes";
 import usageRoutes from "./routes/usage.routes";
 import webhookRoutes from "./routes/webhook.routes";
 import weightRoutes from "./routes/weight.routes";
@@ -22,6 +23,9 @@ app.use(passport.initialize());
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
+
+// Public settings (no auth, no API key)
+app.use("/api/settings", settingsRoutes);
 
 // Webhooks use their own auth (Bearer secret), skip API key
 app.use("/api/webhooks", webhookRoutes);

@@ -3,9 +3,11 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "@/components/auth-context";
 import { Layout } from "@/components/layout";
 import { ProtectedRoute } from "@/components/protected-route";
+import { ToastProvider } from "@/components/toast";
 import { CreateAdminPage } from "@/pages/create-admin/index";
 import { DashboardPage } from "@/pages/dashboard/index";
 import { LoginPage } from "@/pages/login/index";
+import { SettingsPage } from "@/pages/settings/index";
 import { UserDetailPage } from "@/pages/user-detail/index";
 import { UsersPage } from "@/pages/users/index";
 
@@ -25,18 +27,21 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route element={<ProtectedRoute />}>
-              <Route element={<Layout />}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/users" element={<UsersPage />} />
-                <Route path="/users/:id" element={<UserDetailPage />} />
-                <Route path="/admins/new" element={<CreateAdminPage />} />
+          <ToastProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<Layout />}>
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/users" element={<UsersPage />} />
+                  <Route path="/users/:id" element={<UserDetailPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/admins/new" element={<CreateAdminPage />} />
+                </Route>
               </Route>
-            </Route>
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </ToastProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

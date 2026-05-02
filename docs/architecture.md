@@ -164,7 +164,7 @@ snap-cals/
 - **API key**: All `/api/*` routes (except `/api/health` and `/api/webhooks`) require an `X-Api-Key` header matching `process.env.API_KEY`. Middleware: `src/middleware/api-key.ts`. The mobile app sends this header with every request via `EXPO_PUBLIC_API_KEY`.
 - **Rate limiting**: `express-rate-limit` applied per-IP on abuse-prone routes. Auth routes (`/api/auth/*`): 20 requests / 15 min. AI routes (`/api/ai/*`): 30 requests / 15 min. Middleware: `src/middleware/rate-limit.ts`.
 - **Webhooks**: `/api/webhooks/*` is mounted before the API key middleware — webhooks authenticate via their own `Bearer` secret in the `Authorization` header.
-- **Route protection order in `app.ts`**: health check (public) → webhooks (own auth) → API key gate → rate limiters on auth/AI → Passport JWT on protected routes.
+- **Route protection order in `app.ts`**: health check (public) → signup-status (public) → webhooks (own auth) → API key gate → rate limiters on auth/AI → Passport JWT on protected routes.
 
 - Email/password signup with OTP email verification (6-digit code via Resend, 10-min expiry, bcrypt-hashed)
 - Signup returns `{ userId, emailVerified: false }` — no JWT until verified
@@ -210,7 +210,7 @@ snap-cals/
 - Admin migrations live in `prisma/admin/migrations/` (separate from app migrations in `prisma/migrations/`) — Prisma resolves the migrations directory relative to the schema file
 - Server imports two Prisma clients: `src/lib/prisma.ts` (app DB) and `src/lib/admin-prisma.ts` (admin DB)
 - `postinstall` runs `prisma generate` for both schemas
-- Admin model: `Admin` (id, email, name, passwordHash, createdAt)
+- Admin models: `Admin` (id, email, name, passwordHash, createdAt), `PlatformSetting` (key, value, updatedAt) for admin-controlled feature flags (e.g., signupEnabled)
 - Admin auth uses a separate JWT secret (`ADMIN_JWT_SECRET`) — must differ from the app JWT secret
 - Admin JWT payload includes `role: "admin"` to distinguish from app JWTs
 - Admin routes at `/api/admin/*` are protected by `authenticateAdmin` middleware (except `/api/admin/auth/login`)
