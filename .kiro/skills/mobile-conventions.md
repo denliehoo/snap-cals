@@ -67,3 +67,12 @@ description: React Native coding conventions for the Snap Cals mobile app
 - Always use `parseLocalDate()` from `@/utils/date` to convert a `YYYY-MM-DD` string back to a `Date` object
 - Never use `new Date().toISOString().split("T")[0]` — this converts to UTC first
 - Never use `new Date("YYYY-MM-DD")` without a time component — JavaScript parses this as UTC midnight, not local
+
+## Web Compatibility (PWA)
+
+The same `apps/mobile` codebase compiles for web. Follow these rules:
+
+- **Storage**: Import from `@/utils/storage` — never import `expo-secure-store` directly
+- **Alerts**: Use `showAlert()` from `@/utils/alert` — never use `Alert.alert` directly
+- **Native-only modules**: Create a `.web.ts`/`.web.tsx` counterpart — don't duplicate entire screens. Extract only the platform-specific piece into its own file with a `.web` override.
+- **Stack screens**: Call `useWebRedirect()` from `@/hooks/use-web-redirect` and return `null` if redirecting
