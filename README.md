@@ -303,6 +303,50 @@ pnpm build:ios
 
 EAS will provide a download link / QR code when the build completes. Install the APK directly on your Android device.
 
+### 10. OTA Updates
+
+Push JS-only changes to existing builds without a full `eas build`:
+
+**First-time setup** (once per channel):
+
+```bash
+cd apps/mobile
+eas branch:create preview
+eas channel:edit preview --branch preview
+eas branch:create production
+eas channel:edit production --branch production
+```
+
+Then publish updates:
+
+```bash
+# Publish to preview channel (internal testing)
+pnpm eas-update:preview
+
+# Publish to production channel (released builds)
+pnpm eas-update:production
+```
+
+**Channels explained:**
+
+- **preview** — targets builds made with `eas build --profile preview` (APKs for internal testing, TestFlight builds). Use this to verify a fix before pushing it to real users.
+- **production** — targets builds made with `eas build --profile production` (App Store / Play Store releases). This is what end users receive.
+
+Each channel only delivers updates to builds made with the matching profile. A preview APK will never receive a production update, and vice versa.
+
+**What users see:** On next app launch, the update downloads silently in the background. Once ready, an "Update available" snackbar appears with a "Restart" button. If dismissed, the update applies automatically on the next app open.
+
+**Important:** OTA updates only deliver JavaScript changes. If you add a new native module, change `app.json` plugins, or bump the `version`, you must run `eas build` first — then resume OTA updates targeting the new version.
+
+**Version bumps:** The `runtimeVersion` is derived from the `version` field in `app.json` (e.g., `"1.0.0"`). OTA updates are scoped to a specific runtime version — an update published while `version` is `"1.0.0"` will only reach `1.0.0` builds, not `1.1.0` builds. When you bump the version:
+
+1. Update `version` in `app.json` (e.g., `"1.0.0"` → `"1.1.0"`)
+2. Run `eas build` to create new native binaries with the new runtime version
+3. Distribute the new builds (APK, TestFlight, App Store, Play Store)
+4. Now `pnpm eas-update:preview` / `pnpm eas-update:production` will target `1.1.0` builds only
+
+Old builds on `1.0.0` will no longer receive new OTA updates after the version bump.
+
 ## In-App Purchases Setup
 
 RevenueCat powers the subscription flow. The SDK requires production builds via `eas build` — it cannot be fully tested in Expo Go.
@@ -376,3 +420,4 @@ See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
 15. Signup toggle
 16. User status
 17. Configurable AI daily limit
+18. EAS OTA updates

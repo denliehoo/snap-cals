@@ -130,7 +130,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
                 size={48}
                 color={colors.textSecondary}
               />
-              <Text style={styles.emptyTitle}>No entries yet</Text>
+              <Text style={styles.emptyTitle}>No entries yet!</Text>
               <Text style={styles.emptyText}>Tap + to log your first meal</Text>
             </View>
           }

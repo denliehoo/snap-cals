@@ -106,13 +106,17 @@ Move the hardcoded `FREE_DAILY_AI_LIMIT` from the shared constants package to th
 
 See [Spec](./specs/configurable-ai-limit.md), [QA Report](./specs/configurable-ai-limit-qa.md).
 
+### 18. EAS OTA Updates
+
+Set up Expo EAS Update for over-the-air JS bundle updates without requiring a full native build. Install `expo-updates`, configure `runtimeVersion` (appVersion policy) and update channels (`preview`, `production`) in `eas.json`. App silently checks for updates on launch, downloads in the background, and shows a snackbar with a "Restart" button when ready. Dismissing the snackbar applies the update on next app open. Extends the existing snackbar component to support an action button. Web builds unaffected. No CI/CD automation — manual `eas update` workflow.
+
+See [Spec](./specs/eas-ota-updates.md), [QA Report](./specs/eas-ota-updates-qa.md).
+
 ---
 
 ## Backlog
 
 Ideas for future work, not yet prioritized or planned.
-
-- **EAS OTA Updates:** Investigate and set up Expo EAS Update for over-the-air JS bundle updates without requiring a full app store release.
 - **BYOK (Bring Your Own Key):** Let power users enter their own Gemini API key in settings to get unlimited AI usage without a subscription. Useful as an alternative to paid plans for technical users. Key would be stored encrypted and sent server-side per request.
 - **Optimize Image Token Usage in AI Chat:** Currently the food photo is re-sent with every message in the AI chat flow, costing ~250 extra tokens per message. Investigate alternatives (e.g., send image only on first message, cache a text description of the image server-side, or let the user explicitly re-attach). Balance between cost savings and the ability for the AI to reference the photo when asked.
 - **Data Export (CSV):** Let users export their food entry and weight data for a date range as a CSV file. Useful for sharing with trainers, doctors, or nutritionists. Server-side endpoint that queries entries and returns CSV. Consider making this a Pro-only feature.

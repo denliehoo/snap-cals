@@ -26,6 +26,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
 | Charts           | react-native-chart-kit + react-native-svg | Lightweight line chart for weight history, Expo-compatible |
 | Speech Recognition | expo-speech-recognition | On-device voice-to-text for hands-free food logging, requires dev build |
+| OTA Updates      | expo-updates                                             | Over-the-air JS bundle updates without full native rebuild |
 | Web Support      | react-native-web + react-dom + @expo/metro-runtime       | PWA / mobile web version via Expo's web target, same codebase as native |
 | Admin Frontend   | React + Vite + TypeScript                                | Lightweight SPA for admin dashboard, no SSR needed |
 | Admin DB         | Postgres (Neon, separate project)                        | Isolates admin auth data from app user data |
@@ -146,6 +147,18 @@ snap-cals/
 - PWA manifest configured in `app.json` `web` section: standalone display, theme colors, app name
 - Build: `npx expo export --platform web` → static SPA in `dist/`
 - Dev: `pnpm dev:mw` or `expo start --web`
+
+### EAS OTA Updates
+- `expo-updates` checks for OTA JS bundle updates on every native app launch (not on web or dev builds)
+- `runtimeVersion` uses `"appVersion"` policy — tied to `version` in `app.json`
+- `eas.json` channels: `preview` for internal testing, `production` for released builds; dev profiles have no channel
+- Update check and download are silent and non-blocking — user sees current bundle immediately
+- On successful download, a snackbar with "Restart" action button appears (10s auto-dismiss); tapping reloads the app via `Updates.reloadAsync()`
+- If dismissed, the update applies on next app open
+- Network errors during check are silently ignored
+- `useOtaUpdate` hook in `src/hooks/` with a `.web.ts` no-op counterpart
+- Snackbar component extended to support optional action button (`{ label, onPress }`) and configurable duration
+- Publish workflow: `pnpm eas-update:preview` / `pnpm eas-update:production` (runs `eas update --channel <channel>`)
 
 ### API Design
 - Base path: `/api`

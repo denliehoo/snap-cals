@@ -14,8 +14,18 @@ import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 
 type SnackbarType = "success" | "error";
 
+interface SnackbarAction {
+  label: string;
+  onPress: () => void;
+}
+
+interface ShowOptions {
+  action?: SnackbarAction;
+  duration?: number;
+}
+
 interface SnackbarContextValue {
-  show: (message: string, type?: SnackbarType) => void;
+  show: (message: string, type?: SnackbarType, options?: ShowOptions) => void;
 }
 
 const SnackbarContext = createContext<SnackbarContextValue>({ show: () => {} });
@@ -25,10 +35,13 @@ const ICON: Record<SnackbarType, keyof typeof Ionicons.glyphMap> = {
   error: "alert-circle",
 };
 
+const DEFAULT_DURATION = 3000;
+
 export function SnackbarProvider({ children }: { children: React.ReactNode }) {
   const colors = useColors();
   const [message, setMessage] = useState("");
   const [type, setType] = useState<SnackbarType>("success");
+  const [action, setAction] = useState<SnackbarAction | undefined>();
   const [visible, setVisible] = useState(false);
   const translateY = useRef(new Animated.Value(-100)).current;
   const opacity = useRef(new Animated.Value(0)).current;
@@ -57,10 +70,11 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
   }, [translateY, opacity]);
 
   const show = useCallback(
-    (msg: string, t: SnackbarType = "success") => {
+    (msg: string, t: SnackbarType = "success", options?: ShowOptions) => {
       if (timeout.current) clearTimeout(timeout.current);
       setMessage(msg);
       setType(t);
+      setAction(options?.action);
       setVisible(true);
       translateY.setValue(-100);
       opacity.setValue(0);
@@ -77,7 +91,8 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
           useNativeDriver: true,
         }),
       ]).start();
-      timeout.current = setTimeout(dismiss, 3000);
+      const duration = options?.duration ?? DEFAULT_DURATION;
+      timeout.current = setTimeout(dismiss, duration);
     },
     [translateY, opacity, dismiss],
   );
@@ -104,6 +119,21 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
             <Text style={[styles.text, { color: colors.textOnPrimary }]}>
               {message}
             </Text>
+            {action && (
+              <Pressable
+                onPress={() => {
+                  action.onPress();
+                  dismiss();
+                }}
+                style={styles.actionButton}
+              >
+                <Text
+                  style={[styles.actionText, { color: colors.textOnPrimary }]}
+                >
+                  {action.label}
+                </Text>
+              </Pressable>
+            )}
             <View style={styles.closeHit}>
               <Ionicons name="close" size={18} color={colors.textOnPrimary} />
             </View>
@@ -135,6 +165,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
+  },
+  actionButton: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  actionText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.bold,
   },
   closeHit: {
     padding: spacing.xs,

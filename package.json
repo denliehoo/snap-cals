@@ -13,11 +13,18 @@
     "test:mobile": "pnpm --filter @snap-cals/mobile test",
     "build:apk": "pnpm --filter @snap-cals/mobile build:apk",
     "build:ios": "pnpm --filter @snap-cals/mobile build:ios",
+    "eas-update:preview": "pnpm --filter @snap-cals/mobile eas-update:preview",
+    "eas-update:production": "pnpm --filter @snap-cals/mobile eas-update:production",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check --write ."
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.8"
+  },
+  "pnpm": {
+    "overrides": {
+      "expo-updates-interface": "~55.1.6"
+    }
   }
 }

@@ -9,7 +9,9 @@
     "web": "expo start --web --port 8088",
     "test": "jest",
     "build:apk": "eas build --profile preview --platform android",
-    "build:ios": "eas build --profile preview --platform ios"
+    "build:ios": "eas build --profile preview --platform ios",
+    "eas-update:preview": "eas update --channel preview",
+    "eas-update:production": "eas update --channel production"
   },
   "dependencies": {
     "@expo/metro-runtime": "~55.0.6",
@@ -27,6 +29,7 @@
     "expo-secure-store": "^55.0.8",
     "expo-speech-recognition": "^3.1.2",
     "expo-status-bar": "~55.0.4",
+    "expo-updates": "^55.0.21",
     "expo-web-browser": "~55.0.10",
     "react": "19.2.0",
     "react-dom": "19.2.0",
