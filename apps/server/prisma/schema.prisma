@@ -25,11 +25,17 @@ enum SubscriptionTier {
   PRO
 }
 
+enum UserStatus {
+  VERIFIED
+  UNVERIFIED
+  DEACTIVATED
+}
+
 model User {
   id            String         @id @default(cuid())
   email         String         @unique
   passwordHash  String?
-  emailVerified Boolean        @default(false)
+  status        UserStatus     @default(UNVERIFIED)
   createdAt     DateTime       @default(now())
   subscriptionTier SubscriptionTier @default(FREE)
   entries          FoodEntry[]

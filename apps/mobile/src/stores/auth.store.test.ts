@@ -22,7 +22,7 @@ const { api } = jest.requireMock("@/services/api");
 const mockUser = {
   id: "user-1",
   email: "test@example.com",
-  emailVerified: true,
+  status: "VERIFIED",
   subscriptionTier: "FREE",
   createdAt: "",
 };

@@ -41,7 +41,7 @@ afterAll(async () => {
 // ─── Signup ──────────────────────────────────────────────────────────────────
 
 describe("POST /api/auth/signup", () => {
-  it("creates a user and returns userId with emailVerified false", async () => {
+  it("creates a user and returns userId with status UNVERIFIED", async () => {
     const res = await request(app)
       .post("/api/auth/signup")
       .set("x-api-key", API_KEY)
@@ -49,7 +49,7 @@ describe("POST /api/auth/signup", () => {
 
     expect(res.status).toBe(201);
     expect(res.body.data.userId).toBeDefined();
-    expect(res.body.data.emailVerified).toBe(false);
+    expect(res.body.data.status).toBe("UNVERIFIED");
     expect(res.body.data.token).toBeUndefined();
     expect(sendVerificationCode).toHaveBeenCalledWith(
       "new@test.com",
@@ -105,7 +105,7 @@ describe("POST /api/auth/verify-email", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.data.token).toBeDefined();
-    expect(res.body.data.user.emailVerified).toBe(true);
+    expect(res.body.data.user.status).toBe("VERIFIED");
   });
 
   it("returns 400 for wrong code", async () => {
@@ -217,7 +217,7 @@ describe("POST /api/auth/login", () => {
     expect(res.body.data.token).toBeDefined();
   });
 
-  it("returns userId and emailVerified false for unverified user", async () => {
+  it("returns userId and status UNVERIFIED for unverified user", async () => {
     // Signup creates an unverified user
     const signupRes = await request(app)
       .post("/api/auth/signup")
@@ -231,7 +231,7 @@ describe("POST /api/auth/login", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.data.userId).toBe(signupRes.body.data.userId);
-    expect(res.body.data.emailVerified).toBe(false);
+    expect(res.body.data.status).toBe("UNVERIFIED");
     expect(res.body.data.token).toBeUndefined();
   });
 
@@ -295,7 +295,7 @@ describe("POST /api/auth/forgot-password", () => {
     await prisma.user.create({
       data: {
         email: "oauth@test.com",
-        emailVerified: true,
+        status: "VERIFIED",
         authProviders: {
           create: { provider: "GOOGLE", providerUserId: "google-123" },
         },
@@ -441,7 +441,7 @@ describe("POST /api/auth/google", () => {
     expect(res.status).toBe(200);
     expect(res.body.data.token).toBeDefined();
     expect(res.body.data.user.email).toBe("google@test.com");
-    expect(res.body.data.user.emailVerified).toBe(true);
+    expect(res.body.data.user.status).toBe("VERIFIED");
 
     // Verify user has no password
     const user = await prisma.user.findUnique({
@@ -515,5 +515,77 @@ describe("POST /api/auth/google", () => {
       .send({ idToken: "valid-token" });
 
     expect(res.status).toBe(401);
+  });
+
+  it("returns 403 for deactivated user with linked Google account", async () => {
+    await prisma.user.create({
+      data: {
+        email: "deactivated-google@test.com",
+        status: "DEACTIVATED",
+        authProviders: {
+          create: { provider: "GOOGLE", providerUserId: "google-deact-123" },
+        },
+      },
+    });
+
+    setupMockVerify(
+      mockGooglePayload({
+        sub: "google-deact-123",
+        email: "deactivated-google@test.com",
+      }),
+    );
+
+    const res = await request(app)
+      .post("/api/auth/google")
+      .set("x-api-key", API_KEY)
+      .send({ idToken: "valid-token" });
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toContain("deactivated");
+  });
+
+  it("returns 403 for deactivated user via email-match linking", async () => {
+    await prisma.user.create({
+      data: {
+        email: "deact-link@test.com",
+        status: "DEACTIVATED",
+        passwordHash: "somehash",
+      },
+    });
+
+    setupMockVerify(
+      mockGooglePayload({
+        sub: "google-new-sub",
+        email: "deact-link@test.com",
+      }),
+    );
+
+    const res = await request(app)
+      .post("/api/auth/google")
+      .set("x-api-key", API_KEY)
+      .send({ idToken: "valid-token" });
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toContain("deactivated");
+  });
+});
+
+// ─── Deactivated User Login ─────────────────────────────────────────────────
+
+describe("Deactivated user login", () => {
+  it("returns 403 for deactivated user on email/password login", async () => {
+    const user = await createTestUser("deact@test.com", "password123");
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { status: "DEACTIVATED" },
+    });
+
+    const res = await request(app)
+      .post("/api/auth/login")
+      .set("x-api-key", API_KEY)
+      .send({ email: "deact@test.com", password: "password123" });
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toContain("deactivated");
   });
 });

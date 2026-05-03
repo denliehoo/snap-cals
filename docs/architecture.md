@@ -200,6 +200,7 @@ snap-cals/
 - FavoriteFood stores reusable food templates per user with `@@unique([userId, name])` and a max of 25 per user
 - FoodEntry and FavoriteFood have an optional `source` field (string, nullable) for recording where food came from (e.g. "McDonald's", "Homemade")
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
+- UserStatus enum (VERIFIED, UNVERIFIED, DEACTIVATED) — replaces the old `emailVerified` boolean on User. Admins can change status from the admin panel. DEACTIVATED users are immediately locked out via the Passport JWT middleware.
 - Neon branching: `main` branch for dev data, `unit-test` branch for automated tests
 - Migration workflow: always use `prisma migrate dev --create-only` to generate migrations, then `prisma migrate deploy` to apply — never run `prisma migrate dev` without `--create-only` against a database with data you want to keep
 - Tests require `DATABASE_URL_TEST` env var pointing to the test branch — they refuse to run without it

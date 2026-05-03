@@ -25,19 +25,22 @@ const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
 const SIGNUPS_CLOSED_MSG =
   "We're not accepting new sign-ups at the moment. Please check back later.";
 
+const DEACTIVATED_MSG =
+  "Your account has been deactivated. Please contact the admin.";
+
 const signToken = (userId: string) =>
   jwt.sign({ sub: userId }, process.env.JWT_SECRET ?? "", { expiresIn: "7d" });
 
 const userResponse = (user: {
   id: string;
   email: string;
-  emailVerified: boolean;
+  status: string;
   subscriptionTier: string;
   createdAt: Date;
 }) => ({
   id: user.id,
   email: user.email,
-  emailVerified: user.emailVerified,
+  status: user.status,
   subscriptionTier: user.subscriptionTier,
   createdAt: user.createdAt,
 });
@@ -93,7 +96,7 @@ export const signup = async (
     await sendVerificationCode(email, code);
 
     return res.status(201).json({
-      data: { userId: user.id, emailVerified: false },
+      data: { userId: user.id, status: "UNVERIFIED" },
     });
   } catch (_err) {
     return res.status(500).json({ message: "Internal server error" });
@@ -130,9 +133,13 @@ export const login = async (
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    if (!user.emailVerified) {
+    if (user.status === "DEACTIVATED") {
+      return res.status(403).json({ message: DEACTIVATED_MSG });
+    }
+
+    if (user.status === "UNVERIFIED") {
       return res.json({
-        data: { userId: user.id, emailVerified: false },
+        data: { userId: user.id, status: "UNVERIFIED" },
       });
     }
 
@@ -178,7 +185,7 @@ export const verifyEmail = async (
       prisma.otp.update({ where: { id: otp.id }, data: { used: true } }),
       prisma.user.update({
         where: { id: userId },
-        data: { emailVerified: true },
+        data: { status: "VERIFIED" },
       }),
     ]);
 
@@ -208,7 +215,7 @@ export const resendVerification = async (
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    if (user.emailVerified) {
+    if (user.status !== "UNVERIFIED") {
       return res.status(400).json({ message: "Email already verified" });
     }
 
@@ -404,6 +411,9 @@ export const googleAuth = async (
     });
 
     if (existingProvider) {
+      if (existingProvider.user.status === "DEACTIVATED") {
+        return res.status(403).json({ message: DEACTIVATED_MSG });
+      }
       const token = signToken(existingProvider.user.id);
       return res.json({
         data: { token, user: userResponse(existingProvider.user) },
@@ -414,6 +424,10 @@ export const googleAuth = async (
     const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) {
+      if (existingUser.status === "DEACTIVATED") {
+        return res.status(403).json({ message: DEACTIVATED_MSG });
+      }
+
       await prisma.authProvider.create({
         data: {
           userId: existingUser.id,
@@ -422,10 +436,10 @@ export const googleAuth = async (
         },
       });
 
-      if (!existingUser.emailVerified) {
+      if (existingUser.status === "UNVERIFIED") {
         await prisma.user.update({
           where: { id: existingUser.id },
-          data: { emailVerified: true },
+          data: { status: "VERIFIED" },
         });
       }
 
@@ -446,7 +460,7 @@ export const googleAuth = async (
     const newUser = await prisma.user.create({
       data: {
         email,
-        emailVerified: true,
+        status: "VERIFIED",
         authProviders: {
           create: { provider: "GOOGLE", providerUserId: sub },
         },

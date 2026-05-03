@@ -5,10 +5,11 @@ import { Link, useParams } from "react-router-dom";
 import { get } from "@/services/api";
 import { DailyTab } from "./daily-tab";
 import { GoalsTab } from "./goals-tab";
+import { StatusTab } from "./status-tab";
 import { WeeklyTab } from "./weekly-tab";
 import { WeightTab } from "./weight-tab";
 
-type Tab = "daily" | "weekly" | "weight" | "goals";
+type Tab = "daily" | "weekly" | "weight" | "goals" | "status";
 
 export function UserDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -43,25 +44,28 @@ export function UserDetailPage() {
         </div>
       )}
       <div className="flex gap-1 mb-4 border-b border-gray-800">
-        {(["daily", "weekly", "weight", "goals"] as Tab[]).map((t) => (
-          <button
-            type="button"
-            key={t}
-            onClick={() => setTab(t)}
-            className={`px-3 py-2 text-sm capitalize ${
-              tab === t
-                ? "border-b-2 border-green-400 text-green-400 font-medium"
-                : "text-gray-500 hover:text-gray-300"
-            }`}
-          >
-            {t}
-          </button>
-        ))}
+        {(["daily", "weekly", "weight", "goals", "status"] as Tab[]).map(
+          (t) => (
+            <button
+              type="button"
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-3 py-2 text-sm capitalize ${
+                tab === t
+                  ? "border-b-2 border-green-400 text-green-400 font-medium"
+                  : "text-gray-500 hover:text-gray-300"
+              }`}
+            >
+              {t}
+            </button>
+          ),
+        )}
       </div>
       {tab === "daily" && <DailyTab userId={id} />}
       {tab === "weekly" && <WeeklyTab userId={id} />}
       {tab === "weight" && <WeightTab userId={id} />}
       {tab === "goals" && <GoalsTab userId={id} />}
+      {tab === "status" && <StatusTab userId={id} />}
     </div>
   );
 }

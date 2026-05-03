@@ -33,7 +33,7 @@ export interface AdminUserSummary {
   email: string;
   subscriptionTier: string;
   createdAt: string;
-  emailVerified: boolean;
+  status: string;
 }
 
 export interface AdminUpdateGoalRequest {
@@ -53,6 +53,10 @@ export interface AdminUpdateEntryRequest {
   source?: string;
   mealType?: string;
   date?: string;
+}
+
+export interface AdminUpdateUserStatusRequest {
+  status: string;
 }
 
 export interface PlatformSettings {

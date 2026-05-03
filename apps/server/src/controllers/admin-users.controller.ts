@@ -1,7 +1,11 @@
-import { MealType as PrismaMealType } from "@prisma/client";
+import {
+  MealType as PrismaMealType,
+  UserStatus as PrismaUserStatus,
+} from "@prisma/client";
 import {
   type AdminUpdateEntryRequest,
   type AdminUpdateGoalRequest,
+  type AdminUpdateUserStatusRequest,
   AI_SOURCE_MAX_LENGTH,
   FOOD_NAME_MAX_LENGTH,
   SERVING_SIZE_MAX_LENGTH,
@@ -27,7 +31,7 @@ export const listUsers = async (req: Request, res: Response) => {
           email: true,
           subscriptionTier: true,
           createdAt: true,
-          emailVerified: true,
+          status: true,
         },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
@@ -51,7 +55,7 @@ export const getUser = async (req: Request<{ id: string }>, res: Response) => {
         email: true,
         subscriptionTier: true,
         createdAt: true,
-        emailVerified: true,
+        status: true,
       },
     });
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -235,6 +239,38 @@ export const getUserWeight = async (
       orderBy: { loggedAt: "desc" },
     });
     return res.json({ data: entries });
+  } catch {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateUserStatus = async (
+  req: Request<{ id: string }, {}, AdminUpdateUserStatusRequest>,
+  res: Response,
+) => {
+  try {
+    const { status } = req.body;
+    if (!Object.values(PrismaUserStatus).includes(status as PrismaUserStatus)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.params.id },
+    });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const updated = await prisma.user.update({
+      where: { id: req.params.id },
+      data: { status: status as PrismaUserStatus },
+      select: {
+        id: true,
+        email: true,
+        subscriptionTier: true,
+        createdAt: true,
+        status: true,
+      },
+    });
+    return res.json({ data: updated });
   } catch {
     return res.status(500).json({ message: "Internal server error" });
   }

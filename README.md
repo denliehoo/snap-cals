@@ -374,3 +374,4 @@ See [docs/roadmap.md](./docs/roadmap.md) for the full roadmap.
 13. Admin panel
 14. PWA / mobile web version
 15. Signup toggle
+16. User status

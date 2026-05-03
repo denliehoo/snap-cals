@@ -30,7 +30,7 @@ export async function createTestUser(
 ) {
   const passwordHash = await bcrypt.hash(password, 10);
   return prisma.user.create({
-    data: { email, passwordHash, emailVerified: true },
+    data: { email, passwordHash, status: "VERIFIED" },
   });
 }
 

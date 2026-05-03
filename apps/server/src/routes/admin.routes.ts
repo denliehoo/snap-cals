@@ -28,5 +28,6 @@ router.put("/users/:id/entries/:entryId", adminUsers.updateUserEntry);
 router.get("/users/:id/goals", adminUsers.getUserGoals);
 router.put("/users/:id/goals", adminUsers.updateUserGoals);
 router.get("/users/:id/weight", adminUsers.getUserWeight);
+router.patch("/users/:id/status", adminUsers.updateUserStatus);
 
 export default router;

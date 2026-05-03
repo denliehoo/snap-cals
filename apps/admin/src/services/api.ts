@@ -39,3 +39,7 @@ export function post<T>(path: string, body: unknown) {
 export function put<T>(path: string, body: unknown) {
   return request<T>(path, { method: "PUT", body: JSON.stringify(body) });
 }
+
+export function patch<T>(path: string, body: unknown) {
+  return request<T>(path, { method: "PATCH", body: JSON.stringify(body) });
+}

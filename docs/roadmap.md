@@ -94,6 +94,12 @@ Admin-controlled toggle to open/close new user registrations. A `PlatformSetting
 
 See [Spec](./specs/signup-toggle.md), [QA Report](./specs/signup-toggle-qa.md).
 
+### 16. User Status
+
+Replace the boolean `emailVerified` field on the User model with a `status` enum (`VERIFIED`, `UNVERIFIED`, `DEACTIVATED`). Admins can change any user's status from the admin panel's user detail page (new "Status" tab with dropdown, save button, and confirmation dialog for deactivation). Deactivated users are immediately locked out — the Passport JWT middleware rejects them on their next API call (triggers the existing 401 → logout flow), and login endpoints return a 403 "contact admin" error. Unverified users follow the existing email verification flow. No subscription cancellation on deactivation — just blocks access. No audit log in v1.
+
+See [Spec](./specs/user-status.md), [QA Report](./specs/user-status-qa.md).
+
 ---
 
 ## Backlog
