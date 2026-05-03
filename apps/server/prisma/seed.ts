@@ -12,7 +12,7 @@ async function main() {
     create: {
       email: "test@example.com",
       passwordHash,
-      emailVerified: true,
+      status: "VERIFIED",
     },
   });
 

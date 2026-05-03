@@ -17,7 +17,7 @@ export interface AuthResponse {
 
 export interface AuthPendingResponse {
   userId: string;
-  emailVerified: false;
+  status: "UNVERIFIED";
 }
 
 export interface VerifyEmailRequest {

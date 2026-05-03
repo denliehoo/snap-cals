@@ -1,6 +1,10 @@
 import { fireEvent, render, waitFor } from "@/__tests__/helpers";
 import QuickAddScreen from "./";
 
+jest.mock("@/hooks/use-web-redirect", () => ({
+  useWebRedirect: () => false,
+}));
+
 jest.mock("@/services/api", () => ({
   api: {
     getFavorites: jest.fn().mockResolvedValue({

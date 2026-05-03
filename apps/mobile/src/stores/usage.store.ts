@@ -1,4 +1,7 @@
-import { FREE_DAILY_AI_LIMIT, SubscriptionTier } from "@snap-cals/shared";
+import {
+  DEFAULT_FREE_DAILY_AI_LIMIT,
+  SubscriptionTier,
+} from "@snap-cals/shared";
 import { create } from "zustand";
 import { api } from "@/services/api";
 
@@ -14,7 +17,7 @@ interface UsageState {
 
 export const useUsageStore = create<UsageState>((set, get) => ({
   used: 0,
-  limit: FREE_DAILY_AI_LIMIT,
+  limit: DEFAULT_FREE_DAILY_AI_LIMIT,
   resetsAt: "",
   tier: SubscriptionTier.FREE,
 

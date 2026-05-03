@@ -1,4 +1,3 @@
-import * as SecureStore from "expo-secure-store";
 import type React from "react";
 import {
   createContext,
@@ -8,6 +7,7 @@ import {
   useState,
 } from "react";
 import { colors, darkColors } from "@/theme";
+import { getItem, setItem } from "@/utils/storage";
 
 interface ThemeContextValue {
   isDark: boolean;
@@ -26,7 +26,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [restored, setRestored] = useState(false);
 
   useEffect(() => {
-    SecureStore.getItemAsync(STORAGE_KEY).then((stored) => {
+    getItem(STORAGE_KEY).then((stored) => {
       if (stored === "light") setIsDark(false);
       setRestored(true);
     });
@@ -35,7 +35,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const toggle = useCallback(() => {
     setIsDark((prev) => {
       const next = !prev;
-      SecureStore.setItemAsync(STORAGE_KEY, next ? "dark" : "light");
+      setItem(STORAGE_KEY, next ? "dark" : "light");
       return next;
     });
   }, []);

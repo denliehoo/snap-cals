@@ -6,6 +6,7 @@ import Button from "@/components/button";
 import FormField from "@/components/form-field";
 import KeyboardAwareView from "@/components/keyboard-aware-view";
 import { useSnackbar } from "@/components/snackbar";
+import { useSignupEnabled } from "@/contexts/signup-status-context";
 import { useColors } from "@/contexts/theme-context";
 import { useAuthForm } from "@/hooks/use-auth-form";
 import { useGoogleAuth } from "@/hooks/use-google-auth";
@@ -15,6 +16,7 @@ import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
 
 export default function LoginScreen({ navigation }: Props) {
+  const signupEnabled = useSignupEnabled();
   const colors = useColors();
   const { show } = useSnackbar();
   const {
@@ -75,21 +77,29 @@ export default function LoginScreen({ navigation }: Props) {
           <Button title="Log In" onPress={submit} loading={loading} />
         </View>
 
-        <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>or</Text>
-          <View style={styles.dividerLine} />
-        </View>
+        {google.ready && (
+          <>
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity
+              style={styles.googleButton}
+              onPress={google.trigger}
+              disabled={google.loading}
+            >
+              <Text style={styles.googleText}>Continue with Google</Text>
+            </TouchableOpacity>
+          </>
+        )}
 
         <TouchableOpacity
-          style={styles.googleButton}
-          onPress={google.trigger}
-          disabled={!google.ready || google.loading}
+          onPress={() =>
+            navigation.navigate(signupEnabled ? "Signup" : "SignupsClosed")
+          }
         >
-          <Text style={styles.googleText}>Continue with Google</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
           <Text style={styles.link}>Don't have an account? Sign up</Text>
         </TouchableOpacity>
       </View>

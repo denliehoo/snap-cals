@@ -11,12 +11,14 @@ import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import UsageLimitModal from "@/components/usage-limit-modal";
 import { useColors } from "@/contexts/theme-context";
+import { useWebRedirect } from "@/hooks/use-web-redirect";
 import type { MainStackParamList } from "@/navigation";
 import { useUsageStore } from "@/stores/usage.store";
 import { borderRadius, fontSize, fontWeight, shadow, spacing } from "@/theme";
 import { useGoals } from "./use-goals";
 
 export default function GoalsScreen() {
+  const redirecting = useWebRedirect();
   const colors = useColors();
   const route =
     useRoute<NativeStackScreenProps<MainStackParamList, "Goals">["route"]>();
@@ -46,6 +48,8 @@ export default function GoalsScreen() {
   useEffect(() => {
     if (prefill) show("AI recommendation applied — review and save");
   }, [prefill, show]);
+
+  if (redirecting) return null;
 
   if (loading) {
     return (

@@ -1,9 +1,9 @@
-import type { MealType, SubscriptionTier } from "./enums";
+import type { MealType, SubscriptionTier, UserStatus } from "./enums";
 
 export interface User {
   id: string;
   email: string;
-  emailVerified: boolean;
+  status: UserStatus;
   subscriptionTier: SubscriptionTier;
   createdAt: string;
 }

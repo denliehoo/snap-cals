@@ -6,7 +6,7 @@ import { cleanDb, createTestUser, prisma, signAdminToken } from "./helpers";
 const API_KEY = process.env.API_KEY ?? "";
 const adminToken = signAdminToken("admin-test-id");
 
-function adminReq(method: "get" | "post" | "put", path: string) {
+function adminReq(method: "get" | "post" | "put" | "patch", path: string) {
   return request(app)
     [method](`/api/admin${path}`)
     .set("x-api-key", API_KEY)
@@ -305,5 +305,53 @@ describe("GET /api/admin/users/:id/weight", () => {
     expect(res.status).toBe(200);
     expect(res.body.data).toHaveLength(1);
     expect(res.body.data[0].weightKg).toBe(74);
+  });
+});
+
+describe("PATCH /api/admin/users/:id/status", () => {
+  it("updates user status to DEACTIVATED", async () => {
+    const user = await createTestUser();
+    const res = await adminReq("patch", `/users/${user.id}/status`).send({
+      status: "DEACTIVATED",
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.data.status).toBe("DEACTIVATED");
+  });
+
+  it("updates user status to UNVERIFIED", async () => {
+    const user = await createTestUser();
+    const res = await adminReq("patch", `/users/${user.id}/status`).send({
+      status: "UNVERIFIED",
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.data.status).toBe("UNVERIFIED");
+  });
+
+  it("updates user status to VERIFIED", async () => {
+    const user = await createTestUser();
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { status: "DEACTIVATED" },
+    });
+    const res = await adminReq("patch", `/users/${user.id}/status`).send({
+      status: "VERIFIED",
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.data.status).toBe("VERIFIED");
+  });
+
+  it("returns 400 for invalid status", async () => {
+    const user = await createTestUser();
+    const res = await adminReq("patch", `/users/${user.id}/status`).send({
+      status: "INVALID",
+    });
+    expect(res.status).toBe(400);
+  });
+
+  it("returns 404 for non-existent user", async () => {
+    const res = await adminReq("patch", "/users/nonexistent/status").send({
+      status: "DEACTIVATED",
+    });
+    expect(res.status).toBe(404);
   });
 });

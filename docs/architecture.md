@@ -26,6 +26,7 @@ Snap Cals is a mobile calorie and macro tracking app. Users log food entries, se
 | Linter/Formatter | Biome | Fast, single tool for formatting + linting, replaces ESLint/Prettier |
 | Charts           | react-native-chart-kit + react-native-svg | Lightweight line chart for weight history, Expo-compatible |
 | Speech Recognition | expo-speech-recognition | On-device voice-to-text for hands-free food logging, requires dev build |
+| Web Support      | react-native-web + react-dom + @expo/metro-runtime       | PWA / mobile web version via Expo's web target, same codebase as native |
 | Admin Frontend   | React + Vite + TypeScript                                | Lightweight SPA for admin dashboard, no SSR needed |
 | Admin DB         | Postgres (Neon, separate project)                        | Isolates admin auth data from app user data |
 | Admin Charts     | Recharts (or similar)                                    | Lightweight web charting for weight history in admin |
@@ -132,6 +133,20 @@ snap-cals/
 - Designed for easy theme swapping (change colors in one file)
 - Android native dialogs (time picker, etc.) are themed via an Expo config plugin (`plugins/with-custom-theme.js`) that sets `colorPrimary`/`colorAccent` in Android's `styles.xml`. This only takes effect in `eas build` — Expo Go uses its own native theme, so native dialogs will appear with default blue colors during Expo Go development.
 
+### Web / PWA Support
+- Same `apps/mobile` codebase compiled for web via `react-native-web` + Expo's web target
+- Platform-specific code uses `.web.ts` / `.web.tsx` file extension convention — Metro resolves these automatically on web builds
+- Storage abstraction: `utils/storage.ts` (wraps `expo-secure-store`) and `utils/storage.web.ts` (wraps `localStorage`) — all stores and contexts import from `utils/storage`
+- Web overrides exist for: image picker, voice input, purchases, paywall, settings, time picker, quick-add, weight history, Google auth
+- Google OAuth button is conditionally rendered (hidden on web where `useGoogleAuth` returns `ready: false`)
+- Paywall shows "Coming Soon" on web — no in-app purchases
+- Swipe gestures (quick-add, weight history) replaced with visible buttons on web
+- Weight history chart omitted on web (react-native-chart-kit web compatibility is unreliable)
+- Navigation linking config maps screens to URL paths for browser back/forward and bookmarking (web only)
+- PWA manifest configured in `app.json` `web` section: standalone display, theme colors, app name
+- Build: `npx expo export --platform web` → static SPA in `dist/`
+- Dev: `pnpm dev:mw` or `expo start --web`
+
 ### API Design
 - Base path: `/api`
 - Auth routes: `/api/auth/signup`, `/api/auth/login`, `/api/auth/verify-email`, `/api/auth/resend-verification`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/google`
@@ -149,7 +164,7 @@ snap-cals/
 - **API key**: All `/api/*` routes (except `/api/health` and `/api/webhooks`) require an `X-Api-Key` header matching `process.env.API_KEY`. Middleware: `src/middleware/api-key.ts`. The mobile app sends this header with every request via `EXPO_PUBLIC_API_KEY`.
 - **Rate limiting**: `express-rate-limit` applied per-IP on abuse-prone routes. Auth routes (`/api/auth/*`): 20 requests / 15 min. AI routes (`/api/ai/*`): 30 requests / 15 min. Middleware: `src/middleware/rate-limit.ts`.
 - **Webhooks**: `/api/webhooks/*` is mounted before the API key middleware — webhooks authenticate via their own `Bearer` secret in the `Authorization` header.
-- **Route protection order in `app.ts`**: health check (public) → webhooks (own auth) → API key gate → rate limiters on auth/AI → Passport JWT on protected routes.
+- **Route protection order in `app.ts`**: health check (public) → signup-status (public) → webhooks (own auth) → API key gate → rate limiters on auth/AI → Passport JWT on protected routes.
 
 - Email/password signup with OTP email verification (6-digit code via Resend, 10-min expiry, bcrypt-hashed)
 - Signup returns `{ userId, emailVerified: false }` — no JWT until verified
@@ -185,6 +200,7 @@ snap-cals/
 - FavoriteFood stores reusable food templates per user with `@@unique([userId, name])` and a max of 25 per user
 - FoodEntry and FavoriteFood have an optional `source` field (string, nullable) for recording where food came from (e.g. "McDonald's", "Homemade")
 - MealType enum (BREAKFAST, LUNCH, DINNER, SNACK) — defined in both Prisma schema and shared types
+- UserStatus enum (VERIFIED, UNVERIFIED, DEACTIVATED) — replaces the old `emailVerified` boolean on User. Admins can change status from the admin panel. DEACTIVATED users are immediately locked out via the Passport JWT middleware.
 - Neon branching: `main` branch for dev data, `unit-test` branch for automated tests
 - Migration workflow: always use `prisma migrate dev --create-only` to generate migrations, then `prisma migrate deploy` to apply — never run `prisma migrate dev` without `--create-only` against a database with data you want to keep
 - Tests require `DATABASE_URL_TEST` env var pointing to the test branch — they refuse to run without it
@@ -195,7 +211,7 @@ snap-cals/
 - Admin migrations live in `prisma/admin/migrations/` (separate from app migrations in `prisma/migrations/`) — Prisma resolves the migrations directory relative to the schema file
 - Server imports two Prisma clients: `src/lib/prisma.ts` (app DB) and `src/lib/admin-prisma.ts` (admin DB)
 - `postinstall` runs `prisma generate` for both schemas
-- Admin model: `Admin` (id, email, name, passwordHash, createdAt)
+- Admin models: `Admin` (id, email, name, passwordHash, createdAt), `PlatformSetting` (key, value, updatedAt) for admin-controlled feature flags (e.g., signupEnabled) and operational settings (e.g., freeDailyAiLimit)
 - Admin auth uses a separate JWT secret (`ADMIN_JWT_SECRET`) — must differ from the app JWT secret
 - Admin JWT payload includes `role: "admin"` to distinguish from app JWTs
 - Admin routes at `/api/admin/*` are protected by `authenticateAdmin` middleware (except `/api/admin/auth/login`)

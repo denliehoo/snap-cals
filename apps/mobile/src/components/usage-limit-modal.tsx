@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { FREE_DAILY_AI_LIMIT } from "@snap-cals/shared";
 import { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useColors } from "@/contexts/theme-context";
+import { useUsageStore } from "@/stores/usage.store";
 import { fontSize, fontWeight, spacing } from "@/theme";
 import AppModal from "./app-modal";
 import Button from "./button";
@@ -22,6 +22,7 @@ export default function UsageLimitModal({
 }: Props) {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const limit = useUsageStore((s) => s.limit);
 
   const resetTime = resetsAt
     ? new Date(resetsAt).toLocaleTimeString([], {
@@ -36,7 +37,7 @@ export default function UsageLimitModal({
         <Ionicons name="lock-closed-outline" size={40} color={colors.primary} />
         <Text style={styles.title}>Daily AI Limit Reached</Text>
         <Text style={styles.message}>
-          You've used all {FREE_DAILY_AI_LIMIT} AI lookups today
+          You've used all {limit} AI lookups today
         </Text>
         <Text style={styles.reset}>Resets at {resetTime}</Text>
         <View style={styles.buttons}>

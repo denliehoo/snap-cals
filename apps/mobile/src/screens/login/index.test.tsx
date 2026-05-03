@@ -51,11 +51,11 @@ describe("LoginScreen", () => {
     expect(getByText("Log In")).toBeTruthy();
   });
 
-  it("renders Google sign-in button", async () => {
-    const { getByText } = await render(
+  it("hides Google sign-in button when not ready", async () => {
+    const { queryByText } = await render(
       <LoginScreen navigation={mockNavigation} route={mockRoute} />,
     );
-    expect(getByText("Continue with Google")).toBeTruthy();
+    expect(queryByText("Continue with Google")).toBeNull();
   });
 
   it("renders forgot password link", async () => {

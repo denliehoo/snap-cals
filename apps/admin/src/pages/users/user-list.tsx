@@ -14,6 +14,21 @@ function TierBadge({ tier }: { tier: string }) {
   );
 }
 
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    VERIFIED: "bg-green-900/50 text-green-400",
+    UNVERIFIED: "bg-yellow-900/50 text-yellow-400",
+    DEACTIVATED: "bg-red-900/50 text-red-400",
+  };
+  return (
+    <span
+      className={`px-2 py-0.5 rounded text-xs font-medium ${styles[status] ?? "bg-gray-800 text-gray-400"}`}
+    >
+      {status}
+    </span>
+  );
+}
+
 export function UserTable({
   users,
   onSelect,
@@ -36,7 +51,7 @@ export function UserTable({
               Signup Date
             </th>
             <th className="text-left px-4 py-3 font-medium text-gray-400">
-              Verified
+              Status
             </th>
           </tr>
         </thead>
@@ -58,7 +73,9 @@ export function UserTable({
               <td className="px-4 py-3 text-gray-500">
                 {new Date(user.createdAt).toLocaleDateString()}
               </td>
-              <td className="px-4 py-3">{user.emailVerified ? "✓" : "✗"}</td>
+              <td className="px-4 py-3">
+                <StatusBadge status={user.status} />
+              </td>
             </tr>
           ))}
         </tbody>
@@ -87,7 +104,7 @@ export function UserCardList({
           <div className="flex gap-3 mt-1 text-xs text-gray-500">
             <TierBadge tier={user.subscriptionTier} />
             <span>{new Date(user.createdAt).toLocaleDateString()}</span>
-            <span>{user.emailVerified ? "Verified" : "Unverified"}</span>
+            <StatusBadge status={user.status} />
           </div>
         </button>
       ))}

@@ -8,6 +8,7 @@ import FormField from "@/components/form-field";
 import { useSnackbar } from "@/components/snackbar";
 import TimePickerModal from "@/components/time-picker-modal";
 import { useColors } from "@/contexts/theme-context";
+import { useWebRedirect } from "@/hooks/use-web-redirect";
 import type { MainStackParamList } from "@/navigation";
 import { fontSize, fontWeight, spacing } from "@/theme";
 import { parseLocalDate } from "@/utils/date";
@@ -16,6 +17,7 @@ import { useWeightLog } from "./use-weight-log";
 type Props = NativeStackScreenProps<MainStackParamList, "WeightLog">;
 
 export default function WeightLogScreen({ navigation, route }: Props) {
+  const redirecting = useWebRedirect();
   const colors = useColors();
   const { show } = useSnackbar();
   const {
@@ -36,6 +38,8 @@ export default function WeightLogScreen({ navigation, route }: Props) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  if (redirecting) return null;
 
   const dateLabel = parseLocalDate(date).toLocaleDateString("en-US", {
     weekday: "short",

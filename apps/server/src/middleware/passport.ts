@@ -13,7 +13,8 @@ passport.use(
       const user = await prisma.user.findUnique({
         where: { id: payload.sub },
       });
-      return done(null, user || false);
+      if (!user || user.status !== "VERIFIED") return done(null, false);
+      return done(null, user);
     } catch (err) {
       return done(err, false);
     }

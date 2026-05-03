@@ -1,4 +1,5 @@
 import { PrismaClient } from ".prisma/admin-client";
+import { DEFAULT_FREE_DAILY_AI_LIMIT } from "@snap-cals/shared";
 import bcrypt from "bcryptjs";
 
 const adminPrisma = new PrismaClient();
@@ -18,6 +19,23 @@ async function main() {
   });
 
   console.log(`Admin seeded: ${admin.email}`);
+
+  await adminPrisma.platformSetting.upsert({
+    where: { key: "signupEnabled" },
+    update: {},
+    create: { key: "signupEnabled", value: "true" },
+  });
+
+  await adminPrisma.platformSetting.upsert({
+    where: { key: "freeDailyAiLimit" },
+    update: {},
+    create: {
+      key: "freeDailyAiLimit",
+      value: String(DEFAULT_FREE_DAILY_AI_LIMIT),
+    },
+  });
+
+  console.log("Platform settings seeded");
 }
 
 main()

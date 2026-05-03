@@ -82,6 +82,30 @@ A web-based admin dashboard (`apps/admin`, React + Vite) for viewing and managin
 
 See [Spec](./specs/admin-panel.md), [QA Report](./specs/admin-panel-qa.md).
 
+### 14. PWA / Mobile Web Version
+
+Ship the app as a Progressive Web App using Expo's built-in web support (`react-native-web`), avoiding the $99/year Apple Developer fee. Same `apps/mobile` codebase with `.web.ts` / `.web.tsx` overrides for native-only modules (`expo-secure-store` → `localStorage`, `expo-image-picker` → HTML file input, `react-native-purchases` → no-op stubs, `expo-speech-recognition` → disabled, `@react-native-community/datetimepicker` → HTML input). PWA manifest enables "Add to Home Screen" for app-like experience. Web version is free-tier only (paywall shows "Coming Soon"); email/password auth only (no Google OAuth). No voice logging on web. Camera/image input for AI food estimation supported via browser APIs. React Navigation linking config for proper URL paths and browser back/forward. Static build (`npx expo export --platform web`) deployable to any hosting provider.
+
+See [Spec](./specs/pwa-web-version.md), [QA Report](./specs/pwa-web-version-qa.md).
+
+### 15. Signup Toggle
+
+Admin-controlled toggle to open/close new user registrations. A `PlatformSetting` model in the admin database stores the `signupEnabled` flag. Admin dashboard gets a "Platform Settings" page with a toggle switch. Server enforces the setting on `POST /api/auth/signup` and `POST /api/auth/google` (new accounts only — existing users always log in). A public `GET /api/settings/signup-status` endpoint lets the mobile/web app check the status and show a "not accepting signups" screen when disabled. Existing users are unaffected.
+
+See [Spec](./specs/signup-toggle.md), [QA Report](./specs/signup-toggle-qa.md).
+
+### 16. User Status
+
+Replace the boolean `emailVerified` field on the User model with a `status` enum (`VERIFIED`, `UNVERIFIED`, `DEACTIVATED`). Admins can change any user's status from the admin panel's user detail page (new "Status" tab with dropdown, save button, and confirmation dialog for deactivation). Deactivated users are immediately locked out — the Passport JWT middleware rejects them on their next API call (triggers the existing 401 → logout flow), and login endpoints return a 403 "contact admin" error. Unverified users follow the existing email verification flow. No subscription cancellation on deactivation — just blocks access. No audit log in v1.
+
+See [Spec](./specs/user-status.md), [QA Report](./specs/user-status-qa.md).
+
+### 17. Configurable AI Daily Limit
+
+Move the hardcoded `FREE_DAILY_AI_LIMIT` from the shared constants package to the admin database's `PlatformSetting` table, making it adjustable from the admin dashboard without redeploying. Admin settings page gets a number input (1–20) with save button and confirmation modal. Server reads the limit from admin DB with 60-second cache and fallback to the hardcoded default. Mobile app already receives the limit dynamically via `GET /api/usage` — only change is removing the hardcoded constant from the usage limit modal display. No new API endpoints needed.
+
+See [Spec](./specs/configurable-ai-limit.md), [QA Report](./specs/configurable-ai-limit-qa.md).
+
 ---
 
 ## Backlog

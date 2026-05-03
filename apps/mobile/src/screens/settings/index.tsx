@@ -5,7 +5,6 @@ import { SubscriptionTier } from "@snap-cals/shared";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Purchases from "react-native-purchases";
 import ActionSheet from "@/components/action-sheet";
 import ThemedSwitch from "@/components/themed-switch";
 import { useColors, useTheme } from "@/contexts/theme-context";
@@ -14,6 +13,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import { useSettingsStore } from "@/stores/settings.store";
 import { useUsageStore } from "@/stores/usage.store";
 import { fontSize, fontWeight, spacing } from "@/theme";
+import { showManageSubscriptions } from "./manage-subscriptions";
 
 type RowProps = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -121,9 +121,10 @@ export default function SettingsScreen() {
           <SettingsRow
             icon="settings-outline"
             label="Manage Subscription"
-            onPress={() => Purchases.showManageSubscriptions()}
+            onPress={showManageSubscriptions}
           />
-        ) : (
+        ) : null}
+        {!isPro && (
           <>
             <SettingsRow
               icon="sparkles-outline"

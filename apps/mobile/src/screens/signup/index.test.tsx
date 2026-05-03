@@ -51,11 +51,11 @@ describe("SignupScreen", () => {
     expect(getByText("Sign Up")).toBeTruthy();
   });
 
-  it("renders Google sign-in button", async () => {
-    const { getByText } = await render(
+  it("hides Google sign-in button when not ready", async () => {
+    const { queryByText } = await render(
       <SignupScreen navigation={mockNavigation} route={mockRoute} />,
     );
-    expect(getByText("Continue with Google")).toBeTruthy();
+    expect(queryByText("Continue with Google")).toBeNull();
   });
 
   it("shows error when fields are empty", async () => {

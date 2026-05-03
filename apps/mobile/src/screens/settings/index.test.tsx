@@ -1,7 +1,11 @@
 import { SubscriptionTier } from "@snap-cals/shared";
-import Purchases from "react-native-purchases";
 import { fireEvent, render } from "@/__tests__/helpers";
 import SettingsScreen from "./";
+
+const mockShowManage = jest.fn();
+jest.mock("./manage-subscriptions", () => ({
+  showManageSubscriptions: (...args: unknown[]) => mockShowManage(...args),
+}));
 
 const mockLogout = jest.fn();
 const mockToggleTheme = jest.fn();
@@ -92,6 +96,6 @@ describe("SettingsScreen", () => {
     mockTier = SubscriptionTier.PRO;
     const { getByText } = await render(<SettingsScreen />);
     fireEvent.press(getByText("Manage Subscription"));
-    expect(Purchases.showManageSubscriptions).toHaveBeenCalled();
+    expect(mockShowManage).toHaveBeenCalled();
   });
 });

@@ -16,6 +16,7 @@ import type {
   GoalCoachResponse,
   ImageData,
   RecentFoodItem,
+  SignupStatusResponse,
   UpdateFoodEntryRequest,
   UpdateWeightEntryRequest,
   UpsertGoalRequest,
@@ -24,9 +25,14 @@ import type {
 
 import { Platform } from "react-native";
 
-// Note: If want to test against local server in android app from a physical device using the Expo Go app, need to use the local network IP address instead. Can just use the address below for android:
-const DEV_HOST = Platform.OS === "android" ? "192.168.1.43" : "localhost";
-// const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
+// Note: If want to test against local server in a physical device using the Expo Go app for android/mobile web, need to use the local network IP address instead. Can just use the DEV_HOST below instead and comment out the usual device simulator one:
+// To find your Mac's local IP, run: ipconfig getifaddr en0
+// const DEV_HOST = (Platform.OS === "android" || Platform.OS === 'web') ? process.env.EXPO_PUBLIC_LOCAL_IP : "localhost";
+
+// For usual device simulator testing
+// android => 10.0.2.2 , ios/web => localhost
+const DEV_HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
+
 const DEV_URL = `http://${DEV_HOST}:3000/api`;
 const API_URL =
   process.env.EXPO_PUBLIC_USE_LOCAL === "1"
@@ -62,6 +68,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  getSignupStatus: async (): Promise<ApiResponse<SignupStatusResponse>> => {
+    const res = await fetch(`${API_URL}/settings/signup-status`);
+    return res.json();
+  },
   signup: (email: string, password: string) =>
     request<ApiResponse<AuthPendingResponse>>("/auth/signup", {
       method: "POST",

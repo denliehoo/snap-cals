@@ -6,7 +6,6 @@ import type { FoodEntry } from "@snap-cals/shared";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   SectionList,
   StyleSheet,
   Text,
@@ -24,6 +23,7 @@ import { useColors } from "@/contexts/theme-context";
 import type { MainStackParamList, MainTabParamList } from "@/navigation";
 import { useUsageStore } from "@/stores/usage.store";
 import { fontSize, fontWeight, spacing } from "@/theme";
+import { showAlert } from "@/utils/alert";
 import { parseLocalDate, toLocalDateString } from "@/utils/date";
 import { useDailyEntries } from "./use-daily-entries";
 
@@ -63,7 +63,7 @@ export default function DailyViewScreen({ navigation, route }: Props) {
       });
 
   const handleDelete = (entry: FoodEntry) => {
-    Alert.alert("Delete Entry", `Delete "${entry.name}"?`, [
+    showAlert("Delete Entry", `Delete "${entry.name}"?`, [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
