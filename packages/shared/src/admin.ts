@@ -61,10 +61,12 @@ export interface AdminUpdateUserStatusRequest {
 
 export interface PlatformSettings {
   signupEnabled: boolean;
+  freeDailyAiLimit: number;
 }
 
 export interface UpdatePlatformSettingsRequest {
   signupEnabled?: boolean;
+  freeDailyAiLimit?: number;
 }
 
 export interface SignupStatusResponse {

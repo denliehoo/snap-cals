@@ -1,7 +1,7 @@
 import type { User } from "@prisma/client";
-import { FREE_DAILY_AI_LIMIT } from "@snap-cals/shared";
 import type { NextFunction, Request, Response } from "express";
 import prisma from "../lib/prisma";
+import { getFreeDailyAiLimit } from "../services/settings.service";
 
 function getResetsAt(): string {
   const tomorrow = new Date();
@@ -18,6 +18,7 @@ export const checkAiUsage = async (
   const user = req.user as User;
   if (user.subscriptionTier === "PRO") return next();
 
+  const limit = await getFreeDailyAiLimit();
   const period = new Date().toISOString().slice(0, 10);
   const usage = await prisma.aiUsage.upsert({
     where: { userId_period: { userId: user.id, period } },
@@ -25,11 +26,11 @@ export const checkAiUsage = async (
     update: {},
   });
 
-  if (usage.count >= FREE_DAILY_AI_LIMIT) {
+  if (usage.count >= limit) {
     return res.status(429).json({
       message: "Daily AI limit reached",
       used: usage.count,
-      limit: FREE_DAILY_AI_LIMIT,
+      limit,
       resetsAt: getResetsAt(),
     });
   }

@@ -100,6 +100,12 @@ Replace the boolean `emailVerified` field on the User model with a `status` enum
 
 See [Spec](./specs/user-status.md), [QA Report](./specs/user-status-qa.md).
 
+### 17. Configurable AI Daily Limit
+
+Move the hardcoded `FREE_DAILY_AI_LIMIT` from the shared constants package to the admin database's `PlatformSetting` table, making it adjustable from the admin dashboard without redeploying. Admin settings page gets a number input (1–20) with save button and confirmation modal. Server reads the limit from admin DB with 60-second cache and fallback to the hardcoded default. Mobile app already receives the limit dynamically via `GET /api/usage` — only change is removing the hardcoded constant from the usage limit modal display. No new API endpoints needed.
+
+See [Spec](./specs/configurable-ai-limit.md), [QA Report](./specs/configurable-ai-limit-qa.md).
+
 ---
 
 ## Backlog

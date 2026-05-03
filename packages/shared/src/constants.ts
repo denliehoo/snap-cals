@@ -1,4 +1,5 @@
-export const FREE_DAILY_AI_LIMIT = 3;
+// Fallback only — the actual value is configured via the admin panel (PlatformSetting)
+export const DEFAULT_FREE_DAILY_AI_LIMIT = 3;
 
 // Field length limits
 export const FOOD_NAME_MAX_LENGTH = 100;

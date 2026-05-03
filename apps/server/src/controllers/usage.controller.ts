@@ -1,7 +1,8 @@
 import type { User } from "@prisma/client";
-import { FREE_DAILY_AI_LIMIT, type SubscriptionTier } from "@snap-cals/shared";
+import type { SubscriptionTier } from "@snap-cals/shared";
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
+import { getFreeDailyAiLimit } from "../services/settings.service";
 
 export const getUsage = async (req: Request, res: Response) => {
   const user = req.user as User;
@@ -10,6 +11,8 @@ export const getUsage = async (req: Request, res: Response) => {
     where: { userId_period: { userId: user.id, period } },
   });
 
+  const limit = await getFreeDailyAiLimit();
+
   const tomorrow = new Date();
   tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
   tomorrow.setUTCHours(0, 0, 0, 0);
@@ -17,7 +20,7 @@ export const getUsage = async (req: Request, res: Response) => {
   res.json({
     data: {
       used: usage?.count ?? 0,
-      limit: FREE_DAILY_AI_LIMIT,
+      limit,
       resetsAt: tomorrow.toISOString(),
       tier: user.subscriptionTier as SubscriptionTier,
     },

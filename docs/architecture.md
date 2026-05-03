@@ -211,7 +211,7 @@ snap-cals/
 - Admin migrations live in `prisma/admin/migrations/` (separate from app migrations in `prisma/migrations/`) — Prisma resolves the migrations directory relative to the schema file
 - Server imports two Prisma clients: `src/lib/prisma.ts` (app DB) and `src/lib/admin-prisma.ts` (admin DB)
 - `postinstall` runs `prisma generate` for both schemas
-- Admin models: `Admin` (id, email, name, passwordHash, createdAt), `PlatformSetting` (key, value, updatedAt) for admin-controlled feature flags (e.g., signupEnabled)
+- Admin models: `Admin` (id, email, name, passwordHash, createdAt), `PlatformSetting` (key, value, updatedAt) for admin-controlled feature flags (e.g., signupEnabled) and operational settings (e.g., freeDailyAiLimit)
 - Admin auth uses a separate JWT secret (`ADMIN_JWT_SECRET`) — must differ from the app JWT secret
 - Admin JWT payload includes `role: "admin"` to distinguish from app JWTs
 - Admin routes at `/api/admin/*` are protected by `authenticateAdmin` middleware (except `/api/admin/auth/login`)
